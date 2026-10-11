@@ -1,0 +1,1648 @@
+/* ==========================================================================
+   IFV Reskin — a light mobile-first "native app" theme layer.
+   This file is embedded verbatim into ifv.user.js by tools/embed-reskin.mjs
+   (between the IFV-RESKIN-CSS markers). Edit here, not in the userscript.
+   ========================================================================== */
+
+html[data-ifv-reskin] {
+    /* accent (overridden inline from settings) */
+    --ifv-accent: #6366f1;
+    --ifv-accent-soft: rgba(99, 102, 241, 0.12);
+    --ifv-accent-text: #4f46e5;
+    --ifv-accent-contrast: #ffffff;
+
+    /* surfaces & text */
+    --ifv-bg: #eef0f6;
+    --ifv-bg-2: #e7eaf2;
+    --ifv-surface: #ffffff;
+    --ifv-surface-2: #f5f6fa;
+    --ifv-surface-3: #eceef5;
+    --ifv-text: #1b1e2a;
+    --ifv-text-2: #666d7e;
+    --ifv-text-3: #98a0b3;
+    --ifv-line: #e6e8f0;
+    --ifv-line-2: #d8dce7;
+
+    /* elevation */
+    --ifv-shadow: 0 1px 2px rgba(18, 22, 40, 0.05), 0 12px 30px -16px rgba(18, 22, 40, 0.28);
+    --ifv-shadow-sm: 0 1px 2px rgba(18, 22, 40, 0.07);
+
+    /* shape & motion */
+    --ifv-radius: 18px;
+    --ifv-radius-sm: 12px;
+    --ifv-radius-xs: 10px;
+    --ifv-nav-height: 62px;
+    --ifv-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --ifv-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+
+    /* bridge to the other redesign patches */
+    --bottom-navbar-height: var(--ifv-nav-height);
+    --background-primary: var(--ifv-surface);
+    --background-navigation: var(--ifv-surface);
+    --kolor-wcag: var(--ifv-accent-soft);
+
+    color-scheme: light;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] {
+    --ifv-accent: #8b92ff;
+    --ifv-accent-soft: rgba(139, 146, 255, 0.22);
+    --ifv-accent-text: #c4b5fd;
+    --ifv-accent-contrast: #0d0f14;
+
+    --ifv-bg: #0c0e13;
+    --ifv-bg-2: #0f1218;
+    --ifv-surface: #1b1f2a;
+    --ifv-surface-2: #232733;
+    --ifv-surface-3: #2a2f3d;
+    --ifv-text: #f0f2f5;
+    --ifv-text-2: #a0aec0;
+    --ifv-text-3: #94a3b8;
+    --ifv-line: #262b38;
+    --ifv-line-2: #333a4b;
+
+    --ifv-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 16px 34px -18px rgba(0, 0, 0, 0.85);
+    --ifv-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+
+    color-scheme: dark;
+}
+
+/* ---------------------------------------------------------------- base --- */
+html[data-ifv-reskin] body {
+    background: var(--ifv-bg) !important;
+    color: var(--ifv-text) !important;
+    font-family: var(--ifv-font) !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html[data-ifv-reskin] .app__main,
+html[data-ifv-reskin] #root,
+html[data-ifv-reskin] .app,
+html[data-ifv-reskin] .mobile__frame {
+    background: transparent !important;
+    color: var(--ifv-text);
+}
+
+html[data-ifv-reskin] body.blue {
+    background: var(--ifv-bg) !important;
+}
+
+html[data-ifv-reskin] ::selection {
+    background: var(--ifv-accent-soft);
+}
+
+html[data-ifv-reskin] * {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ------------------------------------------------------------- app bar --- */
+html[data-ifv-reskin] header.app__header {
+    background: color-mix(in srgb, var(--ifv-surface) 86%, transparent) !important;
+    backdrop-filter: saturate(180%) blur(18px);
+    -webkit-backdrop-filter: saturate(180%) blur(18px);
+    border-bottom: 1px solid var(--ifv-line) !important;
+    box-shadow: none !important;
+    height: calc(56px + env(safe-area-inset-top)) !important;
+    padding-top: env(safe-area-inset-top);
+}
+
+html[data-ifv-reskin] .header_logo_tools_user-wrapper,
+html[data-ifv-reskin] .header_logo_tools-container {
+    height: 56px !important;
+    min-height: 56px !important;
+    align-items: center;
+}
+
+/* content scroll container sits below the fixed app bar and above the nav */
+html[data-ifv-reskin] div#root {
+    top: var(--ifv-header-h, 56px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: calc(
+        100svh - var(--ifv-header-h, 56px) - var(--ifv-nav-height) - env(
+                safe-area-inset-bottom
+            )
+    ) !important;
+    overflow-x: hidden !important;
+}
+
+/* the messages button injected by another patch is 72px tall (20px padding)
+   which clips inside the 56px bar — shrink it and cluster it on the right */
+html[data-ifv-reskin] .header_logo_tools-container > div.messages {
+    padding: 12px !important;
+    float: none !important;
+    margin-left: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+html[data-ifv-reskin] .header_logo_tools-container > .ifv-theme-toggle {
+    margin-left: auto !important;
+    margin-right: 2px !important;
+}
+
+html[data-ifv-reskin] .header__hamburger__icon button,
+html[data-ifv-reskin] .header__tools button {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .header__hamburger__icon svg,
+html[data-ifv-reskin] .header__tools svg {
+    fill: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .header__logo-product > span {
+    color: var(--ifv-text) !important;
+    font-weight: 700 !important;
+    font-size: 18px !important;
+    letter-spacing: -0.01em;
+}
+
+html[data-ifv-reskin] .header__logo-product > a > svg,
+html[data-ifv-reskin] .header__logo-product > img {
+    display: none !important;
+}
+
+/* theme toggle button injected by the reskin */
+.ifv-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin: 0 6px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ifv-text-2);
+    cursor: pointer;
+    transition: background-color 0.16s var(--ifv-ease), color 0.16s var(--ifv-ease);
+}
+
+.ifv-theme-toggle:hover {
+    background: var(--ifv-surface-3);
+    color: var(--ifv-text);
+}
+
+.ifv-theme-toggle:active {
+    transform: scale(0.92);
+}
+
+.ifv-theme-toggle svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+/* -------------------------------------------------------- bottom nav --- */
+html[data-ifv-reskin] .bottom-navigation-bar {
+    background: color-mix(in srgb, var(--ifv-surface) 90%, transparent) !important;
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-top: 1px solid var(--ifv-line) !important;
+    box-shadow: 0 -8px 30px -22px rgba(18, 22, 40, 0.6);
+    top: auto !important;
+    bottom: 0 !important;
+    height: calc(var(--ifv-nav-height) + env(safe-area-inset-bottom)) !important;
+    padding-bottom: env(safe-area-inset-bottom);
+    gap: 2px;
+    align-items: stretch !important;
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div {
+    color: var(--ifv-text-3) !important;
+    -webkit-text-fill-color: var(--ifv-text-3) !important;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    padding: 7px 0 5px;
+    border-radius: 14px;
+    transition: color 0.16s var(--ifv-ease);
+    justify-content: center;
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div > div:has(img),
+html[data-ifv-reskin] .bottom-navigation-bar > div > .ifv-nav-ico {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    min-width: 46px;
+    padding: 0 14px;
+    margin-bottom: 2px;
+    border-radius: 15px;
+    background: transparent;
+    transition: background-color 0.18s var(--ifv-ease), transform 0.18s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .ifv-nav-ico svg {
+    width: 22px;
+    height: 22px;
+    fill: var(--ifv-text-3) !important;
+    display: block;
+    transition: fill 0.16s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div:active > .ifv-nav-ico,
+html[data-ifv-reskin] .bottom-navigation-bar > div:active > div:has(img) {
+    transform: scale(0.9);
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div.ifv-nav-active {
+    color: var(--ifv-accent) !important;
+    -webkit-text-fill-color: var(--ifv-accent) !important;
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div.ifv-nav-active > .ifv-nav-ico,
+html[data-ifv-reskin] .bottom-navigation-bar > div.ifv-nav-active > div:has(img) {
+    background: var(--ifv-accent-soft);
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div.ifv-nav-active .ifv-nav-ico svg {
+    fill: var(--ifv-accent) !important;
+}
+
+/* keep the legacy highlight working too */
+html[data-ifv-reskin] .bottom-navigation-bar > div > div:has(img.highlight) {
+    background: var(--ifv-accent-soft) !important;
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div > div > img {
+    filter: none !important;
+    opacity: 0.7;
+    height: 22px !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="light"] .bottom-navigation-bar > div > div > img:not(.highlight) {
+    filter: invert(0.55) !important;
+    opacity: 0.85;
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div > div > img.highlight {
+    opacity: 1;
+}
+
+/* ------------------------------------------------------- cards/tiles --- */
+/* Native app card system */
+html[data-ifv-reskin] .tile {
+    background: var(--ifv-surface) !important;
+    border: 0 !important;
+    border-radius: var(--ifv-radius) !important;
+    box-shadow: var(--ifv-shadow) !important;
+    color: var(--ifv-text) !important;
+    overflow: hidden;
+    transition: box-shadow 0.15s var(--ifv-ease), transform 0.15s var(--ifv-ease), background-color 0.15s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .tile:active {
+    transform: scale(0.99);
+    box-shadow: var(--ifv-shadow-sm) !important;
+}
+
+html[data-ifv-reskin] .tile__header {
+    padding: 14px 16px !important;
+    gap: 10px;
+    align-items: center;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    background: transparent !important;
+    background-image: none !important;
+}
+
+html[data-ifv-reskin] .tile__header h2 {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: var(--ifv-text) !important;
+    letter-spacing: -0.01em;
+    flex: 1;
+}
+
+html[data-ifv-reskin] .tile__link,
+html[data-ifv-reskin] .tile a.simple_link,
+html[data-ifv-reskin] a.simple_link {
+    color: var(--ifv-accent) !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    padding: 4px 8px;
+    border-radius: var(--ifv-radius-xs);
+    transition: background-color 0.15s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .tile__link:active,
+html[data-ifv-reskin] .tile a.simple_link:active {
+    background: var(--ifv-accent-soft) !important;
+}
+
+html[data-ifv-reskin] .tile__content {
+    padding: 14px 16px !important;
+    color: var(--ifv-text) !important;
+}
+
+/* Tile size variants */
+html[data-ifv-reskin] .tile__small {
+    /* default card */
+}
+
+html[data-ifv-reskin] .tile__full-width-content {
+    width: 100% !important;
+}
+
+html[data-ifv-reskin] .tile-with-boxes .tile__content {
+    padding: 0 !important;
+}
+
+html[data-ifv-reskin] .tile-container {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    padding: 8px 12px 16px !important;
+    gap: 10px !important;
+}
+
+/* Content containers — flattened: the page itself is the surface, content
+   sits directly on it instead of inside another bordered box. */
+html[data-ifv-reskin] .content-container {
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 8px 12px 16px !important;
+}
+
+html[data-ifv-reskin] .app__content {
+    padding-top: 8px !important;
+}
+
+/* ---------------------------------------------------- accordions/grades --- */
+/* Native accordion style */
+html[data-ifv-reskin] .MuiAccordion-root {
+    background: var(--ifv-surface) !important;
+    color: var(--ifv-text) !important;
+    border: 1px solid var(--ifv-line) !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+    margin: 0 12px 8px !important;
+    overflow: hidden;
+}
+
+html[data-ifv-reskin] .MuiAccordion-root.Mui-expanded {
+    box-shadow: var(--ifv-shadow) !important;
+    border-color: var(--ifv-accent) !important;
+}
+
+html[data-ifv-reskin] .MuiAccordion-root::before,
+html[data-ifv-reskin] .MuiAccordion-root.Mui-expanded::before {
+    display: none !important;
+}
+
+html[data-ifv-reskin] .MuiAccordionSummary-root {
+    min-height: 56px !important;
+    padding: 0 16px !important;
+}
+
+html[data-ifv-reskin] .MuiAccordionSummary-content,
+html[data-ifv-reskin] .MuiAccordionSummary-content.Mui-expanded {
+    margin: 12px 0 !important;
+    font-weight: 600;
+    font-size: 15px !important;
+}
+
+html[data-ifv-reskin] .MuiAccordionSummary-expandIconWrapper {
+    color: var(--ifv-text-2) !important;
+}
+
+html[data-ifv-reskin] .MuiAccordionDetails-root {
+    padding: 12px !important;
+}
+
+html[data-ifv-reskin] .MuiDivider-root {
+    border-color: var(--ifv-line) !important;
+}
+
+/* Grade tiles inside accordions */
+html[data-ifv-reskin] .accordion__full-width__content .tile,
+html[data-ifv-reskin] .accordion__full-width__content .box {
+    margin: 4px 0 !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+    border: 1px solid var(--ifv-line) !important;
+}
+
+html[data-ifv-reskin] .accordion__full-width__content .tile__header {
+    padding: 8px 10px !important;
+    background: transparent !important;
+    border: 0 !important;
+}
+
+html[data-ifv-reskin] .accordion__full-width__content .tile__header h2 {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+
+html[data-ifv-reskin] .accordion__full-width__content .tile__content {
+    padding: 10px 14px !important;
+}
+
+/* Grade rows */
+html[data-ifv-reskin] .grades__subject {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 12px 14px !important;
+    border: 1px solid var(--ifv-line) !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    margin-bottom: 8px !important;
+    background: transparent !important;
+    gap: 12px;
+}
+
+html[data-ifv-reskin] .grades__subject:last-child {
+    margin-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .grades__button {
+    background: var(--ifv-accent-soft) !important;
+    color: var(--ifv-accent-text) !important;
+    border-radius: var(--ifv-radius-xs) !important;
+    padding: 4px 10px !important;
+    font-weight: 700 !important;
+    font-size: 13px !important;
+    min-width: 48px;
+    text-align: center;
+}
+
+html[data-ifv-reskin] .grades__button {
+    background: var(--ifv-accent-soft) !important;
+    color: var(--ifv-accent-text) !important;
+    border-radius: var(--ifv-radius-xs) !important;
+    padding: 4px 10px !important;
+    font-weight: 700 !important;
+    font-size: 13px !important;
+    min-width: 48px;
+    text-align: center;
+}
+
+html[data-ifv-reskin] .grades__button__content {
+    color: var(--ifv-accent-text) !important;
+}
+
+/* ---------------------------------------------------- Tablica (Dashboard) --- */
+/* Make today's schedule tile prominent */
+html[data-ifv-reskin] .tile:has(.plan-zajec),
+html[data-ifv-reskin] .tile:has(.tile__frequency__day) {
+    /* These contain the most important daily info */
+}
+
+html[data-ifv-reskin] .tile__important-text {
+    color: var(--ifv-text) !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+}
+
+/* Schedule inside tile */
+html[data-ifv-reskin] .plan-zajec {
+    margin: -14px -16px 0 !important;
+    border-radius: var(--ifv-radius) var(--ifv-radius) 0 0 !important;
+    overflow: hidden;
+}
+
+html[data-ifv-reskin] .plan-zajec .timetable__grid {
+    background: transparent !important;
+}
+
+html[data-ifv-reskin] .plan-zajec .plan-position__lesson {
+    background: var(--ifv-surface) !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    padding: 10px 16px !important;
+    transition: background-color 0.15s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .plan-zajec .plan-position__lesson:active {
+    background: var(--ifv-surface-2) !important;
+}
+
+html[data-ifv-reskin] .plan-zajec .plan-position__lesson:last-child {
+    border-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .plan-zajec .position__lesson__hours {
+    color: var(--ifv-text-2) !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    min-width: 70px;
+    flex-shrink: 0;
+}
+
+html[data-ifv-reskin] .plan-zajec .position__lesson__subject {
+    color: var(--ifv-text) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+}
+
+html[data-ifv-reskin] .plan-zajec .position__lesson__teacher {
+    color: var(--ifv-text-3) !important;
+    font-size: 12px !important;
+}
+
+/* Cancelled lessons */
+html[data-ifv-reskin] .plan-zajec .odwolane .position__lesson__subject,
+html[data-ifv-reskin] .plan-zajec .odwolane .position__lesson__teacher,
+html[data-ifv-reskin] .plan-zajec .odwolane .position__lesson__hours {
+    color: var(--ifv-text-3) !important;
+    opacity: 0.6;
+}
+
+html[data-ifv-reskin] .plan-zajec .odwolane .position__lesson__subject::after {
+    content: " (odwołane)";
+    font-weight: 400;
+}
+
+/* Grade tiles on dashboard */
+html[data-ifv-reskin] .tile__grades {
+    background: transparent !important;
+    border-radius: 0 0 var(--ifv-radius) var(--ifv-radius) !important;
+}
+
+html[data-ifv-reskin] .tile__empty-bg {
+    background: transparent !important;
+    border-radius: 0 0 var(--ifv-radius) var(--ifv-radius) !important;
+}
+
+html[data-ifv-reskin] .tile__empty__content {
+    color: var(--ifv-text-2) !important;
+    font-size: 14px !important;
+    padding: 24px 16px !important;
+}
+
+/* Tests/homework lists in tiles */
+html[data-ifv-reskin] .tile__list__rectangle-boxes li,
+html[data-ifv-reskin] .tile__list__borders li {
+    padding: 10px 12px !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px;
+}
+
+html[data-ifv-reskin] .tile__list__rectangle-boxes li:last-child,
+html[data-ifv-reskin] .tile__list__borders li:last-child {
+    border-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .tile__list__rectangle__ribbon {
+    background: var(--ifv-accent-soft) !important;
+    color: var(--ifv-accent-text) !important;
+    border-radius: var(--ifv-radius-xs) !important;
+    padding: 2px 8px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    white-space: nowrap;
+}
+
+/* Teachers list */
+html[data-ifv-reskin] .tile__teachers__item {
+    padding: 12px 0 !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+}
+
+html[data-ifv-reskin] .tile__teachers__item:last-child {
+    border-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .tile__teacher__type {
+    display: inline-block !important;
+    background: var(--ifv-accent-soft) !important;
+    color: var(--ifv-accent-text) !important;
+    border-radius: var(--ifv-radius-xs) !important;
+    padding: 2px 8px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    margin-bottom: 4px !important;
+}
+
+html[data-ifv-reskin] .tile__teacher__name {
+    color: var(--ifv-text) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+}
+
+/* Frequency tile */
+html[data-ifv-reskin] .tile__frequency__day {
+    padding: 8px 0 !important;
+}
+
+html[data-ifv-reskin] .tile__frequency__day .tile__important-text {
+    display: block !important;
+    margin-bottom: 8px !important;
+    font-size: 13px !important;
+}
+
+/* Hide less important empty tiles on mobile - keep only essential ones */
+html[data-ifv-reskin] .tile:has(.tile__empty__content:only-child):not(:has(.plan-zajec)):not(:has(.tile__frequency__day)) {
+    /* These will be de-emphasized via opacity */
+    opacity: 0.5;
+}
+
+html[data-ifv-reskin] .tile:has(.tile__empty__content:only-child):not(:has(.plan-zajec)):not(:has(.tile__frequency__day)):active {
+    opacity: 1;
+}
+
+/* ------------------------------------------------------------- buttons --- */
+html[data-ifv-reskin] .MuiButtonBase-root,
+html[data-ifv-reskin] button {
+    font-family: var(--ifv-font);
+}
+
+html[data-ifv-reskin] .MuiButton-containedPrimary,
+html[data-ifv-reskin] .MuiButton-contained.MuiButton-containedPrimary {
+    background-color: var(--ifv-accent) !important;
+    color: var(--ifv-accent-contrast) !important;
+    box-shadow: none !important;
+    border-radius: var(--ifv-radius-sm);
+}
+
+html[data-ifv-reskin] .MuiTabs-indicator {
+    background-color: var(--ifv-accent) !important;
+    border-radius: 3px;
+}
+
+html[data-ifv-reskin] .MuiTab-root.Mui-selected {
+    color: var(--ifv-accent) !important;
+}
+
+/* --------------------------------------------------------------- drawer --- */
+html[data-ifv-reskin] aside,
+html[data-ifv-reskin] .MuiDrawer-paper {
+    background: var(--ifv-surface) !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] aside nav a,
+html[data-ifv-reskin] aside nav li,
+html[data-ifv-reskin] aside a {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] aside nav ul li a {
+    border-radius: var(--ifv-radius-sm);
+}
+
+html[data-ifv-reskin] .MuiListItem-root:hover {
+    background: var(--ifv-surface-2) !important;
+}
+
+/* the "Więcej" / list modals */
+html[data-ifv-reskin] .list-modal,
+html[data-ifv-reskin] .more-popup {
+    background: var(--ifv-bg) !important;
+    color: var(--ifv-text) !important;
+    font-family: var(--ifv-font) !important;
+}
+
+html[data-ifv-reskin] .list-modal > div:first-of-type {
+    background: color-mix(in srgb, var(--ifv-surface) 92%, transparent) !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .list-modal > div:first-of-type > h1 {
+    color: var(--ifv-text) !important;
+    font-weight: 700;
+}
+
+html[data-ifv-reskin] .list-modal > div:first-of-type > img {
+    filter: none !important;
+    opacity: 0.75;
+}
+
+html[data-ifv-reskin] .list-modal > div:last-of-type > div {
+    color: var(--ifv-text) !important;
+    fill: var(--ifv-text) !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+}
+
+html[data-ifv-reskin] .list-modal > div:last-of-type > div:active {
+    background: var(--ifv-surface-2);
+}
+
+html[data-ifv-reskin] .list-modal > div:last-of-type > div > .icon {
+    filter: none !important;
+    color: var(--ifv-text-2);
+}
+
+/* --------------------------------------------------------- misc polish --- */
+html[data-ifv-reskin] .spinner {
+    border-color: var(--ifv-accent) transparent transparent transparent;
+}
+
+html[data-ifv-reskin] ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+html[data-ifv-reskin] ::-webkit-scrollbar-thumb {
+    background: var(--ifv-line-2);
+    border-radius: 8px;
+}
+
+html[data-ifv-reskin] a {
+    color: var(--ifv-accent);
+}
+
+/* ----------------------------------------- readability / palette fixes --- */
+/* one consistent accent: profile avatar + notification badges */
+html[data-ifv-reskin] .user-avatar {
+    background: var(--ifv-accent) !important;
+    color: var(--ifv-accent-contrast) !important;
+}
+
+html[data-ifv-reskin] .user-avatar span,
+html[data-ifv-reskin] .user-avatar * {
+    color: var(--ifv-accent-contrast) !important;
+}
+
+html[data-ifv-reskin] .MuiBadge-badge {
+    background: var(--ifv-accent) !important;
+    color: var(--ifv-accent-contrast) !important;
+    font-weight: 700;
+}
+
+/* tags / ribbons such as "kartkówka" — never plain white */
+html[data-ifv-reskin] .tile__list__rectangle__ribbon,
+html[data-ifv-reskin] .tag,
+html[data-ifv-reskin] .MuiChip-root,
+html[data-ifv-reskin] .tile__grade-tag {
+    background: var(--ifv-accent-soft) !important;
+    color: var(--ifv-accent-text) !important;
+    border: 0 !important;
+    font-weight: 700;
+}
+
+/* ------------------------------------------------ native mobile polish --- */
+/* page/section headers: clear hierarchy like a native app */
+html[data-ifv-reskin] .content__header {
+    padding: 6px 4px 10px !important;
+    gap: 4px;
+}
+
+html[data-ifv-reskin] .content__header__info-big,
+html[data-ifv-reskin] .content__header > h2 {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin: 0 !important;
+}
+
+html[data-ifv-reskin] .content__header__info-subheader {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    margin-top: 2px !important;
+}
+
+/* card / row press feedback */
+html[data-ifv-reskin] .tile:active,
+html[data-ifv-reskin] .MuiAccordion-root:active,
+html[data-ifv-reskin] .list-modal > div:last-of-type > div:active {
+    transform: scale(0.992);
+}
+
+/* segmented control (frekwencja month tabs etc.) */
+html[data-ifv-reskin] .attendance-tabs {
+    background: var(--ifv-surface-3) !important;
+    border: 0 !important;
+    border-radius: 12px !important;
+    padding: 4px !important;
+    margin: 12px !important;
+}
+
+html[data-ifv-reskin] .attendance-tabs button {
+    border-radius: 9px !important;
+    min-height: 40px !important;
+    font-weight: 600 !important;
+    transition: background-color 0.18s var(--ifv-ease), color 0.18s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .attendance-tabs button.Mui-selected,
+html[data-ifv-reskin] .attendance-tabs button:disabled {
+    background: var(--ifv-surface) !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+    opacity: 1 !important;
+}
+
+/* buttons: comfortable, non-capitalised tap targets */
+html[data-ifv-reskin] .MuiButton-root {
+    border-radius: var(--ifv-radius-sm) !important;
+    min-height: 42px;
+    text-transform: none !important;
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+}
+
+/* inputs / selects */
+html[data-ifv-reskin] .MuiOutlinedInput-root {
+    border-radius: var(--ifv-radius-sm) !important;
+}
+
+/* friendly, centred empty states */
+html[data-ifv-reskin] .tile__empty-container,
+html[data-ifv-reskin] .tile__empty-text,
+html[data-ifv-reskin] .tile__grades {
+    text-align: center;
+    justify-content: center;
+}
+
+/* dark-mode: replace hardcoded white/light surfaces with theme surfaces */
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__content,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__empty-container {
+    background-color: transparent !important;
+    background-image: none !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__empty-bg,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__grades {
+    background-color: var(--ifv-surface-2) !important;
+    background-image: none !important;
+    color: var(--ifv-text-2) !important;
+}
+
+/* soften the diagonal stripes so they don't glare on dark */
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__empty-bg {
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.015),
+        rgba(255, 255, 255, 0.015) 10px,
+        rgba(255, 255, 255, 0.04),
+        rgba(255, 255, 255, 0.04) 12px
+    ) !important;
+}
+
+/* attendance / segmented tabs also ship hardcoded white */
+html[data-ifv-reskin][data-ifv-theme="dark"] .tabsview,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tabsview__header,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tabsview__tabs,
+html[data-ifv-reskin][data-ifv-theme="dark"] .cell,
+html[data-ifv-reskin][data-ifv-theme="dark"] .column__content {
+    background-color: var(--ifv-surface) !important;
+    background-image: none !important;
+    color: var(--ifv-text) !important;
+}
+
+/* week selector arrows keep a hardcoded bg that ignores overrides — paint it
+   away with an inset shadow instead, and recolour the arrow itself */
+html[data-ifv-reskin][data-ifv-theme="dark"] .week-selector .MuiIconButton-root,
+html[data-ifv-reskin][data-ifv-theme="dark"] .month-selector .MuiIconButton-root {
+    background-color: var(--ifv-surface) !important;
+    box-shadow: inset 0 0 0 100px var(--ifv-surface) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .week-selector .MuiIconButton-root svg,
+html[data-ifv-reskin][data-ifv-theme="dark"] .month-selector .MuiIconButton-root svg {
+    fill: var(--ifv-text-2) !important;
+    color: var(--ifv-text-2) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .tabsview__header {
+    border-color: var(--ifv-line) !important;
+}
+
+/* attendance status chips: "present" ships a hardcoded white bg with light text */
+html[data-ifv-reskin][data-ifv-theme="dark"] .frequency-position__one-item {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .frequency-position__one-item.obecnosc,
+html[data-ifv-reskin][data-ifv-theme="dark"] .frequency-position__one-item.usprawiedliwione {
+    background-color: rgba(34, 197, 94, 0.16) !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .frequency-position__one-item.nieobecnyZPrzyczynSzkolnych,
+html[data-ifv-reskin][data-ifv-theme="dark"] .frequency-position__one-item.zwolnienie {
+    background-color: rgba(148, 163, 184, 0.18) !important;
+    color: var(--ifv-text) !important;
+}
+
+/* dashboard info chips ("-", counters) */
+html[data-ifv-reskin][data-ifv-theme="dark"] .dashboard-info-toolbar > div,
+html[data-ifv-reskin][data-ifv-theme="dark"] .dashboard-info-toolbar > div > div {
+    background-color: var(--ifv-surface-2) !important;
+    color: var(--ifv-text) !important;
+}
+
+/* secondary / empty-state labels must stay legible */
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__empty-text,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__empty-container,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__content__title {
+    color: var(--ifv-text-2) !important;
+}
+
+/* PrimeReact datatables ship white headers/rows and white empty messages */
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-wrapper,
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-table,
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-thead > tr > th,
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-tbody > tr,
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-tbody > tr > td,
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-emptymessage,
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-emptymessage > td {
+    background-color: var(--ifv-surface) !important;
+    background-image: none !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-thead > tr > th,
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-tbody > tr > td {
+    border-color: var(--ifv-line) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-thead > tr > th {
+    color: var(--ifv-text-2) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-tbody > tr:hover {
+    background-color: var(--ifv-surface-2) !important;
+}
+
+/* grade tiles: numbers/labels render in the app's dark ink on dark cards */
+html[data-ifv-reskin][data-ifv-theme="dark"] .grades__subject,
+html[data-ifv-reskin][data-ifv-theme="dark"] .grades__button,
+html[data-ifv-reskin][data-ifv-theme="dark"] .grades__button__content,
+html[data-ifv-reskin][data-ifv-theme="dark"] .grades__combo,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiButton-root.MuiButton-text,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiButton-root.MuiButton-text * {
+    color: var(--ifv-text) !important;
+}
+
+/* form controls / comboboxes */
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiFormLabel-root,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiInputLabel-root {
+    color: var(--ifv-text-2) !important;
+    background-color: transparent !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiInputBase-root,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiOutlinedInput-root,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiSelect-nativeInput {
+    background-color: transparent !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiInputBase-input,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiSelect-select {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiOutlinedInput-notchedOutline {
+    border-color: var(--ifv-line-2) !important;
+}
+
+/* info rows / accordions use the app's dark ink on dark cards */
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-label,
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-label span,
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-label > * {
+    color: var(--ifv-text-2) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-text,
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-text span,
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-text > *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-row,
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-column {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiAccordionSummary-content,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiAccordionSummary-content > h2,
+html[data-ifv-reskin][data-ifv-theme="dark"] .accordion__item-selected,
+html[data-ifv-reskin][data-ifv-theme="dark"] .accordion__full-width__header,
+html[data-ifv-reskin][data-ifv-theme="dark"] .accordion__full-width__header > * {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiAccordionSummary-expandIconWrapper svg {
+    fill: var(--ifv-text-2) !important;
+    color: var(--ifv-text-2) !important;
+}
+
+/* the app is light-only and hardcodes a dark ink (#3d4455) in many components;
+   recolour it so text stays legible on the dark surfaces */
+html[data-ifv-reskin][data-ifv-theme="dark"] #root {
+    color: var(--ifv-text);
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] header.app__header,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__header,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__header *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .content__header,
+html[data-ifv-reskin][data-ifv-theme="dark"] .content__header *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .grades__subject *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .grades__button *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .frekwencja-symbol__nazwa,
+html[data-ifv-reskin][data-ifv-theme="dark"] .first-header__date-selector,
+html[data-ifv-reskin][data-ifv-theme="dark"] .month-selector,
+html[data-ifv-reskin][data-ifv-theme="dark"] .selectedtab,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiTab-wrapper {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .content__header__info-subheader,
+html[data-ifv-reskin][data-ifv-theme="dark"] .position__lesson__hours,
+html[data-ifv-reskin][data-ifv-theme="dark"] .app-footer,
+html[data-ifv-reskin][data-ifv-theme="dark"] .app-footer a,
+html[data-ifv-reskin][data-ifv-theme="dark"] .app-footer span {
+    color: var(--ifv-text-2) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__teachers__item,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__teachers__info,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__teacher__name,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__teacher__name * {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__teacher__type {
+    color: var(--ifv-text-2) !important;
+}
+
+/* timetable (plan zajec): white lesson cards with near-black ink */
+html[data-ifv-reskin][data-ifv-theme="dark"] .timetable .lesson,
+html[data-ifv-reskin][data-ifv-theme="dark"] .timetable .lesson *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .lesson.normal,
+html[data-ifv-reskin][data-ifv-theme="dark"] .lesson.normal * {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .timetable .lesson article {
+    background-color: var(--ifv-surface-2) !important;
+    background-image: none !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .timetable .lesson.normal > div {
+    background-color: var(--ifv-surface-3) !important;
+    color: var(--ifv-text-2) !important;
+}
+
+/* scheduler / calendar (sprawdziany, zebrania): black ink on the grid */
+html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple,
+html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple__header-cell,
+html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple-cell__number,
+html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple-cell__container {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple-cell--disabled,
+html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple-cell--disabled * {
+    color: var(--ifv-text-3) !important;
+}
+
+/* segmented tabs (frekwencja / plan) */
+html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button,
+html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button * {
+    color: var(--ifv-text-2) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button.Mui-selected,
+html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button.Mui-selected *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button:disabled,
+html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button:disabled * {
+    color: var(--ifv-accent-text) !important;
+    opacity: 1 !important;
+}
+
+/* ---------------------------------------------------- Plan zajęć --- */
+/* Timetable uses absolute positioning - style within existing structure */
+html[data-ifv-reskin] .timetable__grid {
+    background: transparent !important;
+}
+
+/* Time column (left side) */
+html[data-ifv-reskin] .timetable__grid > .column:first-child,
+html[data-ifv-reskin] .timetable__grid > div[style*="padding-left"] > div:first-child {
+    background: var(--ifv-surface) !important;
+    border-radius: var(--ifv-radius) 0 0 var(--ifv-radius) !important;
+    box-shadow: var(--ifv-shadow) !important;
+    margin: 8px 0 8px 12px !important;
+    padding: 8px 0 !important;
+}
+
+html[data-ifv-reskin] .column__header {
+    padding: 8px 12px !important;
+    color: var(--ifv-text-2) !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    text-align: center;
+}
+
+html[data-ifv-reskin] .position__lesson__hours {
+    color: var(--ifv-text-2) !important;
+    font-weight: 600 !important;
+    font-size: 11px !important;
+    line-height: 1.3;
+    padding: 0 8px !important;
+    white-space: nowrap;
+    text-align: right;
+}
+
+/* Lesson cells */
+html[data-ifv-reskin] .cell.cell--single {
+    background: transparent !important;
+}
+
+html[data-ifv-reskin] .plan-position {
+    background: var(--ifv-surface) !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    margin: 2px !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+    overflow: hidden;
+    transition: transform 0.15s var(--ifv-ease), box-shadow 0.15s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .plan-position:active {
+    transform: scale(0.99);
+    box-shadow: var(--ifv-shadow) !important;
+}
+
+/* Subject color accent bar */
+html[data-ifv-reskin] .plan-position {
+    position: relative;
+}
+
+html[data-ifv-reskin] .plan-position::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--ifv-accent);
+    opacity: 0.3;
+}
+
+html[data-ifv-reskin] .plan-position:nth-child(6n+1)::before { background: #6366f1; }
+html[data-ifv-reskin] .plan-position:nth-child(6n+2)::before { background: #10b981; }
+html[data-ifv-reskin] .plan-position:nth-child(6n+3)::before { background: #f59e0b; }
+html[data-ifv-reskin] .plan-position:nth-child(6n+4)::before { background: #ef4444; }
+html[data-ifv-reskin] .plan-position:nth-child(6n+5)::before { background: #8b5cf6; }
+html[data-ifv-reskin] .plan-position:nth-child(6n+6)::before { background: #06b6d4; }
+
+/* Cancelled lessons */
+html[data-ifv-reskin] .plan-position.odwolane,
+html[data-ifv-reskin] .plan-position.odwolane::before {
+    opacity: 0.4 !important;
+}
+
+html[data-ifv-reskin] .plan-position.odwolane .position__lesson__subject,
+html[data-ifv-reskin] .plan-position.odwolane .position__lesson__teacher {
+    text-decoration: line-through;
+    color: var(--ifv-text-3) !important;
+}
+
+html[data-ifv-reskin] .position__lesson__hours.odwolane {
+    opacity: 0.5;
+}
+
+/* Lesson content */
+html[data-ifv-reskin] .plan-position__lesson {
+    padding: 10px 12px !important;
+    background: transparent !important;
+}
+
+html[data-ifv-reskin] .position__lesson__info {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 3px !important;
+}
+
+html[data-ifv-reskin] .position__lesson__subject {
+    color: var(--ifv-text) !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    line-height: 1.3;
+}
+
+html[data-ifv-reskin] .position__lesson__subject.right-gap {
+    margin-right: 6px !important;
+}
+
+html[data-ifv-reskin] .position__lesson__teacher {
+    color: var(--ifv-text-3) !important;
+    font-size: 11px !important;
+    line-height: 1.3;
+}
+
+/* Month selector */
+html[data-ifv-reskin] .first-header__date-selector {
+    padding: 12px 12px 8px !important;
+    margin: 0 12px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+html[data-ifv-reskin] .month-selector {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+}
+
+html[data-ifv-reskin] .month-selector button {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    border-radius: 50% !important;
+    background: var(--ifv-surface-2) !important;
+    color: var(--ifv-text) !important;
+    transition: background-color 0.15s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .month-selector button:active {
+    background: var(--ifv-accent-soft) !important;
+}
+
+/* Day headers in column content */
+html[data-ifv-reskin] .column__content > div:first-child {
+    padding-top: 12px !important;
+}
+
+/* ---------------------------------------------------- Frekwencja --- */
+/* Segmented control tabs */
+html[data-ifv-reskin] .attendance-tabs {
+    display: flex !important;
+    margin: 8px 12px !important;
+    padding: 4px !important;
+    background: var(--ifv-surface-3) !important;
+    border-radius: 12px !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+}
+
+html[data-ifv-reskin] .attendance-tabs button {
+    flex: 1 !important;
+    min-height: 44px !important;
+    border-radius: 9px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    transition: all 0.18s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .attendance-tabs button:disabled {
+    background: var(--ifv-surface) !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+    color: var(--ifv-accent) !important;
+}
+
+/* Attendance list container */
+html[data-ifv-reskin] .frequency-position__bg {
+    background: transparent !important;
+    margin: 8px 12px !important;
+    border-radius: var(--ifv-radius) !important;
+    box-shadow: var(--ifv-shadow) !important;
+    overflow: hidden;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item {
+    background: var(--ifv-surface) !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    padding: 12px 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item:last-child {
+    border-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item:active {
+    background: var(--ifv-surface-2) !important;
+}
+
+/* Attendance item layout: time | subject+teacher | status */
+html[data-ifv-reskin] .frequency-position__one-item > .position__lesson__hours {
+    flex: 0 0 70px !important;
+    color: var(--ifv-text-2) !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    white-space: nowrap;
+    text-align: right;
+    padding-right: 12px !important;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item > div:not(.position__lesson__hours) {
+    flex: 1 !important;
+    min-width: 0;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item .position__lesson__subject {
+    color: var(--ifv-text) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    margin-bottom: 2px !important;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item .position__lesson__teacher {
+    color: var(--ifv-text-3) !important;
+    font-size: 12px !important;
+}
+
+/* Attendance status chips */
+html[data-ifv-reskin] .frequency-position__one-item .obecnosc,
+html[data-ifv-reskin] .frequency-position__one-item .usprawiedliwione,
+html[data-ifv-reskin] .frequency-position__one-item .nieobecnosc,
+html[data-ifv-reskin] .frequency-position__one-item .spoznienie,
+html[data-ifv-reskin] .frequency-position__one-item .nieobecnyZPrzyczynSzkolnych,
+html[data-ifv-reskin] .frequency-position__one-item .zwolnienie {
+    flex: 0 0 auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 4px 10px !important;
+    border-radius: var(--ifv-radius-xs) !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    margin-left: auto !important;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item .obecnosc,
+html[data-ifv-reskin] .frequency-position__one-item .usprawiedliwione {
+    background: rgba(16, 185, 129, 0.15) !important;
+    color: #10b981 !important;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item .nieobecnosc {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #ef4444 !important;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item .spoznienie {
+    background: rgba(245, 158, 11, 0.15) !important;
+    color: #f59e0b !important;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item .nieobecnyZPrzyczynSzkolnych,
+html[data-ifv-reskin] .frequency-position__one-item .zwolnienie {
+    background: rgba(148, 163, 184, 0.15) !important;
+    color: #94a3b8 !important;
+}
+
+/* Statistics cards */
+html[data-ifv-reskin] .statistics .content__header {
+    padding: 12px 16px !important;
+    background: var(--ifv-surface) !important;
+    border-radius: var(--ifv-radius) var(--ifv-radius) 0 0 !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+}
+
+html[data-ifv-reskin] .statistics .content__header__info-big {
+    font-size: 18px !important;
+}
+
+html[data-ifv-reskin] .statistics > div:not(.content__header) {
+    background: var(--ifv-surface) !important;
+    border-radius: 0 0 var(--ifv-radius) var(--ifv-radius) !important;
+    box-shadow: var(--ifv-shadow) !important;
+    margin: 0 12px 12px !important;
+    padding: 12px 16px !important;
+}
+
+/* ---------------------------------------------------- Oceny: section pager --- */
+/* The expandable accordion headers are replaced by a top pager (prev/next). */
+html[data-ifv-reskin] .MuiAccordion-root[data-ifv-oceny] {
+    margin: 0 12px 10px !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-oceny]
+    > .MuiAccordionSummary-root {
+    display: none !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-oceny]
+    .MuiAccordionDetails-root {
+    padding: 14px 16px 16px !important;
+}
+
+/* No expand/collapse animation — instant swap between sections. */
+html[data-ifv-reskin] .MuiAccordion-root[data-ifv-oceny] .MuiCollapse-root,
+html[data-ifv-reskin] .MuiAccordion-root[data-ifv-oceny] .MuiCollapse-wrapper,
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-oceny]
+    .MuiCollapse-wrapperInner,
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-oceny]
+    .MuiAccordionDetails-root {
+    transition: none !important;
+    animation: none !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-oceny]:not(.Mui-expanded)
+    .MuiCollapse-root {
+    display: none !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-oceny].Mui-expanded
+    .MuiCollapse-root {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    visibility: visible !important;
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 12px 12px;
+    padding: 6px;
+    border-radius: var(--ifv-radius-sm);
+    background: var(--ifv-surface-2);
+    border: 1px solid var(--ifv-line);
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__arrow {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ifv-radius-xs);
+    background: transparent;
+    color: var(--ifv-text-2);
+    cursor: pointer;
+    transition:
+        background-color 0.16s var(--ifv-ease),
+        color 0.16s var(--ifv-ease),
+        transform 0.12s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__arrow:hover {
+    background: var(--ifv-surface-3);
+    color: var(--ifv-text);
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__arrow:active {
+    transform: scale(0.92);
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__arrow svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__label {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: center;
+    line-height: 1.2;
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__title {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ifv-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__count {
+    display: block;
+    margin-top: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ifv-text-3);
+    text-transform: uppercase;
+}
+
+/* ---------------------------------------------------- Global touch targets --- */
+html[data-ifv-reskin] button,
+html[data-ifv-reskin] a[role="button"],
+html[data-ifv-reskin] .MuiButtonBase-root,
+html[data-ifv-reskin] .MuiIconButton-root {
+    min-height: 44px !important;
+    min-width: 44px !important;
+}
+
+html[data-ifv-reskin] .MuiIconButton-root {
+    padding: 8px !important;
+}
+
+/* Smooth scrolling */
+html[data-ifv-reskin] {
+    scroll-behavior: smooth;
+}
+
+/* Focus visible for accessibility */
+html[data-ifv-reskin] *:focus-visible {
+    outline: 2px solid var(--ifv-accent) !important;
+    outline-offset: 2px !important;
+    border-radius: var(--ifv-radius-xs) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html[data-ifv-reskin] * {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+    }
+}
+
+/* ============================================================ flat pass ===
+   Remove nested "box" chrome so content shows directly on the card surface.
+   Placed last (and scoped with [data-ifv-theme]) so it also wins in dark. */
+html[data-ifv-reskin][data-ifv-theme] .content-container,
+html[data-ifv-reskin][data-ifv-theme] .tile__header,
+html[data-ifv-reskin][data-ifv-theme] .tile__grades,
+html[data-ifv-reskin][data-ifv-theme] .tile__empty-bg,
+html[data-ifv-reskin][data-ifv-theme] .tile__empty-container,
+html[data-ifv-reskin][data-ifv-theme] .tile-with-boxes .tile__content,
+html[data-ifv-reskin][data-ifv-theme] .grades__box,
+html[data-ifv-reskin][data-ifv-theme] .app-footer__row {
+    background-color: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme] .app-footer__row {
+    border-bottom: 1px solid var(--ifv-line) !important;
+}
+
+/* Accordion (Oceny) content: drop the inner container padding so grades sit
+   flush on the section card. */
+html[data-ifv-reskin][data-ifv-theme]
+    .MuiAccordionDetails-root
+    .content-container {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Grade rows: flat with divider lines only. */
+html[data-ifv-reskin][data-ifv-theme] .grades__subject {
+    background-color: var(--ifv-surface) !important;
+    border: 1px solid var(--ifv-line) !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    margin-bottom: 8px !important;
+    padding: 12px 14px !important;
+    box-shadow: none !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme] .grades__subject:last-child {
+    border-bottom: 0 !important;
+}
+
+/* Stray hardcoded ink on wrappers (e.g. Zebrania notes). */
+html[data-ifv-reskin][data-ifv-theme] .note {
+    color: var(--ifv-text) !important;
+}
+
+/* Fully flat: card surfaces (tiles, boxes, sections, lessons) lose their
+   background/border too — content sits on the page surface directly. */
+html[data-ifv-reskin][data-ifv-theme] .tile,
+html[data-ifv-reskin][data-ifv-theme] .box,
+html[data-ifv-reskin][data-ifv-theme] .MuiAccordion-root,
+html[data-ifv-reskin][data-ifv-theme] .MuiAccordion-root.Mui-expanded,
+html[data-ifv-reskin][data-ifv-theme] .plan-position {
+    background-color: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme] .tile:active {
+    box-shadow: none !important;
+    background-color: var(--ifv-surface-2) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme] .timetable .lesson,
+html[data-ifv-reskin][data-ifv-theme] .timetable .lesson article,
+html[data-ifv-reskin][data-ifv-theme] .lesson.normal > div,
+html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector {
+    background-color: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
