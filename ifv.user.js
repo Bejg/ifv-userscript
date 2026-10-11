@@ -4458,11 +4458,11 @@ html[data-ifv-reskin] .plan-zajec .timetable__grid {
 }
 
 html[data-ifv-reskin] .plan-zajec .plan-position__lesson {
-    background: var(--ifv-surface) !important;
+    background: transparent !important;
     border-radius: 0 !important;
     margin: 0 !important;
     border-bottom: 1px solid var(--ifv-line) !important;
-    padding: 10px 16px !important;
+    padding: 8px 12px !important;
     transition: background-color 0.15s var(--ifv-ease);
 }
 
@@ -4475,22 +4475,24 @@ html[data-ifv-reskin] .plan-zajec .plan-position__lesson:last-child {
 }
 
 html[data-ifv-reskin] .plan-zajec .position__lesson__hours {
-    color: var(--ifv-text-2) !important;
-    font-weight: 600 !important;
-    font-size: 12px !important;
-    min-width: 70px;
+    color: var(--ifv-text-3) !important;
+    font-weight: 500 !important;
+    font-size: 11px !important;
+    min-width: 64px;
     flex-shrink: 0;
 }
 
 html[data-ifv-reskin] .plan-zajec .position__lesson__subject {
     color: var(--ifv-text) !important;
-    font-weight: 600 !important;
+    font-weight: 500 !important;
     font-size: 14px !important;
+    line-height: 1.3;
 }
 
 html[data-ifv-reskin] .plan-zajec .position__lesson__teacher {
     color: var(--ifv-text-3) !important;
-    font-size: 12px !important;
+    font-size: 11px !important;
+    line-height: 1.3;
 }
 
 /* Cancelled lessons */
@@ -5100,46 +5102,28 @@ html[data-ifv-reskin] .cell.cell--single {
 }
 
 html[data-ifv-reskin] .plan-position {
-    background: var(--ifv-surface) !important;
-    border-radius: var(--ifv-radius-sm) !important;
-    margin: 2px !important;
-    box-shadow: var(--ifv-shadow-sm) !important;
-    overflow: hidden;
-    transition: transform 0.15s var(--ifv-ease), box-shadow 0.15s var(--ifv-ease);
+    background: transparent !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    transition: background-color 0.15s var(--ifv-ease) !important;
 }
 
 html[data-ifv-reskin] .plan-position:active {
-    transform: scale(0.99);
-    box-shadow: var(--ifv-shadow) !important;
+    transform: none !important;
+    box-shadow: none !important;
+    background: var(--ifv-surface-2) !important;
 }
 
-/* Subject color accent bar */
-html[data-ifv-reskin] .plan-position {
-    position: relative;
-}
-
+/* Remove subject color accent bars - minimalistic */
 html[data-ifv-reskin] .plan-position::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: var(--ifv-accent);
-    opacity: 0.3;
+    display: none !important;
 }
 
-html[data-ifv-reskin] .plan-position:nth-child(6n+1)::before { background: #6366f1; }
-html[data-ifv-reskin] .plan-position:nth-child(6n+2)::before { background: #10b981; }
-html[data-ifv-reskin] .plan-position:nth-child(6n+3)::before { background: #f59e0b; }
-html[data-ifv-reskin] .plan-position:nth-child(6n+4)::before { background: #ef4444; }
-html[data-ifv-reskin] .plan-position:nth-child(6n+5)::before { background: #8b5cf6; }
-html[data-ifv-reskin] .plan-position:nth-child(6n+6)::before { background: #06b6d4; }
-
-/* Cancelled lessons */
-html[data-ifv-reskin] .plan-position.odwolane,
-html[data-ifv-reskin] .plan-position.odwolane::before {
-    opacity: 0.4 !important;
+/* Cancelled lessons - subtle */
+html[data-ifv-reskin] .plan-position.odwolane {
+    opacity: 0.5 !important;
 }
 
 html[data-ifv-reskin] .plan-position.odwolane .position__lesson__subject,
@@ -5152,22 +5136,22 @@ html[data-ifv-reskin] .position__lesson__hours.odwolane {
     opacity: 0.5;
 }
 
-/* Lesson content */
+/* Lesson content - compact */
 html[data-ifv-reskin] .plan-position__lesson {
-    padding: 10px 12px !important;
+    padding: 8px 12px !important;
     background: transparent !important;
 }
 
 html[data-ifv-reskin] .position__lesson__info {
     display: flex !important;
     flex-direction: column !important;
-    gap: 3px !important;
+    gap: 2px !important;
 }
 
 html[data-ifv-reskin] .position__lesson__subject {
     color: var(--ifv-text) !important;
-    font-weight: 600 !important;
-    font-size: 13px !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
     line-height: 1.3;
 }
 
@@ -5176,6 +5160,12 @@ html[data-ifv-reskin] .position__lesson__subject.right-gap {
 }
 
 html[data-ifv-reskin] .position__lesson__teacher {
+    color: var(--ifv-text-3) !important;
+    font-size: 11px !important;
+    line-height: 1.3;
+}
+
+html[data-ifv-reskin] .position__lesson__room {
     color: var(--ifv-text-3) !important;
     font-size: 11px !important;
     line-height: 1.3;
@@ -5194,20 +5184,24 @@ html[data-ifv-reskin] .month-selector {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
-    gap: 12px !important;
+    gap: 8px !important;
 }
 
 html[data-ifv-reskin] .month-selector button {
-    min-width: 44px !important;
-    min-height: 44px !important;
-    border-radius: 50% !important;
-    background: var(--ifv-surface-2) !important;
-    color: var(--ifv-text) !important;
-    transition: background-color 0.15s var(--ifv-ease);
+    min-width: 40px !important;
+    min-height: 40px !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    color: var(--ifv-text-2) !important;
+    border: 1px solid var(--ifv-line) !important;
+    transition: background-color 0.15s var(--ifv-ease), color 0.15s var(--ifv-ease), border-color 0.15s var(--ifv-ease) !important;
 }
 
+html[data-ifv-reskin] .month-selector button:hover,
 html[data-ifv-reskin] .month-selector button:active {
-    background: var(--ifv-accent-soft) !important;
+    background: var(--ifv-surface-2) !important;
+    color: var(--ifv-text) !important;
+    border-color: var(--ifv-accent) !important;
 }
 
 /* Day headers in column content */
@@ -5576,6 +5570,10 @@ html[data-ifv-reskin][data-ifv-theme] .plan-position {
     box-shadow: none !important;
 }
 
+html[data-ifv-reskin][data-ifv-theme] .plan-position::before {
+    display: none !important;
+}
+
 html[data-ifv-reskin][data-ifv-theme] .tile:active {
     box-shadow: none !important;
     background-color: var(--ifv-surface-2) !important;
@@ -5584,7 +5582,8 @@ html[data-ifv-reskin][data-ifv-theme] .tile:active {
 html[data-ifv-reskin][data-ifv-theme] .timetable .lesson,
 html[data-ifv-reskin][data-ifv-theme] .timetable .lesson article,
 html[data-ifv-reskin][data-ifv-theme] .lesson.normal > div,
-html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector {
+html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector,
+html[data-ifv-reskin][data-ifv-theme] .plan-position {
     background-color: transparent !important;
     background-image: none !important;
     border: 0 !important;
