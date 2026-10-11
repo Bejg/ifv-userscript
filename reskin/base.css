@@ -1227,9 +1227,9 @@ html[data-ifv-reskin] .position__lesson__teacher {
 html[data-ifv-reskin] .first-header__date-selector {
     padding: 12px 12px 8px !important;
     margin: 0 12px !important;
-    background: var(--ifv-surface) !important;
-    border-radius: var(--ifv-radius) !important;
-    box-shadow: var(--ifv-shadow) !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
 }
 
 html[data-ifv-reskin] .month-selector {
@@ -1617,4 +1617,15 @@ html[data-ifv-reskin][data-ifv-theme] .plan-position {
 html[data-ifv-reskin][data-ifv-theme] .tile:active {
     box-shadow: none !important;
     background-color: var(--ifv-surface-2) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme] .timetable .lesson,
+html[data-ifv-reskin][data-ifv-theme] .timetable .lesson article,
+html[data-ifv-reskin][data-ifv-theme] .lesson.normal > div,
+html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector {
+    background-color: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
 }
