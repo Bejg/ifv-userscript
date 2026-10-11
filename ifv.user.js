@@ -4299,12 +4299,14 @@ html[data-ifv-reskin][data-ifv-theme="dark"] .column__content {
 
 /* week selector arrows keep a hardcoded bg that ignores overrides — paint it
    away with an inset shadow instead, and recolour the arrow itself */
-html[data-ifv-reskin][data-ifv-theme="dark"] .week-selector .MuiIconButton-root {
+html[data-ifv-reskin][data-ifv-theme="dark"] .week-selector .MuiIconButton-root,
+html[data-ifv-reskin][data-ifv-theme="dark"] .month-selector .MuiIconButton-root {
     background-color: var(--ifv-surface) !important;
     box-shadow: inset 0 0 0 100px var(--ifv-surface) !important;
 }
 
-html[data-ifv-reskin][data-ifv-theme="dark"] .week-selector .MuiIconButton-root svg {
+html[data-ifv-reskin][data-ifv-theme="dark"] .week-selector .MuiIconButton-root svg,
+html[data-ifv-reskin][data-ifv-theme="dark"] .month-selector .MuiIconButton-root svg {
     fill: var(--ifv-text-2) !important;
     color: var(--ifv-text-2) !important;
 }
@@ -4488,6 +4490,20 @@ html[data-ifv-reskin][data-ifv-theme="dark"] .timetable .lesson article {
 html[data-ifv-reskin][data-ifv-theme="dark"] .timetable .lesson.normal > div {
     background-color: var(--ifv-surface-3) !important;
     color: var(--ifv-text-2) !important;
+}
+
+/* scheduler / calendar (sprawdziany, zebrania): black ink on the grid */
+html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple,
+html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple__header-cell,
+html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple-cell__number,
+html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple-cell__container {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple-cell--disabled,
+html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple-cell--disabled * {
+    color: var(--ifv-text-3) !important;
 }
 
 /* segmented tabs (frekwencja / plan) */
