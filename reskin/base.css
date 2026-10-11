@@ -664,6 +664,34 @@ html[data-ifv-reskin][data-ifv-theme="dark"] .MuiOutlinedInput-notchedOutline {
     border-color: var(--ifv-line-2) !important;
 }
 
+/* info rows / accordions use the app's dark ink on dark cards */
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-label,
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-label span,
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-label > * {
+    color: var(--ifv-text-2) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-text,
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-text span,
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-text > *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-row,
+html[data-ifv-reskin][data-ifv-theme="dark"] .info-column {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiAccordionSummary-content,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiAccordionSummary-content > h2,
+html[data-ifv-reskin][data-ifv-theme="dark"] .accordion__item-selected,
+html[data-ifv-reskin][data-ifv-theme="dark"] .accordion__full-width__header,
+html[data-ifv-reskin][data-ifv-theme="dark"] .accordion__full-width__header > * {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiAccordionSummary-expandIconWrapper svg {
+    fill: var(--ifv-text-2) !important;
+    color: var(--ifv-text-2) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     html[data-ifv-reskin] * {
         transition-duration: 0.001ms !important;
