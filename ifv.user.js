@@ -5340,10 +5340,11 @@ html[data-ifv-reskin][data-ifv-theme]
 
 /* Grade rows: flat with divider lines only. */
 html[data-ifv-reskin][data-ifv-theme] .grades__subject {
-    border: 0 !important;
-    border-bottom: 1px solid var(--ifv-line) !important;
-    border-radius: 0 !important;
-    background: transparent !important;
+    background-color: var(--ifv-surface) !important;
+    border: 1px solid var(--ifv-line) !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    margin-bottom: 8px !important;
+    padding: 12px 14px !important;
     box-shadow: none !important;
 }
 
