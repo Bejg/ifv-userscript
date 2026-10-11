@@ -3843,14 +3843,25 @@ html[data-ifv-reskin] header.app__header {
     -webkit-backdrop-filter: saturate(180%) blur(18px);
     border-bottom: 1px solid var(--ifv-line) !important;
     box-shadow: none !important;
-    height: auto !important;
-    min-height: 54px;
+    height: calc(56px + env(safe-area-inset-top)) !important;
     padding-top: env(safe-area-inset-top);
 }
 
+html[data-ifv-reskin] .header_logo_tools_user-wrapper,
 html[data-ifv-reskin] .header_logo_tools-container {
-    min-height: 54px;
+    height: 56px !important;
+    min-height: 56px !important;
     align-items: center;
+}
+
+/* content scroll container sits below the fixed app bar and above the nav */
+html[data-ifv-reskin] div#root {
+    top: var(--ifv-header-h, 56px) !important;
+    height: calc(
+        100svh - var(--ifv-header-h, 56px) - var(--ifv-nav-height) - env(
+                safe-area-inset-bottom
+            )
+    ) !important;
 }
 
 html[data-ifv-reskin] .header__hamburger__icon button,
@@ -3913,6 +3924,8 @@ html[data-ifv-reskin] .bottom-navigation-bar {
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     border-top: 1px solid var(--ifv-line) !important;
     box-shadow: 0 -8px 30px -22px rgba(18, 22, 40, 0.6);
+    top: auto !important;
+    bottom: 0 !important;
     height: calc(var(--ifv-nav-height) + env(safe-area-inset-bottom)) !important;
     padding-bottom: env(safe-area-inset-bottom);
     gap: 2px;
@@ -3920,7 +3933,8 @@ html[data-ifv-reskin] .bottom-navigation-bar {
 }
 
 html[data-ifv-reskin] .bottom-navigation-bar > div {
-    color: var(--ifv-text-3);
+    color: var(--ifv-text-3) !important;
+    -webkit-text-fill-color: var(--ifv-text-3) !important;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.01em;
@@ -3947,8 +3961,9 @@ html[data-ifv-reskin] .bottom-navigation-bar > div > .ifv-nav-ico {
 html[data-ifv-reskin] .ifv-nav-ico svg {
     width: 22px;
     height: 22px;
-    fill: currentColor;
+    fill: var(--ifv-text-3) !important;
     display: block;
+    transition: fill 0.16s var(--ifv-ease);
 }
 
 html[data-ifv-reskin] .bottom-navigation-bar > div:active > .ifv-nav-ico,
@@ -3957,12 +3972,17 @@ html[data-ifv-reskin] .bottom-navigation-bar > div:active > div:has(img) {
 }
 
 html[data-ifv-reskin] .bottom-navigation-bar > div.ifv-nav-active {
-    color: var(--ifv-accent);
+    color: var(--ifv-accent) !important;
+    -webkit-text-fill-color: var(--ifv-accent) !important;
 }
 
 html[data-ifv-reskin] .bottom-navigation-bar > div.ifv-nav-active > .ifv-nav-ico,
 html[data-ifv-reskin] .bottom-navigation-bar > div.ifv-nav-active > div:has(img) {
     background: var(--ifv-accent-soft);
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div.ifv-nav-active .ifv-nav-ico svg {
+    fill: var(--ifv-accent) !important;
 }
 
 /* keep the legacy highlight working too */
@@ -4378,19 +4398,34 @@ html[data-ifv-reskin] a {
         });
     };
 
+    const syncReskinMetrics = () => {
+        const header = document.querySelector("header.app__header");
+        if (header) {
+            const h = Math.round(header.getBoundingClientRect().height);
+            if (h > 0)
+                document.documentElement.style.setProperty(
+                    "--ifv-header-h",
+                    h + "px",
+                );
+        }
+    };
+
     const mountReskin = () => {
         applyReskinTheme();
         addReskinThemeToggle();
+        syncReskinMetrics();
         waitForRender(() =>
             document.querySelector(".bottom-navigation-bar"),
         ).then(() => {
             decorateReskinNav();
             refreshReskinNavActive();
+            syncReskinMetrics();
         });
     };
 
     const setupReskin = () => {
         applyReskinTheme();
+        W.addEventListener("resize", syncReskinMetrics);
         if (!W.matchMedia) return;
         const mq = W.matchMedia("(prefers-color-scheme: dark)");
         const onChange = () => {
