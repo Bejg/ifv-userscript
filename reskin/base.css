@@ -564,9 +564,11 @@ html[data-ifv-reskin] .attendance-tabs button {
     transition: background-color 0.18s var(--ifv-ease), color 0.18s var(--ifv-ease);
 }
 
-html[data-ifv-reskin] .attendance-tabs button.Mui-selected {
+html[data-ifv-reskin] .attendance-tabs button.Mui-selected,
+html[data-ifv-reskin] .attendance-tabs button:disabled {
     background: var(--ifv-surface) !important;
     box-shadow: var(--ifv-shadow-sm) !important;
+    opacity: 1 !important;
 }
 
 /* buttons: comfortable, non-capitalised tap targets */
@@ -843,8 +845,11 @@ html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button * {
 }
 
 html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button.Mui-selected,
-html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button.Mui-selected * {
+html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button.Mui-selected *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button:disabled,
+html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button:disabled * {
     color: var(--ifv-accent-text) !important;
+    opacity: 1 !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
