@@ -4303,6 +4303,24 @@ html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs {
     border-color: var(--ifv-line) !important;
 }
 
+/* attendance status chips: "present" ships a hardcoded white bg with light text */
+html[data-ifv-reskin][data-ifv-theme="dark"] .frequency-position__one-item {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .frequency-position__one-item.obecnosc,
+html[data-ifv-reskin][data-ifv-theme="dark"] .frequency-position__one-item.usprawiedliwione {
+    background-color: rgba(34, 197, 94, 0.16) !important;
+    color: var(--ifv-text) !important;
+}
+
+/* dashboard info chips ("-", counters) */
+html[data-ifv-reskin][data-ifv-theme="dark"] .dashboard-info-toolbar > div,
+html[data-ifv-reskin][data-ifv-theme="dark"] .dashboard-info-toolbar > div > div {
+    background-color: var(--ifv-surface-2) !important;
+    color: var(--ifv-text) !important;
+}
+
 /* secondary / empty-state labels must stay legible */
 html[data-ifv-reskin][data-ifv-theme="dark"] .tile__empty-text,
 html[data-ifv-reskin][data-ifv-theme="dark"] .tile__empty-container,
