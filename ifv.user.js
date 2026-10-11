@@ -5068,14 +5068,25 @@ html[data-ifv-reskin] .timetable__grid {
     background: transparent !important;
 }
 
-/* Time column (left side) - clean, no background boxes */
+/* Time column (left side) - completely clean, no background boxes */
 html[data-ifv-reskin] .timetable__grid > .column:first-child,
-html[data-ifv-reskin] .timetable__grid > div[style*="padding-left"] > div:first-child {
+html[data-ifv-reskin] .timetable__grid > .column:first-child *,
+html[data-ifv-reskin] .timetable__grid > div[style*="padding-left"] > div:first-child,
+html[data-ifv-reskin] .timetable__grid > div[style*="padding-left"] > div:first-child * {
     background: transparent !important;
-    border-radius: 0 !important;
+    background-color: transparent !important;
+    background-image: none !important;
     box-shadow: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+}
+
+html[data-ifv-reskin] .timetable__grid > .column:first-child .plan-position,
+html[data-ifv-reskin] .timetable__grid > .column:first-child .cell,
+html[data-ifv-reskin] .timetable__grid > .column:first-child .column__content,
+html[data-ifv-reskin] .timetable__grid > .column:first-child .column__header {
+    background: transparent !important;
+    background-color: transparent !important;
 }
 
 html[data-ifv-reskin] .column__header {
@@ -5088,18 +5099,6 @@ html[data-ifv-reskin] .column__header {
     letter-spacing: 0.04em;
 }
 
-html[data-ifv-reskin] .timetable__grid > .column:first-child .cell.cell--single {
-    background: transparent !important;
-}
-
-html[data-ifv-reskin] .timetable__grid > .column:first-child .plan-position {
-    background: transparent !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    margin: 0 !important;
-}
-
 html[data-ifv-reskin] .position__lesson__hours {
     color: var(--ifv-text-3) !important;
     font-weight: 500 !important;
@@ -5108,6 +5107,11 @@ html[data-ifv-reskin] .position__lesson__hours {
     padding: 4px 8px !important;
     white-space: nowrap;
     text-align: right;
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
 }
 
 /* Lesson cells */
