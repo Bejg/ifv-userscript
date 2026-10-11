@@ -4157,7 +4157,7 @@ html[data-ifv-reskin] .MuiAccordionSummary-expandIconWrapper {
 }
 
 html[data-ifv-reskin] .MuiAccordionDetails-root {
-    padding: 0 16px 16px !important;
+    padding: 12px !important;
 }
 
 html[data-ifv-reskin] .MuiDivider-root {
@@ -4174,8 +4174,9 @@ html[data-ifv-reskin] .accordion__full-width__content .box {
 }
 
 html[data-ifv-reskin] .accordion__full-width__content .tile__header {
-    padding: 12px 14px !important;
-    background: var(--ifv-surface-2) !important;
+    padding: 8px 10px !important;
+    background: transparent !important;
+    border: 0 !important;
 }
 
 html[data-ifv-reskin] .accordion__full-width__content .tile__header h2 {
@@ -4192,12 +4193,27 @@ html[data-ifv-reskin] .grades__subject {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
-    padding: 10px 0 !important;
-    border-bottom: 1px solid var(--ifv-line) !important;
+    padding: 12px 14px !important;
+    border: 1px solid var(--ifv-line) !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    margin-bottom: 8px !important;
+    background: transparent !important;
+    gap: 12px;
 }
 
 html[data-ifv-reskin] .grades__subject:last-child {
-    border-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .grades__button {
+    background: var(--ifv-accent-soft) !important;
+    color: var(--ifv-accent-text) !important;
+    border-radius: var(--ifv-radius-xs) !important;
+    padding: 4px 10px !important;
+    font-weight: 700 !important;
+    font-size: 13px !important;
+    min-width: 48px;
+    text-align: center;
 }
 
 html[data-ifv-reskin] .grades__button {
