@@ -2,7 +2,7 @@
 // @name         Improvements for Vulcan
 // @name:pl      Ulepszenia dla VULCAN
 // @namespace    https://github.com/Bejg/ifv-userscript
-// @version      1.0.0
+// @version      1.1.0
 // @description  Poprawia uciążliwe elementy stron usług eduVULCAN oraz Dziennik Vulcan (port rozszerzenia banocean/ifv na userscript).
 // @author       Bejg (userscript port); banocean (oryginalne rozszerzenie)
 // @homepageURL  https://github.com/Bejg/ifv-userscript
@@ -986,24 +986,147 @@
             ?.setAttribute("autocomplete", "current-password");
     };
 
+    // The current eduVULCAN login page is a two-step wizard whose "Dalej"
+    // button is what initializes the proof-of-work captcha. To keep both
+    // inputs visible at once we have to reproduce that step ourselves,
+    // otherwise the captcha never starts and the login fails.
+    const syncEduVulcanLoginCaptcha = () => {
+        const alias = document.querySelector("#UserName")?.value?.trim() || "";
+        const label = document.querySelector("#lblPassword");
+        if (label) label.textContent = alias;
+
+        const captcha = document.querySelector("#captcha");
+        if (!alias) {
+            if (captcha) captcha.style.display = "none";
+            return;
+        }
+
+        if (
+            typeof W.showSessionInfo === "function" &&
+            typeof W.configurationDataSet === "function"
+        ) {
+            W.showSessionInfo(W.configurationDataSet());
+        } else if (captcha) {
+            captcha.style.display = "block";
+            document.dispatchEvent(
+                new CustomEvent("vulcan:powcaptcha:reinit"),
+            );
+        }
+    };
+
+    const fixEduVulcanLoginPage = () => {
+        const userName = document.querySelector("#UserName");
+        const password = document.querySelector("#Password");
+        userName?.setAttribute("autocomplete", "username");
+        password?.setAttribute("autocomplete", "current-password");
+        userName?.focus();
+
+        const linksEl = document.querySelector(
+            "#wizard1 > div > .flex-row:has(a)",
+        );
+        if (linksEl) document.querySelector("#wizard2")?.appendChild(linksEl);
+
+        if (userName && !userName.dataset.ifvCaptchaSync) {
+            userName.dataset.ifvCaptchaSync = "1";
+            let timer;
+            const schedule = () => {
+                clearTimeout(timer);
+                timer = setTimeout(syncEduVulcanLoginCaptcha, 700);
+            };
+            userName.addEventListener("input", schedule);
+            userName.addEventListener("change", schedule);
+            password?.addEventListener("focus", syncEduVulcanLoginCaptcha);
+        }
+
+        syncEduVulcanLoginCaptcha();
+    };
+
     const fixLoginPage = () => {
+        if (document.querySelector("#UserName")) {
+            fixEduVulcanLoginPage();
+            return;
+        }
+
         setAutocomplete();
         document.querySelector("#btNext")?.remove();
 
-        if (W.location.hostname === "eduvulcan.pl") {
-            const linksEl = document.querySelector(
-                "#wizard1 > div > .flex-row:has(a)",
-            );
-            document.querySelector("#wizard2")?.appendChild(linksEl);
-        }
-
         const wizard2 = document.querySelector("#wizard2");
+        if (!wizard2) return;
         wizard2.parentElement.insertBefore(
             document.querySelector("#wizard1"),
             wizard2,
         );
         const centerBox = document.querySelector(".center-box");
-        centerBox.innerHTML = centerBox.innerHTML;
+        if (centerBox) centerBox.innerHTML = centerBox.innerHTML;
+    };
+
+    const JOURNAL_REDIRECT_FLAG = "ifv_journal_after_login";
+    const JOURNAL_REDIRECT_MAX_AGE = 5 * 60 * 1000;
+
+    const markJournalRedirectPending = () => {
+        try {
+            sessionStorage.setItem(
+                JOURNAL_REDIRECT_FLAG,
+                String(Date.now()),
+            );
+        } catch (e) {}
+    };
+
+    const getJournalRedirectPending = () => {
+        try {
+            const value = Number(sessionStorage.getItem(JOURNAL_REDIRECT_FLAG));
+            if (!value) return false;
+            if (Date.now() - value > JOURNAL_REDIRECT_MAX_AGE) {
+                sessionStorage.removeItem(JOURNAL_REDIRECT_FLAG);
+                return false;
+            }
+            return true;
+        } catch (e) {
+            return false;
+        }
+    };
+
+    const clearJournalRedirectPending = () => {
+        try {
+            sessionStorage.removeItem(JOURNAL_REDIRECT_FLAG);
+        } catch (e) {}
+    };
+
+    const isEduVulcanLoggedIn = () =>
+        !!document.querySelector('a[href*="koniecPracy"]');
+
+    const redirectToJournalAfterLogin = () => {
+        const path = W.location.pathname;
+
+        if (path.startsWith("/logowanie")) {
+            const mark = markJournalRedirectPending;
+            document.querySelector("form")?.addEventListener("submit", mark, true);
+            document.querySelector("#btLogOn")?.addEventListener("click", mark);
+            document
+                .querySelector("#btAssertion")
+                ?.addEventListener("click", mark);
+            return;
+        }
+
+        if (!getJournalRedirectPending()) return;
+
+        if (path === "/") {
+            if (isEduVulcanLoggedIn()) W.location.assign("/dostep-do-dziennika/");
+            return;
+        }
+
+        if (path.replace(/\/+$/, "") === "/dostep-do-dziennika") {
+            const journalLinks = [
+                ...document.querySelectorAll('a[href*="/dziennik?"]'),
+            ];
+            clearJournalRedirectPending();
+            if (journalLinks.length === 1) {
+                W.location.assign(journalLinks[0].href);
+            }
+            return;
+        }
+
+        if (path.startsWith("/dziennik")) clearJournalRedirectPending();
     };
 
     const toggleUserModal = () => {
@@ -2400,7 +2523,7 @@ main .app__content:has(.accordion__full-width__one-item #panel-content-egzaminy 
 }
 `,
         "hideWCAG.css": `
-.wcag-mobile, .wcag-tools, .wcag-controls {
+.wcag-mobile, .wcag-tools, .wcag-controls, #wcag-tools {
     display: none !important;
 }
 `,
@@ -3863,8 +3986,24 @@ body {
                     doesRunHere: () =>
                         W.location.hostname === "eduvulcan.pl" &&
                         W.location.pathname === "/" &&
-                        !!document.querySelector("#panelLoginButton"),
+                        !isEduVulcanLoggedIn() &&
+                        !!document.querySelector(
+                            'a[href*="/logowanie"], a.vdpo-login-link',
+                        ),
                     run: redirectToEVLogin,
+                },
+            ],
+        },
+        {
+            name: "Auto redirect to dziennik after login",
+            description:
+                "Po zalogowaniu w eduVULCAN automatycznie przechodzi do dziennika.",
+            modules: [
+                {
+                    onlyOnReloads: true,
+                    isLoaded: () => true,
+                    doesRunHere: () => W.location.hostname === "eduvulcan.pl",
+                    run: redirectToJournalAfterLogin,
                 },
             ],
         },
@@ -3980,7 +4119,8 @@ body {
             modules: [
                 {
                     onlyOnReloads: true,
-                    isLoaded: () => document.querySelector("#Haslo"),
+                    isLoaded: () =>
+                        !!document.querySelector("#Password, #Haslo"),
                     doesRunHere: () =>
                         ["eduvulcan.pl", "dziennik-logowanie.vulcan.net.pl"].includes(
                             W.location.hostname,

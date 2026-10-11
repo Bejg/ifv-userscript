@@ -44,7 +44,7 @@ The panel lets you toggle every improvement on/off, search and filter them
 - Clean eduVULCAN home
 - Other minor improvements: hiding WCAG controls, aligning the detailed grades
   button, redirecting to the board, auto-redirecting to the eduVULCAN login page,
-  counting averages, and more.
+  auto-redirecting to the journal right after login, counting averages, and more.
 
 See the [original extension repository](https://github.com/banocean/ifv) for
 screenshots and the full feature list.
