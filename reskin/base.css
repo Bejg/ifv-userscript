@@ -732,6 +732,24 @@ html[data-ifv-reskin][data-ifv-theme="dark"] .tile__teacher__type {
     color: var(--ifv-text-2) !important;
 }
 
+/* timetable (plan zajec): white lesson cards with near-black ink */
+html[data-ifv-reskin][data-ifv-theme="dark"] .timetable .lesson,
+html[data-ifv-reskin][data-ifv-theme="dark"] .timetable .lesson *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .lesson.normal,
+html[data-ifv-reskin][data-ifv-theme="dark"] .lesson.normal * {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .timetable .lesson article {
+    background-color: var(--ifv-surface-2) !important;
+    background-image: none !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .timetable .lesson.normal > div {
+    background-color: var(--ifv-surface-3) !important;
+    color: var(--ifv-text-2) !important;
+}
+
 /* segmented tabs (frekwencja / plan) */
 html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button,
 html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button * {
