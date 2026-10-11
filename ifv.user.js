@@ -5334,6 +5334,11 @@ html[data-ifv-reskin][data-ifv-theme] .grades__subject {
 html[data-ifv-reskin][data-ifv-theme] .grades__subject:last-child {
     border-bottom: 0 !important;
 }
+
+/* Stray hardcoded ink on wrappers (e.g. Zebrania notes). */
+html[data-ifv-reskin][data-ifv-theme] .note {
+    color: var(--ifv-text) !important;
+}
 `,
 
         /* IFV-RESKIN-CSS:END */
