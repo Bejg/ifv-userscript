@@ -309,7 +309,8 @@ html[data-ifv-reskin] .tile__header {
     gap: 10px;
     align-items: center;
     border-bottom: 1px solid var(--ifv-line) !important;
-    background: linear-gradient(180deg, var(--ifv-surface) 0%, var(--ifv-surface-2) 100%) !important;
+    background: transparent !important;
+    background-image: none !important;
 }
 
 html[data-ifv-reskin] .tile__header h2 {
@@ -362,13 +363,14 @@ html[data-ifv-reskin] .tile-container {
     gap: 10px !important;
 }
 
-/* Content containers */
+/* Content containers — flattened: the page itself is the surface, content
+   sits directly on it instead of inside another bordered box. */
 html[data-ifv-reskin] .content-container {
-    background: var(--ifv-surface) !important;
-    border-radius: var(--ifv-radius) !important;
-    box-shadow: var(--ifv-shadow) !important;
-    margin: 8px 12px !important;
-    overflow: hidden;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
 }
 
 html[data-ifv-reskin] .app__content {
@@ -1546,4 +1548,43 @@ html[data-ifv-reskin] *:focus-visible {
         transition-duration: 0.001ms !important;
         animation-duration: 0.001ms !important;
     }
+}
+
+/* ============================================================ flat pass ===
+   Remove nested "box" chrome so content shows directly on the card surface.
+   Placed last (and scoped with [data-ifv-theme]) so it also wins in dark. */
+html[data-ifv-reskin][data-ifv-theme] .content-container,
+html[data-ifv-reskin][data-ifv-theme] .tile__header,
+html[data-ifv-reskin][data-ifv-theme] .tile__grades,
+html[data-ifv-reskin][data-ifv-theme] .tile__empty-bg,
+html[data-ifv-reskin][data-ifv-theme] .tile__empty-container,
+html[data-ifv-reskin][data-ifv-theme] .tile-with-boxes .tile__content,
+html[data-ifv-reskin][data-ifv-theme] .grades__box {
+    background-color: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+/* Accordion (Oceny) content: drop the inner container padding so grades sit
+   flush on the section card. */
+html[data-ifv-reskin][data-ifv-theme]
+    .MuiAccordionDetails-root
+    .content-container {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Grade rows: flat with divider lines only. */
+html[data-ifv-reskin][data-ifv-theme] .grades__subject {
+    border: 0 !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme] .grades__subject:last-child {
+    border-bottom: 0 !important;
 }
