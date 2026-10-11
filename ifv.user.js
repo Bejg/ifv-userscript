@@ -3736,6 +3736,467 @@ body {
     align-items: center;
 }
 `,
+        /* IFV-RESKIN-CSS:START */
+        "reskin/base.css": `
+/* ==========================================================================
+   IFV Reskin — a light mobile-first "native app" theme layer.
+   This file is embedded verbatim into ifv.user.js by tools/embed-reskin.mjs
+   (between the IFV-RESKIN-CSS markers). Edit here, not in the userscript.
+   ========================================================================== */
+
+html[data-ifv-reskin] {
+    /* accent (overridden inline from settings) */
+    --ifv-accent: #4f46e5;
+    --ifv-accent-soft: rgba(79, 70, 229, 0.12);
+    --ifv-accent-contrast: #ffffff;
+
+    /* surfaces & text */
+    --ifv-bg: #eef0f6;
+    --ifv-bg-2: #e7eaf2;
+    --ifv-surface: #ffffff;
+    --ifv-surface-2: #f5f6fa;
+    --ifv-surface-3: #eceef5;
+    --ifv-text: #1b1e2a;
+    --ifv-text-2: #666d7e;
+    --ifv-text-3: #98a0b3;
+    --ifv-line: #e6e8f0;
+    --ifv-line-2: #d8dce7;
+
+    /* elevation */
+    --ifv-shadow: 0 1px 2px rgba(18, 22, 40, 0.05), 0 12px 30px -16px rgba(18, 22, 40, 0.28);
+    --ifv-shadow-sm: 0 1px 2px rgba(18, 22, 40, 0.07);
+
+    /* shape & motion */
+    --ifv-radius: 18px;
+    --ifv-radius-sm: 12px;
+    --ifv-radius-xs: 10px;
+    --ifv-nav-height: 62px;
+    --ifv-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --ifv-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+
+    /* bridge to the other redesign patches */
+    --bottom-navbar-height: var(--ifv-nav-height);
+    --background-primary: var(--ifv-surface);
+    --background-navigation: var(--ifv-surface);
+    --kolor-wcag: var(--ifv-accent-soft);
+
+    color-scheme: light;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] {
+    --ifv-accent: #9a9bff;
+    --ifv-accent-soft: rgba(154, 155, 255, 0.2);
+    --ifv-accent-contrast: #0d0f14;
+
+    --ifv-bg: #0c0e13;
+    --ifv-bg-2: #0f1218;
+    --ifv-surface: #161922;
+    --ifv-surface-2: #1b1f2a;
+    --ifv-surface-3: #232838;
+    --ifv-text: #e9ebf3;
+    --ifv-text-2: #a5abbb;
+    --ifv-text-3: #737a8d;
+    --ifv-line: #262b38;
+    --ifv-line-2: #333a4b;
+
+    --ifv-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 16px 34px -18px rgba(0, 0, 0, 0.85);
+    --ifv-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+
+    color-scheme: dark;
+}
+
+/* ---------------------------------------------------------------- base --- */
+html[data-ifv-reskin] body {
+    background: var(--ifv-bg) !important;
+    color: var(--ifv-text) !important;
+    font-family: var(--ifv-font) !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html[data-ifv-reskin] .app__main,
+html[data-ifv-reskin] #root,
+html[data-ifv-reskin] .app,
+html[data-ifv-reskin] .mobile__frame {
+    background: transparent !important;
+    color: var(--ifv-text);
+}
+
+html[data-ifv-reskin] body.blue {
+    background: var(--ifv-bg) !important;
+}
+
+html[data-ifv-reskin] ::selection {
+    background: var(--ifv-accent-soft);
+}
+
+html[data-ifv-reskin] * {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ------------------------------------------------------------- app bar --- */
+html[data-ifv-reskin] header.app__header {
+    background: color-mix(in srgb, var(--ifv-surface) 86%, transparent) !important;
+    backdrop-filter: saturate(180%) blur(18px);
+    -webkit-backdrop-filter: saturate(180%) blur(18px);
+    border-bottom: 1px solid var(--ifv-line) !important;
+    box-shadow: none !important;
+    height: auto !important;
+    min-height: 54px;
+    padding-top: env(safe-area-inset-top);
+}
+
+html[data-ifv-reskin] .header_logo_tools-container {
+    min-height: 54px;
+    align-items: center;
+}
+
+html[data-ifv-reskin] .header__hamburger__icon button,
+html[data-ifv-reskin] .header__tools button {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .header__hamburger__icon svg,
+html[data-ifv-reskin] .header__tools svg {
+    fill: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .header__logo-product > span {
+    color: var(--ifv-text) !important;
+    font-weight: 700 !important;
+    font-size: 18px !important;
+    letter-spacing: -0.01em;
+}
+
+html[data-ifv-reskin] .header__logo-product > a > svg,
+html[data-ifv-reskin] .header__logo-product > img {
+    display: none !important;
+}
+
+/* theme toggle button injected by the reskin */
+.ifv-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin: 0 6px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ifv-text-2);
+    cursor: pointer;
+    transition: background-color 0.16s var(--ifv-ease), color 0.16s var(--ifv-ease);
+}
+
+.ifv-theme-toggle:hover {
+    background: var(--ifv-surface-3);
+    color: var(--ifv-text);
+}
+
+.ifv-theme-toggle:active {
+    transform: scale(0.92);
+}
+
+.ifv-theme-toggle svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+/* -------------------------------------------------------- bottom nav --- */
+html[data-ifv-reskin] .bottom-navigation-bar {
+    background: color-mix(in srgb, var(--ifv-surface) 90%, transparent) !important;
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-top: 1px solid var(--ifv-line) !important;
+    box-shadow: 0 -8px 30px -22px rgba(18, 22, 40, 0.6);
+    height: calc(var(--ifv-nav-height) + env(safe-area-inset-bottom)) !important;
+    padding-bottom: env(safe-area-inset-bottom);
+    gap: 2px;
+    align-items: stretch !important;
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div {
+    color: var(--ifv-text-3);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    padding: 7px 0 5px;
+    border-radius: 14px;
+    transition: color 0.16s var(--ifv-ease);
+    justify-content: center;
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div > div:has(img),
+html[data-ifv-reskin] .bottom-navigation-bar > div > .ifv-nav-ico {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    min-width: 46px;
+    padding: 0 14px;
+    margin-bottom: 2px;
+    border-radius: 15px;
+    background: transparent;
+    transition: background-color 0.18s var(--ifv-ease), transform 0.18s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .ifv-nav-ico svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+    display: block;
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div:active > .ifv-nav-ico,
+html[data-ifv-reskin] .bottom-navigation-bar > div:active > div:has(img) {
+    transform: scale(0.9);
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div.ifv-nav-active {
+    color: var(--ifv-accent);
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div.ifv-nav-active > .ifv-nav-ico,
+html[data-ifv-reskin] .bottom-navigation-bar > div.ifv-nav-active > div:has(img) {
+    background: var(--ifv-accent-soft);
+}
+
+/* keep the legacy highlight working too */
+html[data-ifv-reskin] .bottom-navigation-bar > div > div:has(img.highlight) {
+    background: var(--ifv-accent-soft) !important;
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div > div > img {
+    filter: none !important;
+    opacity: 0.7;
+    height: 22px !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="light"] .bottom-navigation-bar > div > div > img:not(.highlight) {
+    filter: invert(0.55) !important;
+    opacity: 0.85;
+}
+
+html[data-ifv-reskin] .bottom-navigation-bar > div > div > img.highlight {
+    opacity: 1;
+}
+
+/* ------------------------------------------------------- cards/tiles --- */
+html[data-ifv-reskin] .tile {
+    background: var(--ifv-surface) !important;
+    border: 0 !important;
+    border-radius: var(--ifv-radius) !important;
+    box-shadow: var(--ifv-shadow) !important;
+    color: var(--ifv-text) !important;
+    overflow: hidden;
+    transition: box-shadow 0.2s var(--ifv-ease), transform 0.2s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .tile__header {
+    padding: 14px 16px !important;
+    gap: 10px;
+    align-items: center;
+}
+
+html[data-ifv-reskin] .tile__header h2 {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: var(--ifv-text) !important;
+    letter-spacing: -0.01em;
+}
+
+html[data-ifv-reskin] .tile__link,
+html[data-ifv-reskin] .tile a.simple_link,
+html[data-ifv-reskin] a.simple_link {
+    color: var(--ifv-accent) !important;
+    font-weight: 600 !important;
+}
+
+html[data-ifv-reskin] .tile__content {
+    padding: 14px 16px !important;
+    border-top: 1px solid var(--ifv-line) !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .tile__content__title {
+    color: var(--ifv-text-2) !important;
+    font-weight: 600;
+}
+
+html[data-ifv-reskin] .tile-container {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    padding: 1px 12px 12px !important;
+    gap: 12px !important;
+}
+
+html[data-ifv-reskin] .content-container {
+    background: var(--ifv-surface) !important;
+    border-radius: var(--ifv-radius) !important;
+    box-shadow: var(--ifv-shadow) !important;
+    margin: 12px !important;
+    overflow: hidden;
+}
+
+html[data-ifv-reskin] .app__content {
+    padding-top: 6px !important;
+}
+
+/* ---------------------------------------------------- accordions/grades --- */
+html[data-ifv-reskin] .MuiAccordion-root {
+    background: var(--ifv-surface) !important;
+    color: var(--ifv-text) !important;
+    border: 1px solid var(--ifv-line) !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+    margin: 0 0 10px !important;
+    overflow: hidden;
+}
+
+html[data-ifv-reskin] .MuiAccordion-root.Mui-expanded {
+    box-shadow: var(--ifv-shadow) !important;
+}
+
+html[data-ifv-reskin] .MuiAccordion-root::before,
+html[data-ifv-reskin] .MuiAccordion-root.Mui-expanded::before {
+    display: none !important;
+}
+
+html[data-ifv-reskin] .MuiAccordionSummary-root {
+    min-height: 54px !important;
+    padding: 0 14px !important;
+}
+
+html[data-ifv-reskin] .MuiAccordionSummary-content,
+html[data-ifv-reskin] .MuiAccordionSummary-content.Mui-expanded {
+    margin: 12px 0 !important;
+    font-weight: 600;
+}
+
+html[data-ifv-reskin] .MuiAccordionDetails-root {
+    padding: 0 14px 14px !important;
+}
+
+html[data-ifv-reskin] .MuiDivider-root {
+    border-color: var(--ifv-line) !important;
+}
+
+/* ------------------------------------------------------------- buttons --- */
+html[data-ifv-reskin] .MuiButtonBase-root,
+html[data-ifv-reskin] button {
+    font-family: var(--ifv-font);
+}
+
+html[data-ifv-reskin] .MuiButton-containedPrimary,
+html[data-ifv-reskin] .MuiButton-contained.MuiButton-containedPrimary {
+    background-color: var(--ifv-accent) !important;
+    color: var(--ifv-accent-contrast) !important;
+    box-shadow: none !important;
+    border-radius: var(--ifv-radius-sm);
+}
+
+html[data-ifv-reskin] .MuiTabs-indicator {
+    background-color: var(--ifv-accent) !important;
+    border-radius: 3px;
+}
+
+html[data-ifv-reskin] .MuiTab-root.Mui-selected {
+    color: var(--ifv-accent) !important;
+}
+
+/* --------------------------------------------------------------- drawer --- */
+html[data-ifv-reskin] aside,
+html[data-ifv-reskin] .MuiDrawer-paper {
+    background: var(--ifv-surface) !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] aside nav a,
+html[data-ifv-reskin] aside nav li,
+html[data-ifv-reskin] aside a {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] aside nav ul li a {
+    border-radius: var(--ifv-radius-sm);
+}
+
+html[data-ifv-reskin] .MuiListItem-root:hover {
+    background: var(--ifv-surface-2) !important;
+}
+
+/* the "Więcej" / list modals */
+html[data-ifv-reskin] .list-modal,
+html[data-ifv-reskin] .more-popup {
+    background: var(--ifv-bg) !important;
+    color: var(--ifv-text) !important;
+    font-family: var(--ifv-font) !important;
+}
+
+html[data-ifv-reskin] .list-modal > div:first-of-type {
+    background: color-mix(in srgb, var(--ifv-surface) 92%, transparent) !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .list-modal > div:first-of-type > h1 {
+    color: var(--ifv-text) !important;
+    font-weight: 700;
+}
+
+html[data-ifv-reskin] .list-modal > div:first-of-type > img {
+    filter: none !important;
+    opacity: 0.75;
+}
+
+html[data-ifv-reskin] .list-modal > div:last-of-type > div {
+    color: var(--ifv-text) !important;
+    fill: var(--ifv-text) !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+}
+
+html[data-ifv-reskin] .list-modal > div:last-of-type > div:active {
+    background: var(--ifv-surface-2);
+}
+
+html[data-ifv-reskin] .list-modal > div:last-of-type > div > .icon {
+    filter: none !important;
+    color: var(--ifv-text-2);
+}
+
+/* --------------------------------------------------------- misc polish --- */
+html[data-ifv-reskin] .spinner {
+    border-color: var(--ifv-accent) transparent transparent transparent;
+}
+
+html[data-ifv-reskin] ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+html[data-ifv-reskin] ::-webkit-scrollbar-thumb {
+    background: var(--ifv-line-2);
+    border-radius: 8px;
+}
+
+html[data-ifv-reskin] a {
+    color: var(--ifv-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html[data-ifv-reskin] * {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+    }
+}
+`,
+
+        /* IFV-RESKIN-CSS:END */
     };
 
     const CSS_EXTRA = `
@@ -3797,6 +4258,150 @@ body {
     }
 }
 `;
+
+    const RESKIN_PATCH_NAME = "Nowy wygląd (reskin)";
+    const RESKIN_ICONS = {
+        tablica: "M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z",
+        oceny: "M3 5h18v2H3zm0 4h12v2H3zm0 4h18v2H3zm0 4h12v2H3z",
+        frekwencja: "M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z",
+        planZajec:
+            "M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2m0 16H5V10h14zM5 8V6h14v2z",
+        more: "M6 10a2 2 0 1 1 0 4 2 2 0 0 1 0-4m6 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4m6 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4",
+    };
+    const RESKIN_THEME_ICONS = {
+        light: "M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10m0-5h0v3h0zm0 14v3h0zM4.2 4.2l2.1 2.1 1.4-1.4-2.1-2.1zM18.3 4.2l-2.1 2.1 1.4 1.4 2.1-2.1zM2 11h3v2H2zm17 0h3v2h-3zM4.2 19.8l2.1-2.1 1.4 1.4-2.1 2.1zM18.3 19.8l-2.1-2.1 1.4-1.4 2.1 2.1z",
+        dark: "M12 3a9 9 0 1 0 9 9c0-.5-.04-1-.12-1.48A5.5 5.5 0 0 1 12 4.5c0-.5.06-.99.19-1.46A9 9 0 0 0 12 3",
+        auto: "M12 4a8 8 0 1 0 0 16zM12 6v12a6 6 0 0 0 0-12",
+    };
+
+    const hexToRgb = (hex) => {
+        const clean = String(hex).replace("#", "").trim();
+        const full =
+            clean.length === 3
+                ? clean
+                      .split("")
+                      .map((c) => c + c)
+                      .join("")
+                : clean;
+        const n = parseInt(full || "4f46e5", 16);
+        return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+    };
+
+    const resolveReskinTheme = () => {
+        const choice = getSetting(RESKIN_PATCH_NAME, "theme") || "auto";
+        if (choice === "light" || choice === "dark") return choice;
+        return W.matchMedia &&
+            W.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+    };
+
+    const applyReskinTheme = () => {
+        const html = document.documentElement;
+        html.setAttribute("data-ifv-reskin", "");
+        const resolved = resolveReskinTheme();
+        html.setAttribute("data-ifv-theme", resolved);
+        const accent = getSetting(RESKIN_PATCH_NAME, "accent") || "#4f46e5";
+        const { r, g, b } = hexToRgb(accent);
+        html.style.setProperty("--ifv-accent", accent);
+        html.style.setProperty(
+            "--ifv-accent-soft",
+            `rgba(${r}, ${g}, ${b}, ${resolved === "dark" ? 0.24 : 0.12})`,
+        );
+        const toggle = document.querySelector(".ifv-theme-toggle");
+        if (toggle) {
+            const choice = getSetting(RESKIN_PATCH_NAME, "theme") || "auto";
+            const path =
+                RESKIN_THEME_ICONS[choice] || RESKIN_THEME_ICONS.auto;
+            toggle.innerHTML = `<svg viewBox="0 0 24 24"><path d="${path}"/></svg>`;
+        }
+    };
+
+    const cycleReskinTheme = () => {
+        const order = ["auto", "light", "dark"];
+        const current = getSetting(RESKIN_PATCH_NAME, "theme") || "auto";
+        const next = order[(order.indexOf(current) + 1) % order.length];
+        saveSetting(RESKIN_PATCH_NAME, "theme", next);
+        applyReskinTheme();
+    };
+
+    const addReskinThemeToggle = () => {
+        if (document.querySelector(".ifv-theme-toggle")) return;
+        const target =
+            document.querySelector(".header__tools") ||
+            document.querySelector(".header_logo_tools-container");
+        if (!target) return;
+        const button = document.createElement("button");
+        button.className = "ifv-theme-toggle";
+        button.type = "button";
+        button.title = "Motyw: jasny / ciemny / automatyczny";
+        button.style.marginLeft = "auto";
+        button.addEventListener("click", cycleReskinTheme);
+        target.appendChild(button);
+        applyReskinTheme();
+    };
+
+    const decorateReskinNav = () => {
+        const nav = document.querySelector(".bottom-navigation-bar");
+        if (!nav || nav.getAttribute("data-ifv-nav") === "1") return;
+        const order = ["tablica", "oceny", "frekwencja", "planZajec", "more"];
+        Array.from(nav.children).forEach((item, index) => {
+            const holder =
+                item.querySelector("div:has(img)") ||
+                item.firstElementChild;
+            if (!holder) return;
+            const key = order[index];
+            holder.classList.add("ifv-nav-ico");
+            if (key && RESKIN_ICONS[key]) {
+                holder.innerHTML = `<svg viewBox="0 0 24 24"><path d="${RESKIN_ICONS[key]}"/></svg>`;
+            }
+        });
+        nav.setAttribute("data-ifv-nav", "1");
+    };
+
+    const refreshReskinNavActive = () => {
+        const nav = document.querySelector(".bottom-navigation-bar");
+        if (!nav) return;
+        const order = ["tablica", "oceny", "frekwencja", "planZajec"];
+        const path = W.location.pathname;
+        let activeIndex = -1;
+        order.forEach((key, i) => {
+            if (path.endsWith(key)) activeIndex = i;
+        });
+        const moreOpen = document
+            .querySelector(".more-popup")
+            ?.style?.display === "block";
+        Array.from(nav.children).forEach((item, index) => {
+            const isActive =
+                index === 4 ? moreOpen : index === activeIndex;
+            item.classList.toggle("ifv-nav-active", isActive);
+        });
+    };
+
+    const mountReskin = () => {
+        applyReskinTheme();
+        addReskinThemeToggle();
+        waitForRender(() =>
+            document.querySelector(".bottom-navigation-bar"),
+        ).then(() => {
+            decorateReskinNav();
+            refreshReskinNavActive();
+        });
+    };
+
+    const setupReskin = () => {
+        applyReskinTheme();
+        if (!W.matchMedia) return;
+        const mq = W.matchMedia("(prefers-color-scheme: dark)");
+        const onChange = () => {
+            if ((getSetting(RESKIN_PATCH_NAME, "theme") || "auto") === "auto")
+                applyReskinTheme();
+        };
+        if (mq.addEventListener) mq.addEventListener("change", onChange);
+        else if (mq.addListener) mq.addListener(onChange);
+
+        W.addEventListener("popstate", refreshReskinNavActive);
+    };
 
     const PATCH_LIST = [
         {
@@ -4312,6 +4917,47 @@ body {
                         ].includes(W.location.hostname) &&
                         window.innerWidth < 1024,
                     run: addMobileSettings,
+                },
+            ],
+        },
+        {
+            name: RESKIN_PATCH_NAME,
+            description:
+                "Odświeżony, aplikacyjny wygląd (mobile-first): spójne karty, nowy pasek nawigacji, tryb ciemny i własny kolor akcentu.",
+            allowedHostsCss: [
+                "uczen.eduvulcan.pl",
+                "dziennik-uczen.vulcan.net.pl",
+            ],
+            css: ["reskin/base.css"],
+            settings: [
+                {
+                    id: "theme",
+                    name: "Motyw",
+                    description: "Jasny, ciemny lub automatyczny (wg systemu).",
+                    type: "select",
+                    default: "auto",
+                    options: [
+                        { value: "auto", name: "Automatyczny" },
+                        { value: "light", name: "Jasny" },
+                        { value: "dark", name: "Ciemny" },
+                    ],
+                },
+                {
+                    id: "accent",
+                    name: "Kolor akcentu",
+                    description: "Główny kolor aplikacji.",
+                    type: "color",
+                    default: "#4f46e5",
+                },
+            ],
+            setup: setupReskin,
+            modules: [
+                {
+                    onlyOnReloads: false,
+                    isLoaded: () => true,
+                    doesRunHere: () =>
+                        /^(dziennik-)?(uczen).*/.test(W.location.hostname),
+                    run: mountReskin,
                 },
             ],
         },
