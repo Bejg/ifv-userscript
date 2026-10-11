@@ -5154,6 +5154,34 @@ html[data-ifv-reskin]
     padding: 14px 16px 16px !important;
 }
 
+/* No expand/collapse animation — instant swap between sections. */
+html[data-ifv-reskin] .MuiAccordion-root[data-ifv-oceny] .MuiCollapse-root,
+html[data-ifv-reskin] .MuiAccordion-root[data-ifv-oceny] .MuiCollapse-wrapper,
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-oceny]
+    .MuiCollapse-wrapperInner,
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-oceny]
+    .MuiAccordionDetails-root {
+    transition: none !important;
+    animation: none !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-oceny]:not(.Mui-expanded)
+    .MuiCollapse-root {
+    display: none !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-oceny].Mui-expanded
+    .MuiCollapse-root {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    visibility: visible !important;
+}
+
 html[data-ifv-reskin] .ifv-oceny-pager {
     display: flex;
     align-items: center;
