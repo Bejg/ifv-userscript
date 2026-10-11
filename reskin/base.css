@@ -371,6 +371,7 @@ html[data-ifv-reskin] .content-container {
     border-radius: 0 !important;
     box-shadow: none !important;
     margin: 0 !important;
+    padding: 8px 12px 16px !important;
 }
 
 html[data-ifv-reskin] .app__content {
@@ -1559,12 +1560,17 @@ html[data-ifv-reskin][data-ifv-theme] .tile__grades,
 html[data-ifv-reskin][data-ifv-theme] .tile__empty-bg,
 html[data-ifv-reskin][data-ifv-theme] .tile__empty-container,
 html[data-ifv-reskin][data-ifv-theme] .tile-with-boxes .tile__content,
-html[data-ifv-reskin][data-ifv-theme] .grades__box {
+html[data-ifv-reskin][data-ifv-theme] .grades__box,
+html[data-ifv-reskin][data-ifv-theme] .app-footer__row {
     background-color: transparent !important;
     background-image: none !important;
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme] .app-footer__row {
+    border-bottom: 1px solid var(--ifv-line) !important;
 }
 
 /* Accordion (Oceny) content: drop the inner container padding so grades sit
