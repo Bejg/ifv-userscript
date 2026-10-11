@@ -4432,6 +4432,46 @@ html[data-ifv-reskin][data-ifv-theme="dark"] .MuiAccordionSummary-expandIconWrap
     color: var(--ifv-text-2) !important;
 }
 
+/* the app is light-only and hardcodes a dark ink (#3d4455) in many components;
+   recolour it so text stays legible on the dark surfaces */
+html[data-ifv-reskin][data-ifv-theme="dark"] #root {
+    color: var(--ifv-text);
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] header.app__header,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__header,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__header *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .content__header,
+html[data-ifv-reskin][data-ifv-theme="dark"] .content__header *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .grades__subject *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .grades__button *,
+html[data-ifv-reskin][data-ifv-theme="dark"] .frekwencja-symbol__nazwa,
+html[data-ifv-reskin][data-ifv-theme="dark"] .first-header__date-selector,
+html[data-ifv-reskin][data-ifv-theme="dark"] .month-selector,
+html[data-ifv-reskin][data-ifv-theme="dark"] .selectedtab,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiTab-wrapper {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .content__header__info-subheader,
+html[data-ifv-reskin][data-ifv-theme="dark"] .position__lesson__hours,
+html[data-ifv-reskin][data-ifv-theme="dark"] .app-footer,
+html[data-ifv-reskin][data-ifv-theme="dark"] .app-footer a,
+html[data-ifv-reskin][data-ifv-theme="dark"] .app-footer span {
+    color: var(--ifv-text-2) !important;
+}
+
+/* segmented tabs (frekwencja / plan) */
+html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button,
+html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button * {
+    color: var(--ifv-text-2) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button.Mui-selected,
+html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button.Mui-selected * {
+    color: var(--ifv-accent-text) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     html[data-ifv-reskin] * {
         transition-duration: 0.001ms !important;
