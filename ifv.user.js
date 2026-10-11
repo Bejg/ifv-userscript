@@ -3746,8 +3746,9 @@ body {
 
 html[data-ifv-reskin] {
     /* accent (overridden inline from settings) */
-    --ifv-accent: #4f46e5;
-    --ifv-accent-soft: rgba(79, 70, 229, 0.12);
+    --ifv-accent: #6366f1;
+    --ifv-accent-soft: rgba(99, 102, 241, 0.12);
+    --ifv-accent-text: #4f46e5;
     --ifv-accent-contrast: #ffffff;
 
     /* surfaces & text */
@@ -3785,18 +3786,19 @@ html[data-ifv-reskin] {
 }
 
 html[data-ifv-reskin][data-ifv-theme="dark"] {
-    --ifv-accent: #9a9bff;
-    --ifv-accent-soft: rgba(154, 155, 255, 0.2);
+    --ifv-accent: #8b92ff;
+    --ifv-accent-soft: rgba(139, 146, 255, 0.22);
+    --ifv-accent-text: #c4b5fd;
     --ifv-accent-contrast: #0d0f14;
 
     --ifv-bg: #0c0e13;
     --ifv-bg-2: #0f1218;
-    --ifv-surface: #161922;
-    --ifv-surface-2: #1b1f2a;
-    --ifv-surface-3: #232838;
-    --ifv-text: #e9ebf3;
-    --ifv-text-2: #a5abbb;
-    --ifv-text-3: #737a8d;
+    --ifv-surface: #1b1f2a;
+    --ifv-surface-2: #232733;
+    --ifv-surface-3: #2a2f3d;
+    --ifv-text: #f0f2f5;
+    --ifv-text-2: #a0aec0;
+    --ifv-text-3: #94a3b8;
     --ifv-line: #262b38;
     --ifv-line-2: #333a4b;
 
@@ -4228,6 +4230,86 @@ html[data-ifv-reskin] a {
     color: var(--ifv-accent);
 }
 
+/* ----------------------------------------- readability / palette fixes --- */
+/* one consistent accent: profile avatar + notification badges */
+html[data-ifv-reskin] .user-avatar {
+    background: var(--ifv-accent) !important;
+    color: var(--ifv-accent-contrast) !important;
+}
+
+html[data-ifv-reskin] .user-avatar span,
+html[data-ifv-reskin] .user-avatar * {
+    color: var(--ifv-accent-contrast) !important;
+}
+
+html[data-ifv-reskin] .MuiBadge-badge {
+    background: var(--ifv-accent) !important;
+    color: var(--ifv-accent-contrast) !important;
+    font-weight: 700;
+}
+
+/* tags / ribbons such as "kartkówka" — never plain white */
+html[data-ifv-reskin] .tile__list__rectangle__ribbon,
+html[data-ifv-reskin] .tag,
+html[data-ifv-reskin] .MuiChip-root,
+html[data-ifv-reskin] .tile__grade-tag {
+    background: var(--ifv-accent-soft) !important;
+    color: var(--ifv-accent-text) !important;
+    border: 0 !important;
+    font-weight: 700;
+}
+
+/* dark-mode: replace hardcoded white/light surfaces with theme surfaces */
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__content,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__empty-container {
+    background-color: transparent !important;
+    background-image: none !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__empty-bg,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__grades {
+    background-color: var(--ifv-surface-2) !important;
+    background-image: none !important;
+    color: var(--ifv-text-2) !important;
+}
+
+/* soften the diagonal stripes so they don't glare on dark */
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__empty-bg {
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.015),
+        rgba(255, 255, 255, 0.015) 10px,
+        rgba(255, 255, 255, 0.04),
+        rgba(255, 255, 255, 0.04) 12px
+    ) !important;
+}
+
+/* attendance / segmented tabs also ship hardcoded white */
+html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tabsview,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tabsview__header,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tabsview__tabs,
+html[data-ifv-reskin][data-ifv-theme="dark"] .week-selector button,
+html[data-ifv-reskin][data-ifv-theme="dark"] .cell,
+html[data-ifv-reskin][data-ifv-theme="dark"] .column__content {
+    background-color: var(--ifv-surface) !important;
+    background-image: none !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .tabsview__header,
+html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs {
+    border-color: var(--ifv-line) !important;
+}
+
+/* secondary / empty-state labels must stay legible */
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__empty-text,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__empty-container,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__content__title {
+    color: var(--ifv-text-2) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     html[data-ifv-reskin] * {
         transition-duration: 0.001ms !important;
@@ -4341,12 +4423,31 @@ html[data-ifv-reskin] a {
         html.setAttribute("data-ifv-reskin", "");
         const resolved = resolveReskinTheme();
         html.setAttribute("data-ifv-theme", resolved);
-        const accent = getSetting(RESKIN_PATCH_NAME, "accent") || "#4f46e5";
-        const { r, g, b } = hexToRgb(accent);
-        html.style.setProperty("--ifv-accent", accent);
+        const baseAccent = getSetting(RESKIN_PATCH_NAME, "accent") || "#6366f1";
+        const mix = (hex, amt) => {
+            const { r, g, b } = hexToRgb(hex);
+            const f = (v) => Math.round(v + (255 - v) * amt);
+            return { r: f(r), g: f(g), b: f(b) };
+        };
+        const accentRgb =
+            resolved === "dark" ? mix(baseAccent, 0.32) : hexToRgb(baseAccent);
+        const textRgb =
+            resolved === "dark" ? mix(baseAccent, 0.5) : hexToRgb(baseAccent);
+        html.style.setProperty(
+            "--ifv-accent",
+            `rgb(${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b})`,
+        );
         html.style.setProperty(
             "--ifv-accent-soft",
-            `rgba(${r}, ${g}, ${b}, ${resolved === "dark" ? 0.24 : 0.12})`,
+            `rgba(${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}, ${resolved === "dark" ? 0.22 : 0.12})`,
+        );
+        html.style.setProperty(
+            "--ifv-accent-text",
+            `rgb(${textRgb.r}, ${textRgb.g}, ${textRgb.b})`,
+        );
+        html.style.setProperty(
+            "--ifv-accent-contrast",
+            resolved === "dark" ? "#0d0f14" : "#ffffff",
         );
         const toggle = document.querySelector(".ifv-theme-toggle");
         if (toggle) {
@@ -5002,7 +5103,7 @@ html[data-ifv-reskin] a {
                     name: "Kolor akcentu",
                     description: "Główny kolor aplikacji.",
                     type: "color",
-                    default: "#4f46e5",
+                    default: "#6366f1",
                 },
             ],
             setup: setupReskin,
