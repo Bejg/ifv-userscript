@@ -5136,6 +5136,98 @@ html[data-ifv-reskin] .statistics > div:not(.content__header) {
     padding: 12px 16px !important;
 }
 
+/* ---------------------------------------------------- Oceny: section pager --- */
+/* The expandable accordion headers are replaced by a top pager (prev/next). */
+html[data-ifv-reskin] .MuiAccordion-root[data-ifv-oceny] {
+    margin: 0 12px 10px !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-oceny]
+    > .MuiAccordionSummary-root {
+    display: none !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-oceny]
+    .MuiAccordionDetails-root {
+    padding: 14px 16px 16px !important;
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 12px 12px;
+    padding: 6px;
+    border-radius: var(--ifv-radius-sm);
+    background: var(--ifv-surface-2);
+    border: 1px solid var(--ifv-line);
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__arrow {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ifv-radius-xs);
+    background: transparent;
+    color: var(--ifv-text-2);
+    cursor: pointer;
+    transition:
+        background-color 0.16s var(--ifv-ease),
+        color 0.16s var(--ifv-ease),
+        transform 0.12s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__arrow:hover {
+    background: var(--ifv-surface-3);
+    color: var(--ifv-text);
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__arrow:active {
+    transform: scale(0.92);
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__arrow svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__label {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: center;
+    line-height: 1.2;
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__title {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ifv-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__count {
+    display: block;
+    margin-top: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ifv-text-3);
+    text-transform: uppercase;
+}
+
 /* ---------------------------------------------------- Global touch targets --- */
 html[data-ifv-reskin] button,
 html[data-ifv-reskin] a[role="button"],
@@ -5382,10 +5474,131 @@ html[data-ifv-reskin] *:focus-visible {
         }
     };
 
+    const RESKIN_CHEVRON = {
+        prev: "M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z",
+        next: "M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z",
+    };
+
+    const ocenySectionLabel = (accordion) =>
+        (
+            accordion.querySelector(".MuiAccordionSummary-content")
+                ?.textContent || ""
+        )
+            .replace(/\s+/g, " ")
+            .trim();
+
+    const mountOcenyPager = () => {
+        if (!isMobileView()) return;
+        if (!/(^|\/)oceny(\/|$|\?|#)/.test(W.location.pathname)) return;
+
+        const build = () => {
+            const accordions = Array.from(
+                document.querySelectorAll(".MuiAccordion-root"),
+            );
+            if (accordions.length < 2) return false;
+            const parent = accordions[0].parentElement;
+            if (!parent) return false;
+            if (parent.querySelector(":scope > .ifv-oceny-pager")) return true;
+
+            accordions.forEach((a) =>
+                a.setAttribute("data-ifv-oceny", "1"),
+            );
+
+            const bar = document.createElement("div");
+            bar.className = "ifv-oceny-pager";
+            bar.setAttribute("data-ifv-oceny", "1");
+            bar.innerHTML =
+                `<button type="button" class="ifv-oceny-pager__arrow" data-ifv-dir="-1" aria-label="Poprzedni">` +
+                `<svg viewBox="0 0 24 24"><path d="${RESKIN_CHEVRON.prev}"/></svg></button>` +
+                `<div class="ifv-oceny-pager__label">` +
+                `<span class="ifv-oceny-pager__title"></span>` +
+                `<span class="ifv-oceny-pager__count"></span>` +
+                `</div>` +
+                `<button type="button" class="ifv-oceny-pager__arrow" data-ifv-dir="1" aria-label="Następny">` +
+                `<svg viewBox="0 0 24 24"><path d="${RESKIN_CHEVRON.next}"/></svg></button>`;
+
+            const titleEl = bar.querySelector(".ifv-oceny-pager__title");
+            const countEl = bar.querySelector(".ifv-oceny-pager__count");
+
+            const list = () =>
+                Array.from(
+                    document.querySelectorAll(
+                        ".MuiAccordion-root[data-ifv-oceny]",
+                    ),
+                );
+            const isExpanded = (a) =>
+                a.className.toString().indexOf("Mui-expanded") !== -1;
+            const activeIndex = () => {
+                const i = list().findIndex(isExpanded);
+                return i < 0 ? 0 : i;
+            };
+
+            const render = () => {
+                const sections = list();
+                if (!sections.length) return;
+                const idx = activeIndex();
+                const title =
+                    ocenySectionLabel(sections[idx]) || "Okres";
+                const count = `${idx + 1} / ${sections.length}`;
+                if (titleEl.textContent !== title) titleEl.textContent = title;
+                if (countEl.textContent !== count) countEl.textContent = count;
+            };
+
+            const goTo = (target) => {
+                const sections = list();
+                if (!sections.length) return;
+                const total = sections.length;
+                const idx = ((target % total) + total) % total;
+                sections.forEach((a, i) => {
+                    if ((i === idx) === isExpanded(a)) return;
+                    a.querySelector(".MuiAccordionSummary-root")?.click();
+                });
+                requestAnimationFrame(render);
+                setTimeout(render, 140);
+            };
+
+            bar.addEventListener("click", (event) => {
+                const arrow = event.target.closest(
+                    ".ifv-oceny-pager__arrow",
+                );
+                if (!arrow) return;
+                event.preventDefault();
+                goTo(
+                    activeIndex() +
+                        (parseInt(arrow.getAttribute("data-ifv-dir"), 10) ||
+                            0),
+                );
+            });
+
+            parent.insertBefore(bar, accordions[0]);
+
+            new MutationObserver(() => {
+                if (bar.isConnected) render();
+            }).observe(parent, {
+                subtree: true,
+                childList: true,
+                attributes: true,
+                attributeFilter: ["class"],
+            });
+
+            render();
+            return true;
+        };
+
+        if (!build()) {
+            waitForRender(
+                () =>
+                    document.querySelectorAll(".MuiAccordion-root").length >=
+                    2,
+            ).then(build);
+        }
+    };
+
     const mountReskin = () => {
         applyReskinTheme();
         addReskinThemeToggle();
         syncReskinMetrics();
+        mountOcenyPager();
         waitForRender(() =>
             document.querySelector(".bottom-navigation-bar"),
         ).then(() => {

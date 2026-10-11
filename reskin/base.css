@@ -1396,6 +1396,98 @@ html[data-ifv-reskin] .statistics > div:not(.content__header) {
     padding: 12px 16px !important;
 }
 
+/* ---------------------------------------------------- Oceny: section pager --- */
+/* The expandable accordion headers are replaced by a top pager (prev/next). */
+html[data-ifv-reskin] .MuiAccordion-root[data-ifv-oceny] {
+    margin: 0 12px 10px !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-oceny]
+    > .MuiAccordionSummary-root {
+    display: none !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-oceny]
+    .MuiAccordionDetails-root {
+    padding: 14px 16px 16px !important;
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 12px 12px;
+    padding: 6px;
+    border-radius: var(--ifv-radius-sm);
+    background: var(--ifv-surface-2);
+    border: 1px solid var(--ifv-line);
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__arrow {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ifv-radius-xs);
+    background: transparent;
+    color: var(--ifv-text-2);
+    cursor: pointer;
+    transition:
+        background-color 0.16s var(--ifv-ease),
+        color 0.16s var(--ifv-ease),
+        transform 0.12s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__arrow:hover {
+    background: var(--ifv-surface-3);
+    color: var(--ifv-text);
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__arrow:active {
+    transform: scale(0.92);
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__arrow svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__label {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: center;
+    line-height: 1.2;
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__title {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ifv-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+html[data-ifv-reskin] .ifv-oceny-pager__count {
+    display: block;
+    margin-top: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ifv-text-3);
+    text-transform: uppercase;
+}
+
 /* ---------------------------------------------------- Global touch targets --- */
 html[data-ifv-reskin] button,
 html[data-ifv-reskin] a[role="button"],
