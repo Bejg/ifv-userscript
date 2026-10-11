@@ -619,7 +619,7 @@
         });
     };
 
-    const prepGrades = async () => {
+const prepGrades = async () => {
         if (window.innerWidth > 1024) {
             await waitForRender(() =>
                 document.querySelector(".MuiTabs-flexContainer > button"),
@@ -666,6 +666,61 @@
                             e.remove();
                         }
                     });
+                    // Transform grade boxes into compact journal-style rows
+                    semester
+                        .querySelectorAll(".grades__box")
+                        .forEach((box) => {
+                            const header = box.querySelector(".grades__subject");
+                            if (!header) return;
+                            const nameEl = header.querySelector(".right-gap");
+                            const detailsBtn = header.querySelector(
+                                "button[aria-label*='Szczegóły']",
+                            );
+                            const gradeBtns = box.querySelectorAll(
+                                ".grades__button__one-grade",
+                            );
+                            const avgEl = box.querySelector(".info-text > span");
+
+                            const subjectName =
+                                nameEl?.textContent?.trim() || "";
+                            const grades = Array.from(gradeBtns).map((b) =>
+                                b.textContent.trim(),
+                            );
+                            const average = avgEl?.textContent?.trim() || "";
+
+                            if (!subjectName) return;
+
+                            const row = document.createElement("div");
+                            row.className = "subject-row";
+                            row.innerHTML = `
+                                <div class="subject-info">
+                                    <h3 class="subject-name">${subjectName}</h3>
+                                    <div class="grades-list">
+                                        ${grades
+                                            .map(
+                                                (g) =>
+                                                    `<span class="grade-badge" title="Ocena">${g}</span>`,
+                                            )
+                                            .join("")}
+                                    </div>
+                                </div>
+                                <div class="subject-stats">
+                                    <div class="average-box">
+                                        <span class="average-label">Średnia</span>
+                                        <span class="average-value">${average}</span>
+                                    </div>
+                                </div>
+                            `;
+                            if (detailsBtn) {
+                                const stats = row.querySelector(".subject-stats");
+                                const newBtn = detailsBtn.cloneNode(true);
+                                newBtn.classList.add("details-btn");
+                                newBtn.style.marginLeft = "8px";
+                                stats.appendChild(newBtn);
+                                detailsBtn.remove();
+                            }
+                            box.replaceWith(row);
+                        });
                 });
         }
     };
@@ -4234,6 +4289,121 @@ html[data-ifv-reskin] .grades__button {
 
 html[data-ifv-reskin] .grades__button__content {
     color: var(--ifv-accent-text) !important;
+}
+
+/* Compact journal-style grade rows (DOM-restructured) */
+html[data-ifv-reskin] .subject-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 10px 12px !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    background: transparent !important;
+    gap: 12px !important;
+    min-height: 44px !important;
+}
+
+html[data-ifv-reskin] .subject-row:last-child {
+    border-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .subject-info {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+}
+
+html[data-ifv-reskin] .subject-name {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: var(--ifv-text) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    margin: 0 !important;
+}
+
+html[data-ifv-reskin] .grades-list {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+}
+
+html[data-ifv-reskin] .grade-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 28px !important;
+    height: 24px !important;
+    padding: 0 6px !important;
+    border-radius: 4px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: var(--ifv-text) !important;
+    background: var(--ifv-surface-2) !important;
+    border: 1px solid var(--ifv-line) !important;
+    white-space: nowrap !important;
+}
+
+html[data-ifv-reskin] .subject-stats {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    flex: 0 0 auto !important;
+    text-align: right !important;
+}
+
+html[data-ifv-reskin] .average-box {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 2px !important;
+}
+
+html[data-ifv-reskin] .average-label {
+    font-size: 10px !important;
+    font-weight: 500 !important;
+    color: var(--ifv-text-3) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+}
+
+html[data-ifv-reskin] .average-value {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: var(--ifv-text) !important;
+    line-height: 1 !important;
+}
+
+html[data-ifv-reskin] .details-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: var(--ifv-radius-xs) !important;
+    background: transparent !important;
+    color: var(--ifv-text-2) !important;
+    cursor: pointer !important;
+    transition: background-color 0.15s var(--ifv-ease), color 0.15s var(--ifv-ease) !important;
+}
+
+html[data-ifv-reskin] .details-btn:hover,
+html[data-ifv-reskin] .details-btn:focus-visible {
+    background: var(--ifv-surface-2) !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .details-btn svg {
+    width: 18px !important;
+    height: 18px !important;
+    fill: currentColor !important;
 }
 
 /* ---------------------------------------------------- Tablica (Dashboard) --- */
