@@ -5339,6 +5339,25 @@ html[data-ifv-reskin][data-ifv-theme] .grades__subject:last-child {
 html[data-ifv-reskin][data-ifv-theme] .note {
     color: var(--ifv-text) !important;
 }
+
+/* Fully flat: card surfaces (tiles, boxes, sections, lessons) lose their
+   background/border too — content sits on the page surface directly. */
+html[data-ifv-reskin][data-ifv-theme] .tile,
+html[data-ifv-reskin][data-ifv-theme] .box,
+html[data-ifv-reskin][data-ifv-theme] .MuiAccordion-root,
+html[data-ifv-reskin][data-ifv-theme] .MuiAccordion-root.Mui-expanded,
+html[data-ifv-reskin][data-ifv-theme] .plan-position {
+    background-color: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme] .tile:active {
+    box-shadow: none !important;
+    background-color: var(--ifv-surface-2) !important;
+}
 `,
 
         /* IFV-RESKIN-CSS:END */
