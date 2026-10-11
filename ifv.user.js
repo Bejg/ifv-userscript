@@ -686,6 +686,7 @@ const prepGrades = async () => {
                             const grades = Array.from(gradeBtns).map((b) =>
                                 b.textContent.trim(),
                             );
+                            const gradeBtnElements = Array.from(gradeBtns);
                             const average = avgEl?.textContent?.trim() || "";
 
                             if (!subjectName) return;
@@ -695,14 +696,7 @@ const prepGrades = async () => {
                             row.innerHTML = `
                                 <div class="subject-info">
                                     <h3 class="subject-name">${subjectName}</h3>
-                                    <div class="grades-list">
-                                        ${grades
-                                            .map(
-                                                (g) =>
-                                                    `<span class="grade-badge" title="Ocena">${g}</span>`,
-                                            )
-                                            .join("")}
-                                    </div>
+                                    <div class="grades-list"></div>
                                 </div>
                                 <div class="subject-stats">
                                     <div class="average-box">
@@ -711,6 +705,15 @@ const prepGrades = async () => {
                                     </div>
                                 </div>
                             `;
+                            const gradesList = row.querySelector(".grades-list");
+                            // Move original grade buttons (preserve click handlers) and restyle as badges
+                            gradeBtnElements.forEach((btn) => {
+                                btn.classList.add("grade-badge");
+                                btn.removeAttribute("style");
+                                btn.removeAttribute("tabindex");
+                                btn.setAttribute("type", "button");
+                                gradesList.appendChild(btn);
+                            });
                             if (detailsBtn) {
                                 const stats = row.querySelector(".subject-stats");
                                 const newBtn = detailsBtn.cloneNode(true);
@@ -4331,7 +4334,8 @@ html[data-ifv-reskin] .grades-list {
     gap: 4px !important;
 }
 
-html[data-ifv-reskin] .grade-badge {
+html[data-ifv-reskin] .grade-badge,
+html[data-ifv-reskin] button.grade-badge {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -4345,6 +4349,14 @@ html[data-ifv-reskin] .grade-badge {
     background: var(--ifv-surface-2) !important;
     border: 1px solid var(--ifv-line) !important;
     white-space: nowrap !important;
+    cursor: pointer !important;
+    transition: background-color 0.15s var(--ifv-ease), border-color 0.15s var(--ifv-ease) !important;
+}
+
+html[data-ifv-reskin] .grade-badge:hover,
+html[data-ifv-reskin] button.grade-badge:hover {
+    background: var(--ifv-accent-soft) !important;
+    border-color: var(--ifv-accent) !important;
 }
 
 html[data-ifv-reskin] .subject-stats {
