@@ -721,6 +721,17 @@ html[data-ifv-reskin][data-ifv-theme="dark"] .app-footer span {
     color: var(--ifv-text-2) !important;
 }
 
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__teachers__item,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__teachers__info,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__teacher__name,
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__teacher__name * {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .tile__teacher__type {
+    color: var(--ifv-text-2) !important;
+}
+
 /* segmented tabs (frekwencja / plan) */
 html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button,
 html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button * {
