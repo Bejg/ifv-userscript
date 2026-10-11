@@ -4259,6 +4259,78 @@ html[data-ifv-reskin] .tile__grade-tag {
     font-weight: 700;
 }
 
+/* ------------------------------------------------ native mobile polish --- */
+/* page/section headers: clear hierarchy like a native app */
+html[data-ifv-reskin] .content__header {
+    padding: 6px 4px 10px !important;
+    gap: 4px;
+}
+
+html[data-ifv-reskin] .content__header__info-big,
+html[data-ifv-reskin] .content__header > h2 {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin: 0 !important;
+}
+
+html[data-ifv-reskin] .content__header__info-subheader {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    margin-top: 2px !important;
+}
+
+/* card / row press feedback */
+html[data-ifv-reskin] .tile:active,
+html[data-ifv-reskin] .MuiAccordion-root:active,
+html[data-ifv-reskin] .list-modal > div:last-of-type > div:active {
+    transform: scale(0.992);
+}
+
+/* segmented control (frekwencja month tabs etc.) */
+html[data-ifv-reskin] .attendance-tabs {
+    background: var(--ifv-surface-3) !important;
+    border: 0 !important;
+    border-radius: 12px !important;
+    padding: 4px !important;
+    margin: 12px !important;
+}
+
+html[data-ifv-reskin] .attendance-tabs button {
+    border-radius: 9px !important;
+    min-height: 40px !important;
+    font-weight: 600 !important;
+    transition: background-color 0.18s var(--ifv-ease), color 0.18s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .attendance-tabs button.Mui-selected {
+    background: var(--ifv-surface) !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+}
+
+/* buttons: comfortable, non-capitalised tap targets */
+html[data-ifv-reskin] .MuiButton-root {
+    border-radius: var(--ifv-radius-sm) !important;
+    min-height: 42px;
+    text-transform: none !important;
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+}
+
+/* inputs / selects */
+html[data-ifv-reskin] .MuiOutlinedInput-root {
+    border-radius: var(--ifv-radius-sm) !important;
+}
+
+/* friendly, centred empty states */
+html[data-ifv-reskin] .tile__empty-container,
+html[data-ifv-reskin] .tile__empty-text,
+html[data-ifv-reskin] .tile__grades {
+    text-align: center;
+    justify-content: center;
+}
+
 /* dark-mode: replace hardcoded white/light surfaces with theme surfaces */
 html[data-ifv-reskin][data-ifv-theme="dark"] .tile__content,
 html[data-ifv-reskin][data-ifv-theme="dark"] .tile__empty-container {
@@ -4286,7 +4358,6 @@ html[data-ifv-reskin][data-ifv-theme="dark"] .tile__empty-bg {
 }
 
 /* attendance / segmented tabs also ship hardcoded white */
-html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs,
 html[data-ifv-reskin][data-ifv-theme="dark"] .tabsview,
 html[data-ifv-reskin][data-ifv-theme="dark"] .tabsview__header,
 html[data-ifv-reskin][data-ifv-theme="dark"] .tabsview__tabs,
@@ -4311,8 +4382,7 @@ html[data-ifv-reskin][data-ifv-theme="dark"] .month-selector .MuiIconButton-root
     color: var(--ifv-text-2) !important;
 }
 
-html[data-ifv-reskin][data-ifv-theme="dark"] .tabsview__header,
-html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs {
+html[data-ifv-reskin][data-ifv-theme="dark"] .tabsview__header {
     border-color: var(--ifv-line) !important;
 }
 
