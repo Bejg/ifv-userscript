@@ -4028,6 +4028,7 @@ html[data-ifv-reskin] .bottom-navigation-bar > div > div > img.highlight {
 }
 
 /* ------------------------------------------------------- cards/tiles --- */
+/* Native app card system */
 html[data-ifv-reskin] .tile {
     background: var(--ifv-surface) !important;
     border: 0 !important;
@@ -4035,13 +4036,20 @@ html[data-ifv-reskin] .tile {
     box-shadow: var(--ifv-shadow) !important;
     color: var(--ifv-text) !important;
     overflow: hidden;
-    transition: box-shadow 0.2s var(--ifv-ease), transform 0.2s var(--ifv-ease);
+    transition: box-shadow 0.15s var(--ifv-ease), transform 0.15s var(--ifv-ease), background-color 0.15s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .tile:active {
+    transform: scale(0.99);
+    box-shadow: var(--ifv-shadow-sm) !important;
 }
 
 html[data-ifv-reskin] .tile__header {
     padding: 14px 16px !important;
     gap: 10px;
     align-items: center;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    background: linear-gradient(180deg, var(--ifv-surface) 0%, var(--ifv-surface-2) 100%) !important;
 }
 
 html[data-ifv-reskin] .tile__header h2 {
@@ -4049,6 +4057,7 @@ html[data-ifv-reskin] .tile__header h2 {
     font-weight: 700 !important;
     color: var(--ifv-text) !important;
     letter-spacing: -0.01em;
+    flex: 1;
 }
 
 html[data-ifv-reskin] .tile__link,
@@ -4056,52 +4065,71 @@ html[data-ifv-reskin] .tile a.simple_link,
 html[data-ifv-reskin] a.simple_link {
     color: var(--ifv-accent) !important;
     font-weight: 600 !important;
+    font-size: 13px !important;
+    padding: 4px 8px;
+    border-radius: var(--ifv-radius-xs);
+    transition: background-color 0.15s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .tile__link:active,
+html[data-ifv-reskin] .tile a.simple_link:active {
+    background: var(--ifv-accent-soft) !important;
 }
 
 html[data-ifv-reskin] .tile__content {
     padding: 14px 16px !important;
-    border-top: 1px solid var(--ifv-line) !important;
     color: var(--ifv-text) !important;
 }
 
-html[data-ifv-reskin] .tile__content__title {
-    color: var(--ifv-text-2) !important;
-    font-weight: 600;
+/* Tile size variants */
+html[data-ifv-reskin] .tile__small {
+    /* default card */
+}
+
+html[data-ifv-reskin] .tile__full-width-content {
+    width: 100% !important;
+}
+
+html[data-ifv-reskin] .tile-with-boxes .tile__content {
+    padding: 0 !important;
 }
 
 html[data-ifv-reskin] .tile-container {
     background: transparent !important;
     box-shadow: none !important;
     border: 0 !important;
-    padding: 1px 12px 12px !important;
-    gap: 12px !important;
+    padding: 8px 12px 16px !important;
+    gap: 10px !important;
 }
 
+/* Content containers */
 html[data-ifv-reskin] .content-container {
     background: var(--ifv-surface) !important;
     border-radius: var(--ifv-radius) !important;
     box-shadow: var(--ifv-shadow) !important;
-    margin: 12px !important;
+    margin: 8px 12px !important;
     overflow: hidden;
 }
 
 html[data-ifv-reskin] .app__content {
-    padding-top: 6px !important;
+    padding-top: 8px !important;
 }
 
 /* ---------------------------------------------------- accordions/grades --- */
+/* Native accordion style */
 html[data-ifv-reskin] .MuiAccordion-root {
     background: var(--ifv-surface) !important;
     color: var(--ifv-text) !important;
     border: 1px solid var(--ifv-line) !important;
     border-radius: var(--ifv-radius-sm) !important;
     box-shadow: var(--ifv-shadow-sm) !important;
-    margin: 0 0 10px !important;
+    margin: 0 12px 8px !important;
     overflow: hidden;
 }
 
 html[data-ifv-reskin] .MuiAccordion-root.Mui-expanded {
     box-shadow: var(--ifv-shadow) !important;
+    border-color: var(--ifv-accent) !important;
 }
 
 html[data-ifv-reskin] .MuiAccordion-root::before,
@@ -4110,22 +4138,241 @@ html[data-ifv-reskin] .MuiAccordion-root.Mui-expanded::before {
 }
 
 html[data-ifv-reskin] .MuiAccordionSummary-root {
-    min-height: 54px !important;
-    padding: 0 14px !important;
+    min-height: 56px !important;
+    padding: 0 16px !important;
 }
 
 html[data-ifv-reskin] .MuiAccordionSummary-content,
 html[data-ifv-reskin] .MuiAccordionSummary-content.Mui-expanded {
     margin: 12px 0 !important;
     font-weight: 600;
+    font-size: 15px !important;
+}
+
+html[data-ifv-reskin] .MuiAccordionSummary-expandIconWrapper {
+    color: var(--ifv-text-2) !important;
 }
 
 html[data-ifv-reskin] .MuiAccordionDetails-root {
-    padding: 0 14px 14px !important;
+    padding: 0 16px 16px !important;
 }
 
 html[data-ifv-reskin] .MuiDivider-root {
     border-color: var(--ifv-line) !important;
+}
+
+/* Grade tiles inside accordions */
+html[data-ifv-reskin] .accordion__full-width__content .tile,
+html[data-ifv-reskin] .accordion__full-width__content .box {
+    margin: 4px 0 !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+    border: 1px solid var(--ifv-line) !important;
+}
+
+html[data-ifv-reskin] .accordion__full-width__content .tile__header {
+    padding: 12px 14px !important;
+    background: var(--ifv-surface-2) !important;
+}
+
+html[data-ifv-reskin] .accordion__full-width__content .tile__header h2 {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+
+html[data-ifv-reskin] .accordion__full-width__content .tile__content {
+    padding: 10px 14px !important;
+}
+
+/* Grade rows */
+html[data-ifv-reskin] .grades__subject {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 10px 0 !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+}
+
+html[data-ifv-reskin] .grades__subject:last-child {
+    border-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .grades__button {
+    background: var(--ifv-accent-soft) !important;
+    color: var(--ifv-accent-text) !important;
+    border-radius: var(--ifv-radius-xs) !important;
+    padding: 4px 10px !important;
+    font-weight: 700 !important;
+    font-size: 13px !important;
+    min-width: 48px;
+    text-align: center;
+}
+
+html[data-ifv-reskin] .grades__button__content {
+    color: var(--ifv-accent-text) !important;
+}
+
+/* ---------------------------------------------------- Tablica (Dashboard) --- */
+/* Make today's schedule tile prominent */
+html[data-ifv-reskin] .tile:has(.plan-zajec),
+html[data-ifv-reskin] .tile:has(.tile__frequency__day) {
+    /* These contain the most important daily info */
+}
+
+html[data-ifv-reskin] .tile__important-text {
+    color: var(--ifv-text) !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+}
+
+/* Schedule inside tile */
+html[data-ifv-reskin] .plan-zajec {
+    margin: -14px -16px 0 !important;
+    border-radius: var(--ifv-radius) var(--ifv-radius) 0 0 !important;
+    overflow: hidden;
+}
+
+html[data-ifv-reskin] .plan-zajec .timetable__grid {
+    background: transparent !important;
+}
+
+html[data-ifv-reskin] .plan-zajec .plan-position__lesson {
+    background: var(--ifv-surface) !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    padding: 10px 16px !important;
+    transition: background-color 0.15s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .plan-zajec .plan-position__lesson:active {
+    background: var(--ifv-surface-2) !important;
+}
+
+html[data-ifv-reskin] .plan-zajec .plan-position__lesson:last-child {
+    border-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .plan-zajec .position__lesson__hours {
+    color: var(--ifv-text-2) !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    min-width: 70px;
+    flex-shrink: 0;
+}
+
+html[data-ifv-reskin] .plan-zajec .position__lesson__subject {
+    color: var(--ifv-text) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+}
+
+html[data-ifv-reskin] .plan-zajec .position__lesson__teacher {
+    color: var(--ifv-text-3) !important;
+    font-size: 12px !important;
+}
+
+/* Cancelled lessons */
+html[data-ifv-reskin] .plan-zajec .odwolane .position__lesson__subject,
+html[data-ifv-reskin] .plan-zajec .odwolane .position__lesson__teacher,
+html[data-ifv-reskin] .plan-zajec .odwolane .position__lesson__hours {
+    color: var(--ifv-text-3) !important;
+    opacity: 0.6;
+}
+
+html[data-ifv-reskin] .plan-zajec .odwolane .position__lesson__subject::after {
+    content: " (odwołane)";
+    font-weight: 400;
+}
+
+/* Grade tiles on dashboard */
+html[data-ifv-reskin] .tile__grades {
+    background: transparent !important;
+    border-radius: 0 0 var(--ifv-radius) var(--ifv-radius) !important;
+}
+
+html[data-ifv-reskin] .tile__empty-bg {
+    background: transparent !important;
+    border-radius: 0 0 var(--ifv-radius) var(--ifv-radius) !important;
+}
+
+html[data-ifv-reskin] .tile__empty__content {
+    color: var(--ifv-text-2) !important;
+    font-size: 14px !important;
+    padding: 24px 16px !important;
+}
+
+/* Tests/homework lists in tiles */
+html[data-ifv-reskin] .tile__list__rectangle-boxes li,
+html[data-ifv-reskin] .tile__list__borders li {
+    padding: 10px 12px !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px;
+}
+
+html[data-ifv-reskin] .tile__list__rectangle-boxes li:last-child,
+html[data-ifv-reskin] .tile__list__borders li:last-child {
+    border-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .tile__list__rectangle__ribbon {
+    background: var(--ifv-accent-soft) !important;
+    color: var(--ifv-accent-text) !important;
+    border-radius: var(--ifv-radius-xs) !important;
+    padding: 2px 8px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    white-space: nowrap;
+}
+
+/* Teachers list */
+html[data-ifv-reskin] .tile__teachers__item {
+    padding: 12px 0 !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+}
+
+html[data-ifv-reskin] .tile__teachers__item:last-child {
+    border-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .tile__teacher__type {
+    display: inline-block !important;
+    background: var(--ifv-accent-soft) !important;
+    color: var(--ifv-accent-text) !important;
+    border-radius: var(--ifv-radius-xs) !important;
+    padding: 2px 8px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    margin-bottom: 4px !important;
+}
+
+html[data-ifv-reskin] .tile__teacher__name {
+    color: var(--ifv-text) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+}
+
+/* Frequency tile */
+html[data-ifv-reskin] .tile__frequency__day {
+    padding: 8px 0 !important;
+}
+
+html[data-ifv-reskin] .tile__frequency__day .tile__important-text {
+    display: block !important;
+    margin-bottom: 8px !important;
+    font-size: 13px !important;
+}
+
+/* Hide less important empty tiles on mobile - keep only essential ones */
+html[data-ifv-reskin] .tile:has(.tile__empty__content:only-child):not(:has(.plan-zajec)):not(:has(.tile__frequency__day)) {
+    /* These will be de-emphasized via opacity */
+    opacity: 0.5;
+}
+
+html[data-ifv-reskin] .tile:has(.tile__empty__content:only-child):not(:has(.plan-zajec)):not(:has(.tile__frequency__day)):active {
+    opacity: 1;
 }
 
 /* ------------------------------------------------------------- buttons --- */
@@ -4590,6 +4837,300 @@ html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button:disabled,
 html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button:disabled * {
     color: var(--ifv-accent-text) !important;
     opacity: 1 !important;
+}
+
+/* ---------------------------------------------------- Plan zajęć --- */
+/* Day-focused timetable with colored lesson blocks */
+html[data-ifv-reskin] .timetable__grid {
+    display: grid !important;
+    grid-template-columns: 70px 1fr !important;
+    gap: 0 !important;
+    background: transparent !important;
+}
+
+html[data-ifv-reskin] .timetable .day-content {
+    background: var(--ifv-surface) !important;
+    border-radius: var(--ifv-radius) !important;
+    box-shadow: var(--ifv-shadow) !important;
+    margin: 0 12px 12px !important;
+    overflow: hidden;
+}
+
+html[data-ifv-reskin] .timetable .day-content:first-child {
+    margin-top: 8px !important;
+}
+
+html[data-ifv-reskin] .timetable .day-header {
+    background: var(--ifv-surface-2) !important;
+    padding: 12px 16px !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    font-weight: 700 !important;
+    font-size: 15px !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .plan-position__lesson {
+    display: grid !important;
+    grid-template-columns: 70px 1fr !important;
+    gap: 12px !important;
+    align-items: start !important;
+    padding: 12px 16px !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    background: var(--ifv-surface) !important;
+    transition: background-color 0.15s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .plan-position__lesson:last-child {
+    border-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .plan-position__lesson:active {
+    background: var(--ifv-surface-2) !important;
+}
+
+html[data-ifv-reskin] .position__lesson__hours {
+    color: var(--ifv-text-2) !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+html[data-ifv-reskin] .position__lesson__info {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+}
+
+html[data-ifv-reskin] .position__lesson__subject {
+    color: var(--ifv-text) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+}
+
+html[data-ifv-reskin] .position__lesson__teacher {
+    color: var(--ifv-text-3) !important;
+    font-size: 12px !important;
+}
+
+/* Subject color coding - subtle left border accent */
+html[data-ifv-reskin] .plan-position__lesson {
+    position: relative;
+}
+
+html[data-ifv-reskin] .plan-position__lesson::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--ifv-accent);
+    opacity: 0.3;
+    border-radius: 0 var(--ifv-radius) var(--ifv-radius) 0;
+}
+
+/* Vary accent by subject (using nth-child for variety) */
+html[data-ifv-reskin] .plan-position__lesson:nth-child(6n+1)::before { background: #6366f1; }
+html[data-ifv-reskin] .plan-position__lesson:nth-child(6n+2)::before { background: #10b981; }
+html[data-ifv-reskin] .plan-position__lesson:nth-child(6n+3)::before { background: #f59e0b; }
+html[data-ifv-reskin] .plan-position__lesson:nth-child(6n+4)::before { background: #ef4444; }
+html[data-ifv-reskin] .plan-position__lesson:nth-child(6n+5)::before { background: #8b5cf6; }
+html[data-ifv-reskin] .plan-position__lesson:nth-child(6n+6)::before { background: #06b6d4; }
+
+/* Cancelled lessons */
+html[data-ifv-reskin] .plan-position__lesson.odwolane,
+html[data-ifv-reskin] .plan-position__lesson.odwolane::before {
+    opacity: 0.4 !important;
+}
+
+html[data-ifv-reskin] .plan-position__lesson.odwolane .position__lesson__subject,
+html[data-ifv-reskin] .plan-position__lesson.odwolane .position__lesson__teacher {
+    text-decoration: line-through;
+    color: var(--ifv-text-3) !important;
+}
+
+/* Month selector */
+html[data-ifv-reskin] .first-header__date-selector {
+    padding: 12px 12px 8px !important;
+    margin: 0 12px !important;
+    background: var(--ifv-surface) !important;
+    border-radius: var(--ifv-radius) !important;
+    box-shadow: var(--ifv-shadow) !important;
+}
+
+html[data-ifv-reskin] .month-selector {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+}
+
+html[data-ifv-reskin] .month-selector button {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    border-radius: 50% !important;
+    background: var(--ifv-surface-2) !important;
+    color: var(--ifv-text) !important;
+    transition: background-color 0.15s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .month-selector button:active {
+    background: var(--ifv-accent-soft) !important;
+}
+
+/* ---------------------------------------------------- Frekwencja --- */
+/* Clean attendance list */
+html[data-ifv-reskin] .attendance-tabs {
+    margin: 8px 12px !important;
+    padding: 4px !important;
+    background: var(--ifv-surface-3) !important;
+    border-radius: 12px !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+}
+
+html[data-ifv-reskin] .attendance-tabs button {
+    flex: 1 !important;
+    min-height: 44px !important;
+    border-radius: 9px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    transition: all 0.18s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .attendance-tabs button:disabled {
+    background: var(--ifv-surface) !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+    color: var(--ifv-accent) !important;
+}
+
+html[data-ifv-reskin] .frequency-position__bg {
+    background: transparent !important;
+    margin: 8px 12px !important;
+    border-radius: var(--ifv-radius) !important;
+    box-shadow: var(--ifv-shadow) !important;
+    overflow: hidden;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item {
+    background: var(--ifv-surface) !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    padding: 12px 16px !important;
+    display: grid !important;
+    grid-template-columns: 70px 1fr auto !important;
+    gap: 12px !important;
+    align-items: center !important;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item:last-child {
+    border-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item:active {
+    background: var(--ifv-surface-2) !important;
+}
+
+html[data-ifv-reskin] .position__lesson__hours {
+    color: var(--ifv-text-2) !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    white-space: nowrap;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item .position__lesson__subject {
+    color: var(--ifv-text) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item .position__lesson__teacher {
+    color: var(--ifv-text-3) !important;
+    font-size: 12px !important;
+}
+
+/* Attendance status chips */
+html[data-ifv-reskin] .frequency-position__one-item .obecnosc,
+html[data-ifv-reskin] .frequency-position__one-item .usprawiedliwione,
+html[data-ifv-reskin] .frequency-position__one-item .nieobecnosc,
+html[data-ifv-reskin] .frequency-position__one-item .spoznienie,
+html[data-ifv-reskin] .frequency-position__one-item .nieobecnyZPrzyczynSzkolnych,
+html[data-ifv-reskin] .frequency-position__one-item .zwolnienie {
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 4px 10px !important;
+    border-radius: var(--ifv-radius-xs) !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item .obecnosc,
+html[data-ifv-reskin] .frequency-position__one-item .usprawiedliwione {
+    background: rgba(16, 185, 129, 0.15) !important;
+    color: #10b981 !important;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item .nieobecnosc {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #ef4444 !important;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item .spoznienie {
+    background: rgba(245, 158, 11, 0.15) !important;
+    color: #f59e0b !important;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item .nieobecnyZPrzyczynSzkolnych,
+html[data-ifv-reskin] .frequency-position__one-item .zwolnienie {
+    background: rgba(148, 163, 184, 0.15) !important;
+    color: #94a3b8 !important;
+}
+
+/* Statistics cards */
+html[data-ifv-reskin] .statistics .content__header {
+    padding: 12px 16px !important;
+    background: var(--ifv-surface) !important;
+    border-radius: var(--ifv-radius) var(--ifv-radius) 0 0 !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+}
+
+html[data-ifv-reskin] .statistics .content__header__info-big {
+    font-size: 18px !important;
+}
+
+html[data-ifv-reskin] .statistics > div:not(.content__header) {
+    background: var(--ifv-surface) !important;
+    border-radius: 0 0 var(--ifv-radius) var(--ifv-radius) !important;
+    box-shadow: var(--ifv-shadow) !important;
+    margin: 0 12px 12px !important;
+    padding: 12px 16px !important;
+}
+
+/* ---------------------------------------------------- Global touch targets --- */
+html[data-ifv-reskin] button,
+html[data-ifv-reskin] a[role="button"],
+html[data-ifv-reskin] .MuiButtonBase-root,
+html[data-ifv-reskin] .MuiIconButton-root {
+    min-height: 44px !important;
+    min-width: 44px !important;
+}
+
+html[data-ifv-reskin] .MuiIconButton-root {
+    padding: 8px !important;
+}
+
+/* Smooth scrolling */
+html[data-ifv-reskin] {
+    scroll-behavior: smooth;
+}
+
+/* Focus visible for accessibility */
+html[data-ifv-reskin] *:focus-visible {
+    outline: 2px solid var(--ifv-accent) !important;
+    outline-offset: 2px !important;
+    border-radius: var(--ifv-radius-xs) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
