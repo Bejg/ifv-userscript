@@ -619,7 +619,7 @@
         });
     };
 
-    const prepGrades = async () => {
+const prepGrades = async () => {
         if (window.innerWidth > 1024) {
             await waitForRender(() =>
                 document.querySelector(".MuiTabs-flexContainer > button"),
@@ -666,6 +666,64 @@
                             e.remove();
                         }
                     });
+                    // Transform grade boxes into compact journal-style rows
+                    semester
+                        .querySelectorAll(".grades__box")
+                        .forEach((box) => {
+                            const header = box.querySelector(".grades__subject");
+                            if (!header) return;
+                            const nameEl = header.querySelector(".right-gap");
+                            const detailsBtn = header.querySelector(
+                                "button[aria-label*='Szczegóły']",
+                            );
+                            const gradeBtns = box.querySelectorAll(
+                                ".grades__button__one-grade",
+                            );
+                            const avgEl = box.querySelector(".info-text > span");
+
+                            const subjectName =
+                                nameEl?.textContent?.trim() || "";
+                            const grades = Array.from(gradeBtns).map((b) =>
+                                b.textContent.trim(),
+                            );
+                            const gradeBtnElements = Array.from(gradeBtns);
+                            const average = avgEl?.textContent?.trim() || "";
+
+                            if (!subjectName) return;
+
+                            const row = document.createElement("div");
+                            row.className = "subject-row";
+                            row.innerHTML = `
+                                <div class="subject-info">
+                                    <h3 class="subject-name">${subjectName}</h3>
+                                    <div class="grades-list"></div>
+                                </div>
+                                <div class="subject-stats">
+                                    <div class="average-box">
+                                        <span class="average-label">Średnia</span>
+                                        <span class="average-value">${average}</span>
+                                    </div>
+                                </div>
+                            `;
+                            const gradesList = row.querySelector(".grades-list");
+                            // Move original grade buttons (preserve click handlers) and restyle as badges
+                            gradeBtnElements.forEach((btn) => {
+                                btn.classList.add("grade-badge");
+                                btn.removeAttribute("style");
+                                btn.removeAttribute("tabindex");
+                                btn.setAttribute("type", "button");
+                                gradesList.appendChild(btn);
+                            });
+                            if (detailsBtn) {
+                                const stats = row.querySelector(".subject-stats");
+                                const newBtn = detailsBtn.cloneNode(true);
+                                newBtn.classList.add("details-btn");
+                                newBtn.style.marginLeft = "8px";
+                                stats.appendChild(newBtn);
+                                detailsBtn.remove();
+                            }
+                            box.replaceWith(row);
+                        });
                 });
         }
     };
@@ -4234,6 +4292,145 @@ html[data-ifv-reskin] .grades__button {
 
 html[data-ifv-reskin] .grades__button__content {
     color: var(--ifv-accent-text) !important;
+}
+
+/* Compact journal-style grade rows (DOM-restructured) */
+html[data-ifv-reskin] .subject-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 8px 12px !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    background: transparent !important;
+    gap: 12px !important;
+    min-height: 44px !important;
+    transition: background-color 0.15s var(--ifv-ease) !important;
+}
+
+html[data-ifv-reskin] .subject-row:active {
+    background: var(--ifv-surface-2) !important;
+}
+
+html[data-ifv-reskin] .subject-row:last-child {
+    border-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .subject-info {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+}
+
+html[data-ifv-reskin] .subject-name {
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    color: var(--ifv-text) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    margin: 0 !important;
+}
+
+html[data-ifv-reskin] .grades-list {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+}
+
+html[data-ifv-reskin] .grade-badge,
+html[data-ifv-reskin] button.grade-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 32px !important;
+    height: 28px !important;
+    padding: 0 8px !important;
+    border-radius: 6px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: var(--ifv-text) !important;
+    background: var(--ifv-surface-2) !important;
+    border: 1px solid var(--ifv-line) !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    transition: background-color 0.15s var(--ifv-ease), border-color 0.15s var(--ifv-ease), transform 0.1s var(--ifv-ease) !important;
+    box-shadow: none !important;
+}
+
+html[data-ifv-reskin] .grade-badge:hover,
+html[data-ifv-reskin] button.grade-badge:hover,
+html[data-ifv-reskin] .grade-badge:active,
+html[data-ifv-reskin] button.grade-badge:active {
+    background: var(--ifv-accent-soft) !important;
+    border-color: var(--ifv-accent) !important;
+    transform: scale(1.02) !important;
+}
+
+html[data-ifv-reskin] .subject-stats {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    flex: 0 0 auto !important;
+    text-align: right !important;
+}
+
+html[data-ifv-reskin] .average-box {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 1px !important;
+}
+
+html[data-ifv-reskin] .average-label {
+    font-size: 9px !important;
+    font-weight: 500 !important;
+    color: var(--ifv-text-3) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+}
+
+html[data-ifv-reskin] .average-value {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: var(--ifv-text) !important;
+    line-height: 1 !important;
+}
+
+html[data-ifv-reskin] .details-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    color: var(--ifv-text-3) !important;
+    cursor: pointer !important;
+    transition: background-color 0.15s var(--ifv-ease), color 0.15s var(--ifv-ease), transform 0.1s var(--ifv-ease) !important;
+}
+
+html[data-ifv-reskin] .details-btn:hover,
+html[data-ifv-reskin] .details-btn:active {
+    background: var(--ifv-surface-2) !important;
+    color: var(--ifv-text) !important;
+    transform: scale(1.05) !important;
+}
+
+html[data-ifv-reskin] .details-btn:focus-visible {
+    outline: 2px solid var(--ifv-accent) !important;
+    outline-offset: 2px !important;
+}
+
+html[data-ifv-reskin] .details-btn svg {
+    width: 18px !important;
+    height: 18px !important;
+    fill: currentColor !important;
 }
 
 /* ---------------------------------------------------- Tablica (Dashboard) --- */
