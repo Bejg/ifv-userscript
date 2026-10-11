@@ -2,7 +2,7 @@
 // @name         Improvements for Vulcan
 // @name:pl      Ulepszenia dla VULCAN
 // @namespace    https://github.com/Bejg/ifv-userscript
-// @version      1.2.0
+// @version      1.2.1
 // @description  Poprawia uciążliwe elementy stron usług eduVULCAN oraz Dziennik Vulcan (port rozszerzenia banocean/ifv na userscript).
 // @author       Bejg (userscript port); banocean (oryginalne rozszerzenie)
 // @homepageURL  https://github.com/Bejg/ifv-userscript
@@ -745,10 +745,31 @@
             case "eduvulcan.pl":
                 return "https://raw.githubusercontent.com/banocean/ifv/main/pwa/manifest-eduvulcan.json";
             case "uczen.eduvulcan.pl":
-                return `https://ifv-pwa.banocean.com/eduvulcan/${W.location.pathname.split("/")[1]}`;
             case "dziennik-uczen.vulcan.net.pl":
-                return `https://ifv-pwa.banocean.com/dziennik/${W.location.pathname.split("/")[1]}`;
+                return getLocalPwaManifestUrl(hostname);
         }
+    };
+
+    const getLocalPwaManifestUrl = (hostname) => {
+        const isDziennik = hostname === "dziennik-uczen.vulcan.net.pl";
+        const color = isDziennik ? "red" : "blue";
+        const manifest = {
+            name: isDziennik ? "Dziennik VULCAN" : "eduVULCAN",
+            short_name: isDziennik ? "Dziennik VULCAN" : "eduVULCAN",
+            start_url: W.location.href,
+            display: "standalone",
+            orientation: "portrait",
+            background_color: isDziennik ? "#c22a2a" : "#006BD6",
+            icons: [128, 192, 512].map((size) => ({
+                src: `https://raw.githubusercontent.com/banocean/ifv/main/assets/logo/logo-${size}-${color}.png`,
+                sizes: `${size}x${size}`,
+                type: "image/png",
+            })),
+        };
+        const blob = new W.Blob([JSON.stringify(manifest)], {
+            type: "application/manifest+json",
+        });
+        return W.URL.createObjectURL(blob);
     };
 
     const injectWebManifest = () => {
