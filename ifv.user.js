@@ -4188,20 +4188,25 @@ html[data-ifv-reskin] .accordion__full-width__content .tile__content {
     padding: 10px 14px !important;
 }
 
-/* Grade rows */
+/* Grade rows - compact journal style */
 html[data-ifv-reskin] .grades__subject {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
-    padding: 12px 14px !important;
-    border: 1px solid var(--ifv-line) !important;
-    border-radius: var(--ifv-radius-sm) !important;
-    margin-bottom: 8px !important;
+    padding: 10px 12px !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    border-top: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-radius: 0 !important;
+    margin-bottom: 0 !important;
     background: transparent !important;
     gap: 12px;
+    min-height: 44px;
 }
 
 html[data-ifv-reskin] .grades__subject:last-child {
+    border-bottom: 0 !important;
     margin-bottom: 0 !important;
 }
 
@@ -5340,11 +5345,14 @@ html[data-ifv-reskin][data-ifv-theme]
 
 /* Grade rows: flat with divider lines only. */
 html[data-ifv-reskin][data-ifv-theme] .grades__subject {
-    background-color: var(--ifv-surface) !important;
-    border: 1px solid var(--ifv-line) !important;
-    border-radius: var(--ifv-radius-sm) !important;
-    margin-bottom: 8px !important;
-    padding: 12px 14px !important;
+    background-color: transparent !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    border-top: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-radius: 0 !important;
+    margin-bottom: 0 !important;
+    padding: 10px 12px !important;
     box-shadow: none !important;
 }
 
