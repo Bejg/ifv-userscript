@@ -1100,85 +1100,64 @@ html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button:disabled * 
 }
 
 /* ---------------------------------------------------- Plan zajęć --- */
-/* Day-focused timetable with colored lesson blocks */
+/* Timetable uses absolute positioning - style within existing structure */
 html[data-ifv-reskin] .timetable__grid {
-    display: grid !important;
-    grid-template-columns: 70px 1fr !important;
-    gap: 0 !important;
     background: transparent !important;
 }
 
-html[data-ifv-reskin] .timetable .day-content {
+/* Time column (left side) */
+html[data-ifv-reskin] .timetable__grid > .column:first-child,
+html[data-ifv-reskin] .timetable__grid > div[style*="padding-left"] > div:first-child {
     background: var(--ifv-surface) !important;
-    border-radius: var(--ifv-radius) !important;
+    border-radius: var(--ifv-radius) 0 0 var(--ifv-radius) !important;
     box-shadow: var(--ifv-shadow) !important;
-    margin: 0 12px 12px !important;
-    overflow: hidden;
+    margin: 8px 0 8px 12px !important;
+    padding: 8px 0 !important;
 }
 
-html[data-ifv-reskin] .timetable .day-content:first-child {
-    margin-top: 8px !important;
-}
-
-html[data-ifv-reskin] .timetable .day-header {
-    background: var(--ifv-surface-2) !important;
-    padding: 12px 16px !important;
-    border-bottom: 1px solid var(--ifv-line) !important;
-    font-weight: 700 !important;
-    font-size: 15px !important;
-    color: var(--ifv-text) !important;
-}
-
-html[data-ifv-reskin] .plan-position__lesson {
-    display: grid !important;
-    grid-template-columns: 70px 1fr !important;
-    gap: 12px !important;
-    align-items: start !important;
-    padding: 12px 16px !important;
-    border-bottom: 1px solid var(--ifv-line) !important;
-    background: var(--ifv-surface) !important;
-    transition: background-color 0.15s var(--ifv-ease);
-}
-
-html[data-ifv-reskin] .plan-position__lesson:last-child {
-    border-bottom: 0 !important;
-}
-
-html[data-ifv-reskin] .plan-position__lesson:active {
-    background: var(--ifv-surface-2) !important;
+html[data-ifv-reskin] .column__header {
+    padding: 8px 12px !important;
+    color: var(--ifv-text-2) !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    text-align: center;
 }
 
 html[data-ifv-reskin] .position__lesson__hours {
     color: var(--ifv-text-2) !important;
     font-weight: 600 !important;
-    font-size: 12px !important;
-    line-height: 1.4;
+    font-size: 11px !important;
+    line-height: 1.3;
+    padding: 0 8px !important;
     white-space: nowrap;
+    text-align: right;
 }
 
-html[data-ifv-reskin] .position__lesson__info {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 4px !important;
+/* Lesson cells */
+html[data-ifv-reskin] .cell.cell--single {
+    background: transparent !important;
 }
 
-html[data-ifv-reskin] .position__lesson__subject {
-    color: var(--ifv-text) !important;
-    font-weight: 600 !important;
-    font-size: 14px !important;
+html[data-ifv-reskin] .plan-position {
+    background: var(--ifv-surface) !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    margin: 2px !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+    overflow: hidden;
+    transition: transform 0.15s var(--ifv-ease), box-shadow 0.15s var(--ifv-ease);
 }
 
-html[data-ifv-reskin] .position__lesson__teacher {
-    color: var(--ifv-text-3) !important;
-    font-size: 12px !important;
+html[data-ifv-reskin] .plan-position:active {
+    transform: scale(0.99);
+    box-shadow: var(--ifv-shadow) !important;
 }
 
-/* Subject color coding - subtle left border accent */
-html[data-ifv-reskin] .plan-position__lesson {
+/* Subject color accent bar */
+html[data-ifv-reskin] .plan-position {
     position: relative;
 }
 
-html[data-ifv-reskin] .plan-position__lesson::before {
+html[data-ifv-reskin] .plan-position::before {
     content: '';
     position: absolute;
     left: 0;
@@ -1187,27 +1166,58 @@ html[data-ifv-reskin] .plan-position__lesson::before {
     width: 3px;
     background: var(--ifv-accent);
     opacity: 0.3;
-    border-radius: 0 var(--ifv-radius) var(--ifv-radius) 0;
 }
 
-/* Vary accent by subject (using nth-child for variety) */
-html[data-ifv-reskin] .plan-position__lesson:nth-child(6n+1)::before { background: #6366f1; }
-html[data-ifv-reskin] .plan-position__lesson:nth-child(6n+2)::before { background: #10b981; }
-html[data-ifv-reskin] .plan-position__lesson:nth-child(6n+3)::before { background: #f59e0b; }
-html[data-ifv-reskin] .plan-position__lesson:nth-child(6n+4)::before { background: #ef4444; }
-html[data-ifv-reskin] .plan-position__lesson:nth-child(6n+5)::before { background: #8b5cf6; }
-html[data-ifv-reskin] .plan-position__lesson:nth-child(6n+6)::before { background: #06b6d4; }
+html[data-ifv-reskin] .plan-position:nth-child(6n+1)::before { background: #6366f1; }
+html[data-ifv-reskin] .plan-position:nth-child(6n+2)::before { background: #10b981; }
+html[data-ifv-reskin] .plan-position:nth-child(6n+3)::before { background: #f59e0b; }
+html[data-ifv-reskin] .plan-position:nth-child(6n+4)::before { background: #ef4444; }
+html[data-ifv-reskin] .plan-position:nth-child(6n+5)::before { background: #8b5cf6; }
+html[data-ifv-reskin] .plan-position:nth-child(6n+6)::before { background: #06b6d4; }
 
 /* Cancelled lessons */
-html[data-ifv-reskin] .plan-position__lesson.odwolane,
-html[data-ifv-reskin] .plan-position__lesson.odwolane::before {
+html[data-ifv-reskin] .plan-position.odwolane,
+html[data-ifv-reskin] .plan-position.odwolane::before {
     opacity: 0.4 !important;
 }
 
-html[data-ifv-reskin] .plan-position__lesson.odwolane .position__lesson__subject,
-html[data-ifv-reskin] .plan-position__lesson.odwolane .position__lesson__teacher {
+html[data-ifv-reskin] .plan-position.odwolane .position__lesson__subject,
+html[data-ifv-reskin] .plan-position.odwolane .position__lesson__teacher {
     text-decoration: line-through;
     color: var(--ifv-text-3) !important;
+}
+
+html[data-ifv-reskin] .position__lesson__hours.odwolane {
+    opacity: 0.5;
+}
+
+/* Lesson content */
+html[data-ifv-reskin] .plan-position__lesson {
+    padding: 10px 12px !important;
+    background: transparent !important;
+}
+
+html[data-ifv-reskin] .position__lesson__info {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 3px !important;
+}
+
+html[data-ifv-reskin] .position__lesson__subject {
+    color: var(--ifv-text) !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    line-height: 1.3;
+}
+
+html[data-ifv-reskin] .position__lesson__subject.right-gap {
+    margin-right: 6px !important;
+}
+
+html[data-ifv-reskin] .position__lesson__teacher {
+    color: var(--ifv-text-3) !important;
+    font-size: 11px !important;
+    line-height: 1.3;
 }
 
 /* Month selector */
@@ -1239,9 +1249,15 @@ html[data-ifv-reskin] .month-selector button:active {
     background: var(--ifv-accent-soft) !important;
 }
 
+/* Day headers in column content */
+html[data-ifv-reskin] .column__content > div:first-child {
+    padding-top: 12px !important;
+}
+
 /* ---------------------------------------------------- Frekwencja --- */
-/* Clean attendance list */
+/* Segmented control tabs */
 html[data-ifv-reskin] .attendance-tabs {
+    display: flex !important;
     margin: 8px 12px !important;
     padding: 4px !important;
     background: var(--ifv-surface-3) !important;
@@ -1264,6 +1280,7 @@ html[data-ifv-reskin] .attendance-tabs button:disabled {
     color: var(--ifv-accent) !important;
 }
 
+/* Attendance list container */
 html[data-ifv-reskin] .frequency-position__bg {
     background: transparent !important;
     margin: 8px 12px !important;
@@ -1276,10 +1293,9 @@ html[data-ifv-reskin] .frequency-position__one-item {
     background: var(--ifv-surface) !important;
     border-bottom: 1px solid var(--ifv-line) !important;
     padding: 12px 16px !important;
-    display: grid !important;
-    grid-template-columns: 70px 1fr auto !important;
-    gap: 12px !important;
+    display: flex !important;
     align-items: center !important;
+    gap: 12px !important;
 }
 
 html[data-ifv-reskin] .frequency-position__one-item:last-child {
@@ -1290,17 +1306,27 @@ html[data-ifv-reskin] .frequency-position__one-item:active {
     background: var(--ifv-surface-2) !important;
 }
 
-html[data-ifv-reskin] .position__lesson__hours {
+/* Attendance item layout: time | subject+teacher | status */
+html[data-ifv-reskin] .frequency-position__one-item > .position__lesson__hours {
+    flex: 0 0 70px !important;
     color: var(--ifv-text-2) !important;
     font-weight: 600 !important;
     font-size: 12px !important;
     white-space: nowrap;
+    text-align: right;
+    padding-right: 12px !important;
+}
+
+html[data-ifv-reskin] .frequency-position__one-item > div:not(.position__lesson__hours) {
+    flex: 1 !important;
+    min-width: 0;
 }
 
 html[data-ifv-reskin] .frequency-position__one-item .position__lesson__subject {
     color: var(--ifv-text) !important;
     font-weight: 600 !important;
     font-size: 14px !important;
+    margin-bottom: 2px !important;
 }
 
 html[data-ifv-reskin] .frequency-position__one-item .position__lesson__teacher {
@@ -1315,6 +1341,7 @@ html[data-ifv-reskin] .frequency-position__one-item .nieobecnosc,
 html[data-ifv-reskin] .frequency-position__one-item .spoznienie,
 html[data-ifv-reskin] .frequency-position__one-item .nieobecnyZPrzyczynSzkolnych,
 html[data-ifv-reskin] .frequency-position__one-item .zwolnienie {
+    flex: 0 0 auto !important;
     display: inline-flex !important;
     align-items: center !important;
     padding: 4px 10px !important;
@@ -1324,6 +1351,7 @@ html[data-ifv-reskin] .frequency-position__one-item .zwolnienie {
     text-transform: uppercase !important;
     letter-spacing: 0.02em;
     white-space: nowrap;
+    margin-left: auto !important;
 }
 
 html[data-ifv-reskin] .frequency-position__one-item .obecnosc,
