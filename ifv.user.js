@@ -5068,30 +5068,44 @@ html[data-ifv-reskin] .timetable__grid {
     background: transparent !important;
 }
 
-/* Time column (left side) */
+/* Time column (left side) - clean, no background boxes */
 html[data-ifv-reskin] .timetable__grid > .column:first-child,
 html[data-ifv-reskin] .timetable__grid > div[style*="padding-left"] > div:first-child {
-    background: var(--ifv-surface) !important;
-    border-radius: var(--ifv-radius) 0 0 var(--ifv-radius) !important;
-    box-shadow: var(--ifv-shadow) !important;
-    margin: 8px 0 8px 12px !important;
-    padding: 8px 0 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 html[data-ifv-reskin] .column__header {
     padding: 8px 12px !important;
-    color: var(--ifv-text-2) !important;
-    font-weight: 600 !important;
-    font-size: 12px !important;
+    color: var(--ifv-text-3) !important;
+    font-weight: 500 !important;
+    font-size: 11px !important;
     text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+html[data-ifv-reskin] .timetable__grid > .column:first-child .cell.cell--single {
+    background: transparent !important;
+}
+
+html[data-ifv-reskin] .timetable__grid > .column:first-child .plan-position {
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
 }
 
 html[data-ifv-reskin] .position__lesson__hours {
-    color: var(--ifv-text-2) !important;
-    font-weight: 600 !important;
+    color: var(--ifv-text-3) !important;
+    font-weight: 500 !important;
     font-size: 11px !important;
     line-height: 1.3;
-    padding: 0 8px !important;
+    padding: 4px 8px !important;
     white-space: nowrap;
     text-align: right;
 }
@@ -5101,19 +5115,20 @@ html[data-ifv-reskin] .cell.cell--single {
     background: transparent !important;
 }
 
-html[data-ifv-reskin] .plan-position {
-    background: transparent !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
-    box-shadow: none !important;
-    overflow: visible !important;
-    transition: background-color 0.15s var(--ifv-ease) !important;
+/* Day columns - each lesson gets a subtle background box */
+html[data-ifv-reskin] .timetable__grid > .column:not(:first-child) .plan-position {
+    background: var(--ifv-surface) !important;
+    border-radius: 10px !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+    margin: 2px !important;
+    overflow: hidden !important;
+    transition: background-color 0.15s var(--ifv-ease), box-shadow 0.15s var(--ifv-ease), transform 0.1s var(--ifv-ease) !important;
 }
 
-html[data-ifv-reskin] .plan-position:active {
-    transform: none !important;
-    box-shadow: none !important;
+html[data-ifv-reskin] .timetable__grid > .column:not(:first-child) .plan-position:active {
     background: var(--ifv-surface-2) !important;
+    box-shadow: var(--ifv-shadow) !important;
+    transform: scale(0.99) !important;
 }
 
 /* Remove subject color accent bars - minimalistic */
@@ -5136,7 +5151,7 @@ html[data-ifv-reskin] .position__lesson__hours.odwolane {
     opacity: 0.5;
 }
 
-/* Lesson content - compact */
+/* Lesson content */
 html[data-ifv-reskin] .plan-position__lesson {
     padding: 8px 12px !important;
     background: transparent !important;
