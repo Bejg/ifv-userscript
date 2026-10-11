@@ -2,7 +2,7 @@
 // @name         Improvements for Vulcan
 // @name:pl      Ulepszenia dla VULCAN
 // @namespace    https://github.com/Bejg/ifv-userscript
-// @version      1.1.0
+// @version      1.2.0
 // @description  Poprawia uciążliwe elementy stron usług eduVULCAN oraz Dziennik Vulcan (port rozszerzenia banocean/ifv na userscript).
 // @author       Bejg (userscript port); banocean (oryginalne rozszerzenie)
 // @homepageURL  https://github.com/Bejg/ifv-userscript
@@ -1060,73 +1060,28 @@
         if (centerBox) centerBox.innerHTML = centerBox.innerHTML;
     };
 
-    const JOURNAL_REDIRECT_FLAG = "ifv_journal_after_login";
-    const JOURNAL_REDIRECT_MAX_AGE = 5 * 60 * 1000;
-
-    const markJournalRedirectPending = () => {
-        try {
-            sessionStorage.setItem(
-                JOURNAL_REDIRECT_FLAG,
-                String(Date.now()),
-            );
-        } catch (e) {}
-    };
-
-    const getJournalRedirectPending = () => {
-        try {
-            const value = Number(sessionStorage.getItem(JOURNAL_REDIRECT_FLAG));
-            if (!value) return false;
-            if (Date.now() - value > JOURNAL_REDIRECT_MAX_AGE) {
-                sessionStorage.removeItem(JOURNAL_REDIRECT_FLAG);
-                return false;
-            }
-            return true;
-        } catch (e) {
-            return false;
-        }
-    };
-
-    const clearJournalRedirectPending = () => {
-        try {
-            sessionStorage.removeItem(JOURNAL_REDIRECT_FLAG);
-        } catch (e) {}
-    };
-
     const isEduVulcanLoggedIn = () =>
         !!document.querySelector('a[href*="koniecPracy"]');
 
-    const redirectToJournalAfterLogin = () => {
+    const redirectToDziennik = () => {
         const path = W.location.pathname;
 
-        if (path.startsWith("/logowanie")) {
-            const mark = markJournalRedirectPending;
-            document.querySelector("form")?.addEventListener("submit", mark, true);
-            document.querySelector("#btLogOn")?.addEventListener("click", mark);
-            document
-                .querySelector("#btAssertion")
-                ?.addEventListener("click", mark);
-            return;
-        }
-
-        if (!getJournalRedirectPending()) return;
-
-        if (path === "/") {
-            if (isEduVulcanLoggedIn()) W.location.assign("/dostep-do-dziennika/");
-            return;
-        }
-
-        if (path.replace(/\/+$/, "") === "/dostep-do-dziennika") {
+        if (
+            path.replace(/\/+$/, "") === "/dostep-do-dziennika" &&
+            isEduVulcanLoggedIn()
+        ) {
             const journalLinks = [
                 ...document.querySelectorAll('a[href*="/dziennik?"]'),
             ];
-            clearJournalRedirectPending();
             if (journalLinks.length === 1) {
                 W.location.assign(journalLinks[0].href);
             }
             return;
         }
 
-        if (path.startsWith("/dziennik")) clearJournalRedirectPending();
+        if (path === "/" && isEduVulcanLoggedIn()) {
+            W.location.assign("/dostep-do-dziennika/");
+        }
     };
 
     const toggleUserModal = () => {
@@ -3995,15 +3950,15 @@ body {
             ],
         },
         {
-            name: "Auto redirect to dziennik after login",
+            name: "Auto redirect to dziennik",
             description:
-                "Po zalogowaniu w eduVULCAN automatycznie przechodzi do dziennika.",
+                "W eduVULCAN automatycznie przechodzi do dziennika po zalogowaniu lub gdy już jesteś zalogowany.",
             modules: [
                 {
                     onlyOnReloads: true,
                     isLoaded: () => true,
                     doesRunHere: () => W.location.hostname === "eduvulcan.pl",
-                    run: redirectToJournalAfterLogin,
+                    run: redirectToDziennik,
                 },
             ],
         },
