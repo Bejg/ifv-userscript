@@ -605,6 +605,65 @@ html[data-ifv-reskin][data-ifv-theme="dark"] .tile__content__title {
     color: var(--ifv-text-2) !important;
 }
 
+/* PrimeReact datatables ship white headers/rows and white empty messages */
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-wrapper,
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-table,
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-thead > tr > th,
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-tbody > tr,
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-tbody > tr > td,
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-emptymessage,
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-emptymessage > td {
+    background-color: var(--ifv-surface) !important;
+    background-image: none !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-thead > tr > th,
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-tbody > tr > td {
+    border-color: var(--ifv-line) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-thead > tr > th {
+    color: var(--ifv-text-2) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .p-datatable-tbody > tr:hover {
+    background-color: var(--ifv-surface-2) !important;
+}
+
+/* grade tiles: numbers/labels render in the app's dark ink on dark cards */
+html[data-ifv-reskin][data-ifv-theme="dark"] .grades__subject,
+html[data-ifv-reskin][data-ifv-theme="dark"] .grades__button,
+html[data-ifv-reskin][data-ifv-theme="dark"] .grades__button__content,
+html[data-ifv-reskin][data-ifv-theme="dark"] .grades__combo,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiButton-root.MuiButton-text,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiButton-root.MuiButton-text * {
+    color: var(--ifv-text) !important;
+}
+
+/* form controls / comboboxes */
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiFormLabel-root,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiInputLabel-root {
+    color: var(--ifv-text-2) !important;
+    background-color: transparent !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiInputBase-root,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiOutlinedInput-root,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiSelect-nativeInput {
+    background-color: transparent !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiInputBase-input,
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiSelect-select {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"] .MuiOutlinedInput-notchedOutline {
+    border-color: var(--ifv-line-2) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     html[data-ifv-reskin] * {
         transition-duration: 0.001ms !important;
