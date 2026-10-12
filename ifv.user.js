@@ -4448,64 +4448,14 @@ html[data-ifv-reskin] .tile__important-text {
 
 /* Schedule inside tile */
 html[data-ifv-reskin] .plan-zajec {
-    margin: -14px -16px 0 !important;
-    border-radius: var(--ifv-radius) var(--ifv-radius) 0 0 !important;
+    margin: -6px 0 0 !important;
+    padding: 6px 10px 10px !important;
+    border-radius: var(--ifv-radius) !important;
     overflow: hidden;
 }
 
 html[data-ifv-reskin] .plan-zajec .timetable__grid {
     background: transparent !important;
-}
-
-html[data-ifv-reskin] .plan-zajec .plan-position__lesson {
-    background: transparent !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
-    border-bottom: 1px solid var(--ifv-line) !important;
-    padding: 8px 12px !important;
-    transition: background-color 0.15s var(--ifv-ease);
-}
-
-html[data-ifv-reskin] .plan-zajec .plan-position__lesson:active {
-    background: var(--ifv-surface-2) !important;
-}
-
-html[data-ifv-reskin] .plan-zajec .plan-position__lesson:last-child {
-    border-bottom: 0 !important;
-}
-
-html[data-ifv-reskin] .plan-zajec .position__lesson__hours {
-    color: var(--ifv-text-3) !important;
-    font-weight: 500 !important;
-    font-size: 11px !important;
-    min-width: 64px;
-    flex-shrink: 0;
-}
-
-html[data-ifv-reskin] .plan-zajec .position__lesson__subject {
-    color: var(--ifv-text) !important;
-    font-weight: 500 !important;
-    font-size: 14px !important;
-    line-height: 1.3;
-}
-
-html[data-ifv-reskin] .plan-zajec .position__lesson__teacher {
-    color: var(--ifv-text-3) !important;
-    font-size: 11px !important;
-    line-height: 1.3;
-}
-
-/* Cancelled lessons */
-html[data-ifv-reskin] .plan-zajec .odwolane .position__lesson__subject,
-html[data-ifv-reskin] .plan-zajec .odwolane .position__lesson__teacher,
-html[data-ifv-reskin] .plan-zajec .odwolane .position__lesson__hours {
-    color: var(--ifv-text-3) !important;
-    opacity: 0.6;
-}
-
-html[data-ifv-reskin] .plan-zajec .odwolane .position__lesson__subject::after {
-    content: " (odwołane)";
-    font-weight: 400;
 }
 
 /* Grade tiles on dashboard */
@@ -5016,24 +4966,6 @@ html[data-ifv-reskin][data-ifv-theme="dark"] .tile__teacher__type {
     color: var(--ifv-text-2) !important;
 }
 
-/* timetable (plan zajec): white lesson cards with near-black ink */
-html[data-ifv-reskin][data-ifv-theme="dark"] .timetable .lesson,
-html[data-ifv-reskin][data-ifv-theme="dark"] .timetable .lesson *,
-html[data-ifv-reskin][data-ifv-theme="dark"] .lesson.normal,
-html[data-ifv-reskin][data-ifv-theme="dark"] .lesson.normal * {
-    color: var(--ifv-text) !important;
-}
-
-html[data-ifv-reskin][data-ifv-theme="dark"] .timetable .lesson article {
-    background-color: var(--ifv-surface-2) !important;
-    background-image: none !important;
-}
-
-html[data-ifv-reskin][data-ifv-theme="dark"] .timetable .lesson.normal > div {
-    background-color: var(--ifv-surface-3) !important;
-    color: var(--ifv-text-2) !important;
-}
-
 /* scheduler / calendar (sprawdziany, zebrania): black ink on the grid */
 html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple,
 html[data-ifv-reskin][data-ifv-theme="dark"] .scheduler-simple *,
@@ -5063,131 +4995,352 @@ html[data-ifv-reskin][data-ifv-theme="dark"] .attendance-tabs button:disabled * 
 }
 
 /* ---------------------------------------------------- Plan zajęć --- */
-/* Timetable uses absolute positioning - style within existing structure */
+/* The native weekly timetable is an absolutely-positioned grid of day
+   columns. JS rebuilds every .plan-position cell into a clean, tappable
+   lesson card (.ifv-lesson) and hides the app's own absolutely-positioned
+   internals. The mobile "Resigned timetable" patch instead renders a
+   .timetable / .lesson tree, which is rebuilt into .ifv-tl__card the same way. */
 html[data-ifv-reskin] .timetable__grid {
     background: transparent !important;
+    padding-left: 0 !important;
+    gap: 6px !important;
 }
 
-/* Time column (left side) - completely clean, no background boxes */
-html[data-ifv-reskin] .timetable__grid > .column:first-child,
-html[data-ifv-reskin] .timetable__grid > .column:first-child *,
-html[data-ifv-reskin] .timetable__grid > div[style*="padding-left"] > div:first-child,
-html[data-ifv-reskin] .timetable__grid > div[style*="padding-left"] > div:first-child * {
-    background: transparent !important;
-    background-color: transparent !important;
-    background-image: none !important;
-    box-shadow: none !important;
-    border: 0 !important;
-    border-radius: 0 !important;
+/* ---- day headers (only rendered on wider viewports) ---- */
+html[data-ifv-reskin] .column__header:has(h2) {
+    height: auto !important;
+    min-height: 50px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px !important;
 }
 
-html[data-ifv-reskin] .timetable__grid > .column:first-child .plan-position,
-html[data-ifv-reskin] .timetable__grid > .column:first-child .cell,
-html[data-ifv-reskin] .timetable__grid > .column:first-child .column__content,
-html[data-ifv-reskin] .timetable__grid > .column:first-child .column__header {
-    background: transparent !important;
-    background-color: transparent !important;
+html[data-ifv-reskin] .column__header h2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    margin: 0 !important;
+    font-size: inherit !important;
+    line-height: 1.1;
 }
 
-html[data-ifv-reskin] .column__header {
-    padding: 8px 12px !important;
-    color: var(--ifv-text-3) !important;
-    font-weight: 500 !important;
-    font-size: 11px !important;
-    text-align: center;
+html[data-ifv-reskin] .day__number {
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ifv-text);
+}
+
+html[data-ifv-reskin] .day__name {
+    font-size: 9.5px;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
+    color: var(--ifv-text-3);
+    text-align: center;
 }
 
-html[data-ifv-reskin] .position__lesson__hours {
-    color: var(--ifv-text-3) !important;
-    font-weight: 500 !important;
-    font-size: 11px !important;
-    line-height: 1.3;
-    padding: 4px 8px !important;
-    white-space: nowrap;
-    text-align: right;
-    background: transparent !important;
-    background-color: transparent !important;
-    box-shadow: none !important;
-    border: 0 !important;
-    border-radius: 0 !important;
+html[data-ifv-reskin] .column.current .day__number {
+    color: var(--ifv-accent-text);
 }
 
-/* Lesson cells */
+/* ---- lesson cell ---- */
 html[data-ifv-reskin] .cell.cell--single {
     background: transparent !important;
 }
 
-/* Day columns - each lesson gets a subtle background box */
-html[data-ifv-reskin] .timetable__grid > .column:not(:first-child) .plan-position {
+html[data-ifv-reskin] .plan-position {
+    display: flex !important;
+    flex-direction: column !important;
     background: var(--ifv-surface) !important;
-    border-radius: 10px !important;
+    border-radius: var(--ifv-radius-sm) !important;
     box-shadow: var(--ifv-shadow-sm) !important;
-    margin: 2px !important;
     overflow: hidden !important;
-    transition: background-color 0.15s var(--ifv-ease), box-shadow 0.15s var(--ifv-ease), transform 0.1s var(--ifv-ease) !important;
+    transition: transform 0.12s var(--ifv-ease), background-color 0.15s var(--ifv-ease) !important;
 }
 
-html[data-ifv-reskin] .timetable__grid > .column:not(:first-child) .plan-position:active {
-    background: var(--ifv-surface-2) !important;
-    box-shadow: var(--ifv-shadow) !important;
-    transform: scale(0.99) !important;
-}
-
-/* Remove subject color accent bars - minimalistic */
 html[data-ifv-reskin] .plan-position::before {
     display: none !important;
 }
 
-/* Cancelled lessons - subtle */
-html[data-ifv-reskin] .plan-position.odwolane {
-    opacity: 0.5 !important;
+html[data-ifv-reskin] .plan-position:active {
+    transform: scale(0.98) !important;
+    background: var(--ifv-surface-2) !important;
 }
 
-html[data-ifv-reskin] .plan-position.odwolane .position__lesson__subject,
-html[data-ifv-reskin] .plan-position.odwolane .position__lesson__teacher {
+html[data-ifv-reskin] .plan-position.zrealizowane {
+    background: var(--ifv-surface-2) !important;
+    box-shadow: none !important;
+}
+
+html[data-ifv-reskin] .plan-position.odwolane {
+    box-shadow: var(--ifv-shadow-sm), inset 3px 0 0 #ef4444 !important;
+}
+
+html[data-ifv-reskin] .plan-position:has(.zastepstwo) {
+    box-shadow: var(--ifv-shadow-sm), inset 3px 0 0 #f59e0b !important;
+}
+
+/* hide the app's absolute-positioned internals - JS rebuilds them */
+html[data-ifv-reskin] .plan-position > .position__lesson__hours,
+html[data-ifv-reskin] .plan-position > .plan-position__lesson,
+html[data-ifv-reskin] .plan-position > .plan-position__adnotations,
+html[data-ifv-reskin] .plan-position > .details-btn--appearance {
+    display: none !important;
+}
+
+/* ---- rebuilt native lesson card ---- */
+html[data-ifv-reskin] .ifv-lesson {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    padding: 9px 11px;
+    overflow: hidden;
+}
+
+html[data-ifv-reskin] .ifv-lesson__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+html[data-ifv-reskin] .ifv-lesson__time {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ifv-text-2);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+html[data-ifv-reskin] .ifv-lesson__room {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--ifv-text-3);
+    background: var(--ifv-surface-2);
+    border-radius: 6px;
+    padding: 1px 6px;
+    white-space: nowrap;
+}
+
+html[data-ifv-reskin] .plan-position.zrealizowane .ifv-lesson__room {
+    background: var(--ifv-surface-3);
+}
+
+html[data-ifv-reskin] .ifv-lesson__subject {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    min-width: 0;
+}
+
+html[data-ifv-reskin] .ifv-lesson__subject-text {
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--ifv-text);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+html[data-ifv-reskin] .ifv-lesson__group {
+    flex: 0 0 auto;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--ifv-text-2);
+    background: var(--ifv-surface-3);
+    border-radius: 5px;
+    padding: 1px 5px;
+}
+
+html[data-ifv-reskin] .ifv-lesson__teacher {
+    font-size: 11px;
+    color: var(--ifv-text-3);
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+html[data-ifv-reskin] .ifv-lesson__chip {
+    align-self: flex-start;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-radius: 6px;
+    padding: 2px 7px;
+    color: var(--ifv-text-2);
+    background: var(--ifv-surface-3);
+}
+
+html[data-ifv-reskin] .ifv-lesson__chip--canceled {
+    color: #dc2626;
+    background: rgba(239, 68, 68, 0.14);
+}
+
+html[data-ifv-reskin] .ifv-lesson__chip--substitute {
+    color: #b45309;
+    background: rgba(245, 158, 11, 0.16);
+}
+
+html[data-ifv-reskin] .ifv-lesson--canceled .ifv-lesson__subject-text {
+    text-decoration: line-through;
+    color: var(--ifv-text-3);
+}
+
+/* narrow desktop columns need a denser card */
+@media (min-width: 1024px) {
+    html[data-ifv-reskin] .ifv-lesson {
+        padding: 7px 9px;
+        gap: 2px;
+    }
+
+    html[data-ifv-reskin] .ifv-lesson__subject-text {
+        font-size: 12px;
+        -webkit-line-clamp: 3;
+    }
+
+    html[data-ifv-reskin] .ifv-lesson__teacher {
+        font-size: 10px;
+    }
+}
+
+/* ---- custom mobile timetable (patch "Resigned timetable") ---- */
+html[data-ifv-reskin] .timetable {
+    display: block !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 6px 12px 16px !important;
+}
+
+html[data-ifv-reskin] .timetable .lesson {
+    display: flex !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    height: auto !important;
+    margin: 0 0 8px !important;
+    line-height: 1.2 !important;
+}
+
+html[data-ifv-reskin] .timetable .lesson > .ifv-tl__slot {
+    display: flex !important;
+    flex: 0 0 42px !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 1px !important;
+    color: var(--ifv-text-3) !important;
+}
+
+html[data-ifv-reskin] .timetable .lesson > .ifv-tl__card {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    padding: 11px 13px !important;
+    background: var(--ifv-surface) !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+    overflow: hidden !important;
+    transition: transform 0.12s var(--ifv-ease), background-color 0.15s var(--ifv-ease) !important;
+}
+
+html[data-ifv-reskin] .timetable .lesson:active > .ifv-tl__card {
+    transform: scale(0.99) !important;
+    background: var(--ifv-surface-2) !important;
+}
+
+html[data-ifv-reskin] .ifv-tl__no {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    color: var(--ifv-text-2) !important;
+}
+
+html[data-ifv-reskin] .ifv-tl__time {
+    font-size: 10px !important;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+html[data-ifv-reskin] .ifv-tl__body {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+html[data-ifv-reskin] .ifv-tl__subject {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: var(--ifv-text) !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+html[data-ifv-reskin] .ifv-tl__meta {
+    font-size: 11px !important;
+    color: var(--ifv-text-3) !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+html[data-ifv-reskin] .ifv-tl__chip {
+    flex: 0 0 auto;
+    align-self: center;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-radius: 6px;
+    padding: 3px 7px;
+    color: var(--ifv-text-2);
+    background: var(--ifv-surface-3);
+}
+
+html[data-ifv-reskin] .lesson.canceled > .ifv-tl__slot {
+    opacity: 0.6;
+}
+
+html[data-ifv-reskin] .lesson.canceled .ifv-tl__subject {
     text-decoration: line-through;
     color: var(--ifv-text-3) !important;
 }
 
-html[data-ifv-reskin] .position__lesson__hours.odwolane {
-    opacity: 0.5;
+html[data-ifv-reskin] .lesson.canceled .ifv-tl__chip {
+    color: #dc2626;
+    background: rgba(239, 68, 68, 0.14);
 }
 
-/* Lesson content */
-html[data-ifv-reskin] .plan-position__lesson {
-    padding: 8px 12px !important;
-    background: transparent !important;
+html[data-ifv-reskin] .lesson.substitute .ifv-tl__chip {
+    color: #b45309;
+    background: rgba(245, 158, 11, 0.16);
 }
 
-html[data-ifv-reskin] .position__lesson__info {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 2px !important;
+html[data-ifv-reskin] .lesson.canceled > .ifv-tl__card {
+    box-shadow: var(--ifv-shadow-sm), inset 3px 0 0 #ef4444 !important;
 }
 
-html[data-ifv-reskin] .position__lesson__subject {
-    color: var(--ifv-text) !important;
-    font-weight: 500 !important;
-    font-size: 14px !important;
-    line-height: 1.3;
+html[data-ifv-reskin] .lesson.substitute > .ifv-tl__card {
+    box-shadow: var(--ifv-shadow-sm), inset 3px 0 0 #f59e0b !important;
 }
 
-html[data-ifv-reskin] .position__lesson__subject.right-gap {
-    margin-right: 6px !important;
-}
-
-html[data-ifv-reskin] .position__lesson__teacher {
-    color: var(--ifv-text-3) !important;
-    font-size: 11px !important;
-    line-height: 1.3;
-}
-
-html[data-ifv-reskin] .position__lesson__room {
-    color: var(--ifv-text-3) !important;
-    font-size: 11px !important;
-    line-height: 1.3;
+html[data-ifv-reskin] .timetable > div > .no-lessons-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ifv-text-2);
 }
 
 /* Month selector */
@@ -5580,8 +5733,7 @@ html[data-ifv-reskin][data-ifv-theme] .note {
 html[data-ifv-reskin][data-ifv-theme] .tile,
 html[data-ifv-reskin][data-ifv-theme] .box,
 html[data-ifv-reskin][data-ifv-theme] .MuiAccordion-root,
-html[data-ifv-reskin][data-ifv-theme] .MuiAccordion-root.Mui-expanded,
-html[data-ifv-reskin][data-ifv-theme] .plan-position {
+html[data-ifv-reskin][data-ifv-theme] .MuiAccordion-root.Mui-expanded {
     background-color: transparent !important;
     background-image: none !important;
     border: 0 !important;
@@ -5598,11 +5750,7 @@ html[data-ifv-reskin][data-ifv-theme] .tile:active {
     background-color: var(--ifv-surface-2) !important;
 }
 
-html[data-ifv-reskin][data-ifv-theme] .timetable .lesson,
-html[data-ifv-reskin][data-ifv-theme] .timetable .lesson article,
-html[data-ifv-reskin][data-ifv-theme] .lesson.normal > div,
-html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector,
-html[data-ifv-reskin][data-ifv-theme] .plan-position {
+html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector {
     background-color: transparent !important;
     background-image: none !important;
     border: 0 !important;
@@ -5944,11 +6092,178 @@ html[data-ifv-reskin][data-ifv-theme] .plan-position {
         }
     };
 
+    const reskinEl = (tag, className, text) => {
+        const el = document.createElement(tag);
+        if (className) el.className = className;
+        if (text !== undefined && text !== null) el.textContent = text;
+        return el;
+    };
+
+    const reskinHours = (start, end) =>
+        start && end
+            ? `${start}\u2013${end}`
+            : start || end || "";
+
+    const buildReskinNativeCard = (pos) => {
+        const data = normalizeLesson(pos);
+        const sig = [
+            data.type,
+            data.startingHour,
+            data.endingHour,
+            data.subject,
+            data.group,
+            data.classroom,
+            data.teacher,
+            data.annotationText,
+        ].join("|");
+        const existing = pos.querySelector(":scope > .ifv-lesson");
+        if (existing && pos.getAttribute("data-ifv-sig") === sig) return;
+
+        const card = reskinEl("div", `ifv-lesson ifv-lesson--${data.type}`);
+
+        const top = reskinEl("div", "ifv-lesson__top");
+        const time = reskinHours(data.startingHour, data.endingHour);
+        if (time) top.appendChild(reskinEl("span", "ifv-lesson__time", time));
+        if (data.classroom)
+            top.appendChild(reskinEl("span", "ifv-lesson__room", data.classroom));
+        if (top.children.length) card.appendChild(top);
+
+        if (data.subject) {
+            const subject = reskinEl("div", "ifv-lesson__subject");
+            subject.appendChild(
+                reskinEl("span", "ifv-lesson__subject-text", data.subject),
+            );
+            if (data.group)
+                subject.appendChild(
+                    reskinEl("span", "ifv-lesson__group", data.group),
+                );
+            card.appendChild(subject);
+        }
+
+        if (data.teacher)
+            card.appendChild(
+                reskinEl("div", "ifv-lesson__teacher", data.teacher),
+            );
+
+        const chip =
+            data.annotationText ||
+            (data.type === "canceled"
+                ? "Odwołane"
+                : data.type === "substitute"
+                  ? "Zastępstwo"
+                  : "");
+        if (chip)
+            card.appendChild(
+                reskinEl(
+                    "span",
+                    `ifv-lesson__chip ifv-lesson__chip--${data.type}`,
+                    chip,
+                ),
+            );
+
+        if (existing) existing.replaceWith(card);
+        else pos.appendChild(card);
+        pos.setAttribute("data-ifv-sig", sig);
+    };
+
+    const buildReskinCustomCard = (lesson) => {
+        if (lesson.querySelector(":scope > .ifv-tl__card")) return;
+
+        const slotNo =
+            lesson.querySelector(":scope > div")?.textContent?.trim() || "";
+        const info = lesson.querySelector(":scope > article > .info");
+        const start = info?.children[0]?.textContent?.trim() || "";
+        const end = info?.children[1]?.textContent?.trim() || "";
+        const subject =
+            lesson.querySelector(".data .subject")?.textContent?.trim() || "";
+        const meta =
+            lesson.querySelector(".data .additional-info")?.textContent?.trim() ||
+            "";
+        const type =
+            ["conflicted", "substitute", "canceled"].find((t) =>
+                lesson.classList.contains(t),
+            ) ||
+            (lesson.classList.contains("unknown") ? "unknown" : "normal");
+        const chip =
+            type === "canceled"
+                ? "Odwołane"
+                : type === "substitute"
+                  ? "Zastępstwo"
+                  : type === "conflicted"
+                    ? "Więcej lekcji"
+                    : "";
+
+        const slot = reskinEl("div", "ifv-tl__slot");
+        if (slotNo) slot.appendChild(reskinEl("span", "ifv-tl__no", slotNo));
+        if (start)
+            slot.appendChild(reskinEl("span", "ifv-tl__time", start));
+        if (end) slot.appendChild(reskinEl("span", "ifv-tl__time", end));
+
+        const card = reskinEl("article", "ifv-tl__card");
+        const body = reskinEl("div", "ifv-tl__body");
+        if (subject)
+            body.appendChild(reskinEl("div", "ifv-tl__subject", subject));
+        if (meta) body.appendChild(reskinEl("div", "ifv-tl__meta", meta));
+        card.appendChild(body);
+        if (chip) card.appendChild(reskinEl("span", "ifv-tl__chip", chip));
+
+        lesson.innerHTML = "";
+        lesson.appendChild(slot);
+        lesson.appendChild(card);
+    };
+
+    const refreshReskinPlan = () => {
+        document
+            .querySelectorAll(".plan-position")
+            .forEach(buildReskinNativeCard);
+        document
+            .querySelectorAll(".timetable .lesson")
+            .forEach(buildReskinCustomCard);
+    };
+
+    let reskinPlanObserver = null;
+    let reskinPlanFrame = 0;
+
+    const mountReskinPlan = () => {
+        refreshReskinPlan();
+        if (reskinPlanObserver) return;
+
+        reskinPlanObserver = new MutationObserver(() => {
+            if (reskinPlanFrame) return;
+            reskinPlanFrame = requestAnimationFrame(() => {
+                reskinPlanFrame = 0;
+                if (
+                    document.querySelector(".plan-position") ||
+                    document.querySelector(".timetable .lesson")
+                )
+                    refreshReskinPlan();
+            });
+        });
+        reskinPlanObserver.observe(document.body, {
+            childList: true,
+            subtree: true,
+        });
+
+        document.addEventListener("click", (event) => {
+            const card = event.target.closest?.(".ifv-lesson");
+            if (!card || event.target.closest("button")) return;
+            const pos = card.closest(".plan-position");
+            const details = pos?.querySelector(
+                "button.details-btn--appearance",
+            );
+            if (details) {
+                event.preventDefault();
+                details.click();
+            }
+        });
+    };
+
     const mountReskin = () => {
         applyReskinTheme();
         addReskinThemeToggle();
         syncReskinMetrics();
         mountOcenyPager();
+        mountReskinPlan();
         waitForRender(() =>
             document.querySelector(".bottom-navigation-bar"),
         ).then(() => {
