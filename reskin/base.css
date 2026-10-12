@@ -969,6 +969,53 @@ html[data-ifv-reskin] .tile__teacher__name {
     font-size: 14px !important;
 }
 
+/* --- grades since last login --- */
+html[data-ifv-reskin] .ifv-dash .tile__grades {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 14px 14px !important;
+    background: transparent !important;
+}
+
+html[data-ifv-reskin] .ifv-dash .tile__grades__item {
+    background: var(--ifv-surface-2) !important;
+    border: 1px solid var(--ifv-line) !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    padding: 12px 14px !important;
+    gap: 4px !important;
+}
+
+html[data-ifv-reskin] .ifv-dash .tile__grades__subject {
+    color: var(--ifv-text) !important;
+    font-weight: 600 !important;
+    font-size: 13.5px !important;
+}
+
+html[data-ifv-reskin] .ifv-dash .tile__grades__marks {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    justify-content: flex-end !important;
+}
+
+html[data-ifv-reskin] .ifv-dash .tile__grades__rect {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    border-radius: 10px !important;
+    background: var(--ifv-surface-3) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+html[data-ifv-reskin] .ifv-dash .tile__grades__rect__content {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    line-height: 1;
+}
+
 /* --- hide the app's native/legacy markup behind rebuilt lists --- */
 html[data-ifv-reskin] .ifv-dash__hide-native .lessons-container,
 html[data-ifv-reskin] .ifv-dash__hide-native .plan-zajec,
@@ -1105,6 +1152,271 @@ html[data-ifv-reskin] aside nav ul li a {
 
 html[data-ifv-reskin] .MuiListItem-root:hover {
     background: var(--ifv-surface-2) !important;
+}
+
+/* --------------------------- detail panel: right drawer -> centered dialog --- */
+/* The app opens item details ("Szczegóły") in a MuiDrawer anchored to the
+   right. Reskin turns that into a centred modal card with a close button. */
+html[data-ifv-reskin] .MuiDrawer-root:has(.modal) .MuiBackdrop-root {
+    background: rgba(6, 8, 15, 0.55) !important;
+    opacity: 1 !important;
+    transition: none !important;
+}
+
+html[data-ifv-reskin] .MuiDrawer-paper:has(.modal) {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: min(92vw, 440px) !important;
+    max-width: 440px !important;
+    height: auto !important;
+    max-height: 82vh !important;
+    margin: 0 !important;
+    border-radius: var(--ifv-radius) !important;
+    background: var(--ifv-surface) !important;
+    color: var(--ifv-text) !important;
+    box-shadow: 0 24px 64px -16px rgba(0, 0, 0, 0.55) !important;
+    transform: translate(-50%, -50%) !important;
+    overflow: hidden !important;
+    animation: ifv-modal-in 0.2s var(--ifv-ease) both;
+}
+
+@keyframes ifv-modal-in {
+    from {
+        opacity: 0;
+        transform: translate(-50%, calc(-50% + 14px)) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+html[data-ifv-reskin] .MuiDrawer-paper:has(.modal) .modal {
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    height: auto !important;
+    max-height: inherit !important;
+    box-sizing: border-box;
+    background: transparent !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .modal__header {
+    position: relative;
+    flex: 0 0 auto;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 16px 56px 14px 18px !important;
+    background: transparent !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .modal__header .modal__title h1,
+html[data-ifv-reskin] .modal__title h1,
+html[data-ifv-reskin] .modal__header .modal__title * {
+    margin: 0 !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: var(--ifv-text) !important;
+}
+
+/* close button -> minimal icon only, no text */
+html[data-ifv-reskin] .modal-button--close,
+html[data-ifv-reskin] .modal-button--close.MuiIconButton-root {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    padding: 0 !important;
+    border-radius: 999px !important;
+    background: transparent !important;
+    color: var(--ifv-text-2) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+html[data-ifv-reskin] .modal-button--close::before {
+    content: none !important;
+}
+
+html[data-ifv-reskin] .modal-button--close svg {
+    display: block !important;
+    width: 16px !important;
+    height: 16px !important;
+    stroke: currentColor !important;
+    stroke-width: 2 !important;
+    fill: none !important;
+}
+
+html[data-ifv-reskin] .modal-button--close:hover {
+    background: var(--ifv-surface-3) !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .modal__footer {
+    flex: 0 0 auto;
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 10px !important;
+    justify-content: flex-end !important;
+    padding-top: 14px !important;
+    background: transparent !important;
+    border-top: 1px solid var(--ifv-line) !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .modal__footer .MuiButton-root {
+    font-family: var(--ifv-font) !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    padding: 10px 20px !important;
+    min-width: 88px !important;
+    height: 40px !important;
+    box-shadow: none !important;
+}
+
+html[data-ifv-reskin] .modal__footer .MuiButton-containedPrimary,
+html[data-ifv-reskin] .modal__footer .MuiButton-contained.primary-button,
+html[data-ifv-reskin] .modal__footer .MuiButton-contained.default-button {
+    background: var(--ifv-accent) !important;
+    color: var(--ifv-accent-contrast) !important;
+}
+
+html[data-ifv-reskin] .modal__footer .MuiButton-containedPrimary:hover,
+html[data-ifv-reskin] .modal__footer .MuiButton-contained.primary-button:hover,
+html[data-ifv-reskin] .modal__footer .MuiButton-contained.default-button:hover {
+    background: var(--ifv-accent) !important;
+    opacity: 0.9;
+    box-shadow: none !important;
+}
+
+html[data-ifv-reskin] .modal__footer .MuiButton-outlined,
+html[data-ifv-reskin] .modal__footer .MuiButton-outlinedPrimary,
+html[data-ifv-reskin] .modal__footer button:not(.MuiButton-contained) {
+    background: transparent !important;
+    color: var(--ifv-accent) !important;
+    border: 1.5px solid var(--ifv-accent) !important;
+}
+
+html[data-ifv-reskin] .modal__footer .MuiButton-outlined:hover,
+html[data-ifv-reskin] .modal__footer .MuiButton-outlinedPrimary:hover,
+html[data-ifv-reskin] .modal__footer button:not(.MuiButton-contained):hover {
+    background: var(--ifv-accent-soft) !important;
+    color: var(--ifv-accent) !important;
+}
+
+/* modal data box: subtle surface for both themes */
+html[data-ifv-reskin] .modal .details__content__box,
+html[data-ifv-reskin] .modal .modal__box {
+    background: var(--ifv-surface-2) !important;
+    border: 1px solid var(--ifv-line) !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    color: var(--ifv-text) !important;
+    overflow: visible;
+}
+
+html[data-ifv-reskin] .modal .details__content__box__header {
+    background: transparent !important;
+    border-bottom: 0 !important;
+    padding: 0 2px 16px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .modal .details__content__box__header h2,
+html[data-ifv-reskin] .modal .details__content__box__header h2 * {
+    margin: 0 !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .modal .details__content__box__content {
+    background: transparent !important;
+    color: var(--ifv-text) !important;
+}
+
+/* grade detail: label above value, no divider bars under each record */
+html[data-ifv-reskin] .modal .info-row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 3px !important;
+    padding: 0 2px 16px !important;
+    border: 0 !important;
+    background: transparent !important;
+}
+
+html[data-ifv-reskin] .modal .info-row:last-child {
+    padding-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .modal .details__content__box__content .info-label span {
+    display: block;
+    color: var(--ifv-text-3) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.07em !important;
+}
+
+html[data-ifv-reskin] .modal .info-text {
+    color: var(--ifv-text) !important;
+    font-size: 14.5px !important;
+    font-weight: 600 !important;
+}
+
+html[data-ifv-reskin] .modal .details__content__box__content .info-text span {
+    font-size: 14.5px !important;
+    font-weight: 600 !important;
+}
+
+html[data-ifv-reskin] .modal .details__content__box__content .info-text .tile__important-text {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+}
+
+html[data-ifv-reskin] .modal .modal__plan-details__row {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    padding: 8px 2px !important;
+    font-size: 13.5px !important;
+    color: var(--ifv-text) !important;
+    border: 0 !important;
+}
+
+html[data-ifv-reskin] .modal .modal__plan-details__row:last-child {
+    padding-bottom: 0 !important;
+}
+
+html[data-ifv-reskin] .modal .modal__plan-details__row svg {
+    flex: 0 0 auto;
+    width: 17px !important;
+    height: 17px !important;
+    margin-top: 1px;
+    fill: var(--ifv-text-3) !important;
+    color: var(--ifv-text-3) !important;
+}
+
+/* keep semantic colours (grade values), force the rest to theme text */
+html[data-ifv-reskin] .modal .details__content__box__content h3,
+html[data-ifv-reskin] .modal .details__content__box__content p,
+html[data-ifv-reskin] .modal .details__content__box__content strong,
+html[data-ifv-reskin] .modal .details__content__box__content b {
+    color: var(--ifv-text) !important;
 }
 
 /* the "Więcej" / list modals */
