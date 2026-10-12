@@ -4708,29 +4708,6 @@ html[data-ifv-reskin] .list-modal > div:last-of-type > div:active {
     transform: scale(0.992);
 }
 
-/* segmented control (frekwencja month tabs etc.) */
-html[data-ifv-reskin] .attendance-tabs {
-    background: var(--ifv-surface-3) !important;
-    border: 0 !important;
-    border-radius: 12px !important;
-    padding: 4px !important;
-    margin: 12px !important;
-}
-
-html[data-ifv-reskin] .attendance-tabs button {
-    border-radius: 9px !important;
-    min-height: 40px !important;
-    font-weight: 600 !important;
-    transition: background-color 0.18s var(--ifv-ease), color 0.18s var(--ifv-ease);
-}
-
-html[data-ifv-reskin] .attendance-tabs button.Mui-selected,
-html[data-ifv-reskin] .attendance-tabs button:disabled {
-    background: var(--ifv-surface) !important;
-    box-shadow: var(--ifv-shadow-sm) !important;
-    opacity: 1 !important;
-}
-
 /* buttons: comfortable, non-capitalised tap targets */
 html[data-ifv-reskin] .MuiButton-root {
     border-radius: var(--ifv-radius-sm) !important;
@@ -5382,29 +5359,74 @@ html[data-ifv-reskin] .column__content > div:first-child {
 }
 
 /* ---------------------------------------------------- Frekwencja --- */
-/* Segmented control tabs */
+/* Frekwencja | Statystyki — rewritten from scratch.
+   The app injects a \`position:fixed; width:100vw; transform:translateX(-5px)\`
+   bar with two decorative strip <div>s, and swaps the two views with broken
+   structural selectors that leave the attendance view stacked above the
+   statistics view. We render a plain, in-flow segmented control and drive the
+   pane switch off the \`stats\` class the app already toggles. */
 html[data-ifv-reskin] .attendance-tabs {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    height: auto !important;
+    transform: none !important;
+    z-index: 30 !important;
     display: flex !important;
-    margin: 8px 12px !important;
+    gap: 4px !important;
+    margin: 4px 12px 10px !important;
     padding: 4px !important;
     background: var(--ifv-surface-3) !important;
     border-radius: 12px !important;
     box-shadow: var(--ifv-shadow-sm) !important;
 }
 
-html[data-ifv-reskin] .attendance-tabs button {
-    flex: 1 !important;
-    min-height: 44px !important;
-    border-radius: 9px !important;
-    font-weight: 600 !important;
-    font-size: 13px !important;
-    transition: all 0.18s var(--ifv-ease);
+/* decorative strip children shipped by the app */
+html[data-ifv-reskin] .attendance-tabs > div {
+    display: none !important;
 }
 
-html[data-ifv-reskin] .attendance-tabs button:disabled {
+html[data-ifv-reskin] .attendance-tabs > button {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    height: 40px !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 12px !important;
+    border: 0 !important;
+    border-radius: 9px !important;
+    background: transparent !important;
+    color: var(--ifv-text-2) !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+    transition: background-color 0.18s var(--ifv-ease),
+        color 0.18s var(--ifv-ease) !important;
+}
+
+/* the button of the currently shown view is the disabled one */
+html[data-ifv-reskin] .attendance-tabs > button:disabled {
     background: var(--ifv-surface) !important;
-    box-shadow: var(--ifv-shadow-sm) !important;
     color: var(--ifv-accent) !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+}
+
+/* Pane switch: exactly one of the two sibling views is visible. */
+html[data-ifv-reskin]
+    .app__content:has(.tabsview.attendance-init.stats)
+    .tabsview.attendance-init.stats {
+    display: none !important;
+}
+
+html[data-ifv-reskin]
+    .app__content:has(.tabsview.attendance-init:not(.stats))
+    .mobile__frame:has(.statistics) {
+    display: none !important;
 }
 
 /* Attendance list container */
@@ -5750,6 +5772,36 @@ html[data-ifv-reskin]
 
 html[data-ifv-reskin] .ifv-att-nav {
     margin: 4px 12px 10px;
+    padding: 6px;
+    border-radius: var(--ifv-radius);
+    background: var(--ifv-surface-2);
+    border: 1px solid var(--ifv-line);
+}
+
+/* The day picker and its week arrows are the only date navigation on the
+   mobile weekly accordion view — hide the app's own week selector there.
+   Keyed off the mobile frame (not the accordion tags) so it never flashes
+   back while a week switch re-renders the accordions. */
+html[data-ifv-reskin]
+    .mobile__frame .tabsview.attendance-init .week-selector {
+    display: none !important;
+}
+
+html[data-ifv-reskin] .ifv-att-nav__range {
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.03em;
+    color: var(--ifv-text-2);
+    padding: 2px 4px 8px;
+    border-bottom: 1px solid var(--ifv-line);
+    margin-bottom: 6px;
+}
+
+html[data-ifv-reskin] .ifv-att-nav__row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 html[data-ifv-reskin] .ifv-att-nav__days {
@@ -5919,6 +5971,33 @@ html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector {
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
+}
+
+/* ------------------------------------------------- Frekwencja: flat tab ---
+   No nested "box" around the day picker and the lesson list — they sit
+   directly on the tab surface, like Plan lekcji. */
+html[data-ifv-reskin][data-ifv-theme] .MuiAccordion-root[data-ifv-att] {
+    margin: 0 !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme]
+    .MuiAccordion-root[data-ifv-att]
+    .frekwencja {
+    margin: 0 !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme] .ifv-attendance {
+    padding: 0 0 8px !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme] .ifv-att-nav {
+    background: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 0 10px !important;
+    padding: 0 !important;
 }
 `,
 
@@ -6542,7 +6621,7 @@ html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector {
         Niedziela: "Nd",
     };
 
-    const RESKIN_ATT_DAY_RE =
+const RESKIN_ATT_DAY_RE =
         /Poniedziałek|Wtorek|Środa|Czwartek|Piątek|Sobota|Niedziela/;
 
     let reskinAttNavObs = null;
@@ -6592,6 +6671,89 @@ html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector {
         setTimeout(reskinAttNavState, 160);
     };
 
+    const reskinAttNavSig = () =>
+        reskinAttNavDays()
+            .map(reskinAttNavHeader)
+            .join("|");
+
+    const RESKIN_ATT_MONTHS = {
+        stycznia: "01",
+        lutego: "02",
+        marca: "03",
+        kwietnia: "04",
+        maja: "05",
+        czerwca: "06",
+        lipca: "07",
+        sierpnia: "08",
+        września: "09",
+        października: "10",
+        listopada: "11",
+        grudnia: "12",
+    };
+
+    const reskinAttNavDatePart = (header) => {
+        const rest = header.split(",")[1] || "";
+        const m = /^\s*(\d{1,2})\s+([^\s]+)\s+(\d{4})\s*$/.exec(rest);
+        if (!m) return null;
+        return {
+            day: String(+m[1]),
+            month: RESKIN_ATT_MONTHS[m[2].toLowerCase()] || "??",
+            year: m[3],
+        };
+    };
+
+    const reskinAttNavRange = (days) => {
+        const parts = days.map((a) =>
+            reskinAttNavDatePart(reskinAttNavHeader(a)),
+        );
+        if (!parts.length || parts.some((p) => !p)) return "";
+        const first = parts[0];
+        const last = parts[parts.length - 1];
+        if (first.month === last.month && first.year === last.year)
+            return `${first.day}-${last.day}.${first.month}.${first.year}`;
+        return `${first.day}.${first.month}.${first.year} – ${last.day}.${last.month}.${last.year}`;
+    };
+
+    /* The day picker is the only in-week navigation. The side arrows switch
+       whole weeks through the app's own week-selector: back lands on the
+       previous week's last day (Friday), forward on the next week's first
+       day (Monday). */
+    const reskinAttNavWeek = (dir) => {
+        const total = reskinAttNavDays().length;
+        if (!total) return;
+        const ws = document.querySelector(
+            ".content-container__tab-subheader .week-selector",
+        );
+        const btn = ws?.querySelector(
+            `[aria-label="${dir > 0 ? "Następny tydzień" : "Poprzedni tydzień"}"]`,
+        );
+        if (!btn) return;
+        const oldSig = reskinAttNavSig();
+        const target = dir > 0 ? 0 : total - 1;
+        btn.click();
+        let tries = 0;
+        const poll = () => {
+            if (tries++ >= 40) return;
+            const nd = [
+                ...document.querySelectorAll(".MuiAccordion-root"),
+            ].filter(
+                (a) =>
+                    a.querySelector(".frekwencja") &&
+                    RESKIN_ATT_DAY_RE.test(reskinAttNavHeader(a)),
+            );
+            if (
+                nd.length !== total ||
+                reskinAttNavDays().length !== total ||
+                reskinAttNavSig() === oldSig
+            ) {
+                setTimeout(poll, 120);
+                return;
+            }
+            reskinAttNavGo(target);
+        };
+        setTimeout(poll, 120);
+    };
+
     const reskinAttNavObserve = (parent) => {
         if (reskinAttNavObs && reskinAttNavObs._ifvParent === parent) return;
         if (reskinAttNavObs) reskinAttNavObs.disconnect();
@@ -6628,15 +6790,23 @@ html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector {
         days.forEach((a, i) => a.setAttribute("data-ifv-att", String(i)));
 
         const bar = document.createElement("div");
-        bar.className = "ifv-oceny-pager ifv-att-nav";
+        bar.className = "ifv-att-nav";
         bar.dataset.ifvSig = sig;
-        bar.innerHTML =
-            `<button type="button" class="ifv-oceny-pager__arrow" data-ifv-dir="-1" aria-label="Poprzedni dzień">` +
+
+        const range = document.createElement("div");
+        range.className = "ifv-att-nav__range";
+        range.textContent = reskinAttNavRange(days);
+        if (!range.textContent) range.style.display = "none";
+
+        const row = document.createElement("div");
+        row.className = "ifv-att-nav__row";
+        row.innerHTML =
+            `<button type="button" class="ifv-oceny-pager__arrow" data-ifv-dir="-1" aria-label="Poprzedni tydzień">` +
             `<svg viewBox="0 0 24 24"><path d="${RESKIN_CHEVRON.prev}"/></svg></button>` +
             `<div class="ifv-att-nav__days"></div>` +
-            `<button type="button" class="ifv-oceny-pager__arrow" data-ifv-dir="1" aria-label="Następny dzień">` +
+            `<button type="button" class="ifv-oceny-pager__arrow" data-ifv-dir="1" aria-label="Następny tydzień">` +
             `<svg viewBox="0 0 24 24"><path d="${RESKIN_CHEVRON.next}"/></svg></button>`;
-        const daysEl = bar.querySelector(".ifv-att-nav__days");
+        const daysEl = row.querySelector(".ifv-att-nav__days");
         days.forEach((a, i) => {
             const header = reskinAttNavHeader(a);
             const [name, rest] = header.split(",");
@@ -6658,20 +6828,15 @@ html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector {
             b.appendChild(d);
             daysEl.appendChild(b);
         });
+        bar.appendChild(range);
+        bar.appendChild(row);
         bar.addEventListener("click", (event) => {
             const arrow = event.target.closest(".ifv-oceny-pager__arrow");
             const dayBtn = event.target.closest(".ifv-att-nav__day");
             if (!arrow && !dayBtn) return;
             event.preventDefault();
             if (dayBtn) reskinAttNavGo(+dayBtn.dataset.i);
-            else
-                reskinAttNavGo(
-                    reskinAttNavActive() +
-                        (parseInt(
-                            arrow.getAttribute("data-ifv-dir"),
-                            10,
-                        ) || 0),
-                );
+            else reskinAttNavWeek(+arrow.getAttribute("data-ifv-dir"));
         });
         parent.insertBefore(bar, days[0]);
         reskinAttNavObserve(parent);
