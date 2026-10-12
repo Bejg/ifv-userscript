@@ -5503,6 +5503,61 @@ html[data-ifv-reskin] .frequency-position__one-item .zwolnienie {
     color: #94a3b8 !important;
 }
 
+/* Attendance rebuilt as plan-style cards (no hour grid) */
+html[data-ifv-reskin] .frekwencja .timetable__grid {
+    display: none !important;
+}
+
+html[data-ifv-reskin] .ifv-attendance {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+}
+
+html[data-ifv-reskin] .ifv-attendance > .ifv-lesson {
+    margin: 0;
+    padding: 11px 13px;
+    background: var(--ifv-surface);
+    border-radius: var(--ifv-radius-sm);
+    box-shadow: var(--ifv-shadow-sm);
+    transition: transform 0.12s var(--ifv-ease),
+        background-color 0.15s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .ifv-attendance > .ifv-lesson:active {
+    transform: scale(0.99);
+    background: var(--ifv-surface-2);
+}
+
+html[data-ifv-reskin] .ifv-empty {
+    text-align: center;
+    color: var(--ifv-text-3);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 28px 12px;
+}
+
+html[data-ifv-reskin] .ifv-lesson__chip--ok {
+    color: #10b981 !important;
+    background: rgba(16, 185, 129, 0.15) !important;
+}
+
+html[data-ifv-reskin] .ifv-lesson__chip--bad {
+    color: #ef4444 !important;
+    background: rgba(239, 68, 68, 0.15) !important;
+}
+
+html[data-ifv-reskin] .ifv-lesson__chip--warn {
+    color: #f59e0b !important;
+    background: rgba(245, 158, 11, 0.15) !important;
+}
+
+html[data-ifv-reskin] .ifv-lesson__chip--info {
+    color: #94a3b8 !important;
+    background: rgba(148, 163, 184, 0.15) !important;
+}
+
 /* Statistics cards */
 html[data-ifv-reskin] .statistics .content__header {
     padding: 12px 16px !important;
@@ -6212,6 +6267,167 @@ html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector {
         lesson.appendChild(card);
     };
 
+    const RESKIN_ATT_LABELS = {
+        obecnosc: "Obecny",
+        usprawiedliwione: "Usprawiedliwione",
+        usprawiedliwienieZatwierdzone: "Usprawiedliwione",
+        usprawiedliwienieNowe: "Usprawiedliwienie",
+        nieobecnosc: "Nieobecny",
+        nieobecnoscNieusprawiedliwiona: "Nieobecny",
+        nieobecnoscUsprawiedliwiona: "Usprawiedliwiona",
+        spoznienie: "Sp\u00f3\u017anienie",
+        spoznienieUsprawiedliwione: "Sp\u00f3\u017anienie uspr.",
+        nieobecnyZPrzyczynSzkolnych: "Obecno\u015b\u0107 szkolna",
+        zwolniony: "Zwolnienie",
+    };
+
+    const RESKIN_ATT_CHIP = {
+        obecnosc: "ok",
+        usprawiedliwione: "info",
+        usprawiedliwienieZatwierdzone: "info",
+        usprawiedliwienieNowe: "info",
+        nieobecnosc: "bad",
+        nieobecnoscNieusprawiedliwiona: "bad",
+        nieobecnoscUsprawiedliwiona: "info",
+        spoznienie: "warn",
+        spoznienieUsprawiedliwione: "warn",
+        nieobecnyZPrzyczynSzkolnych: "info",
+        zwolniony: "info",
+    };
+
+    const reskinAttStatus = (one) => {
+        const sym = one.querySelector(".frekwencja-symbol");
+        const candidates = [
+            ...(sym ? sym.classList : one.classList),
+            ...one.classList,
+        ];
+        return (
+            candidates.find((c) => RESKIN_ATT_LABELS[c]) ||
+            candidates.find((c) =>
+                ["obecnosc", "nieobecnosc", "spoznienie", "zwolnienie"].includes(
+                    c,
+                ),
+            ) ||
+            ""
+        );
+    };
+
+    const buildReskinAttendanceCard = (one) => {
+        const status = reskinAttStatus(one);
+        const sym = one.querySelector(".frekwencja-symbol");
+        const timeRaw =
+            one.querySelector(".position__lesson__hours")?.textContent?.trim() ||
+            "";
+        const [start, end] = timeRaw.split("-").map((s) => s.trim());
+        const time = reskinHours(start, end);
+        const subject =
+            one.querySelector(".position__lesson__subject")?.textContent?.trim() ||
+            "";
+        const teacher = [
+            ...one.querySelectorAll(
+                ".position__lesson__info:not(.position__lesson__subject)",
+            ),
+        ]
+            .map((el) => el.textContent.trim())
+            .filter(Boolean)
+            .join(" \u00b7 ") ||
+            one.querySelector(".position__lesson__info")?.textContent?.trim() ||
+            "";
+        const label =
+            RESKIN_ATT_LABELS[status] ||
+            sym?.getAttribute("aria-label") ||
+            sym?.textContent?.trim() ||
+            "";
+        const mod = RESKIN_ATT_CHIP[status] ?? (status ? "info" : "");
+
+        const card = reskinEl("div", "ifv-lesson ifv-lesson--att");
+        const top = reskinEl("div", "ifv-lesson__top");
+        if (time) top.appendChild(reskinEl("span", "ifv-lesson__time", time));
+        if (label)
+            top.appendChild(
+                reskinEl(
+                    "span",
+                    `ifv-lesson__chip ifv-lesson__att-chip${
+                        mod ? ` ifv-lesson__chip--${mod}` : ""
+                    }`,
+                    label,
+                ),
+            );
+        if (top.children.length) card.appendChild(top);
+
+        if (subject) {
+            const body = reskinEl("div", "ifv-lesson__subject");
+            body.appendChild(
+                reskinEl("span", "ifv-lesson__subject-text", subject),
+            );
+            card.appendChild(body);
+        }
+        if (teacher)
+            card.appendChild(reskinEl("div", "ifv-lesson__teacher", teacher));
+
+        card.__ifvOrig = one;
+        return card;
+    };
+
+    const buildReskinAttendanceList = (host) => {
+        const grid = host.querySelector(".timetable__grid");
+        if (!grid) return;
+        const cells = [
+            ...grid.querySelectorAll(
+                ".cell .frequency-position__one-item",
+            ),
+        ]
+            .map((one) => {
+                const raw =
+                    one.querySelector(
+                        ".position__lesson__hours",
+                    )?.textContent?.trim() || "";
+                const m = /^(\d{1,2}):(\d{2})/.exec(raw);
+                return {
+                    one,
+                    start: m ? m[1] * 60 + +m[2] : 0,
+                };
+            })
+            .sort((a, b) => a.start - b.start)
+            .map((x) => x.one);
+        const sig = cells
+            .map((one) => {
+                const hr =
+                    one.querySelector(
+                        ".position__lesson__hours",
+                    )?.textContent?.trim() || "";
+                const sub =
+                    one.querySelector(
+                        ".position__lesson__subject",
+                    )?.textContent?.trim() || "";
+                const sym = one.querySelector(".frekwencja-symbol");
+                const st =
+                    sym?.getAttribute("aria-label") ||
+                    sym?.textContent?.trim() ||
+                    "";
+                return [hr, sub, st].join("|");
+            })
+            .join(";");
+        const existing = host.querySelector(":scope > .ifv-attendance");
+        if (existing && host.dataset.ifvAttSig === sig) return;
+        if (existing) existing.remove();
+        host.dataset.ifvAttSig = sig;
+
+        const list = reskinEl("div", "ifv-attendance");
+        if (!cells.length) {
+            list.appendChild(reskinEl("div", "ifv-empty", "Brak lekcji"));
+        } else {
+            cells.forEach((one) =>
+                list.appendChild(buildReskinAttendanceCard(one)),
+            );
+        }
+        host.insertBefore(list, host.firstChild);
+    };
+
+    const refreshReskinAttendance = () => {
+        document.querySelectorAll(".frekwencja").forEach(buildReskinAttendanceList);
+    };
+
     const refreshReskinPlan = () => {
         document
             .querySelectorAll(".plan-position")
@@ -6219,6 +6435,7 @@ html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector {
         document
             .querySelectorAll(".timetable .lesson")
             .forEach(buildReskinCustomCard);
+        refreshReskinAttendance();
     };
 
     let reskinPlanObserver = null;
@@ -6233,8 +6450,9 @@ html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector {
             reskinPlanFrame = requestAnimationFrame(() => {
                 reskinPlanFrame = 0;
                 if (
-                    document.querySelector(".plan-position") ||
-                    document.querySelector(".timetable .lesson")
+                    document.querySelector(
+                        ".plan-position, .timetable .lesson, .frekwencja .timetable__grid",
+                    )
                 )
                     refreshReskinPlan();
             });
@@ -6254,6 +6472,12 @@ html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector {
             if (details) {
                 event.preventDefault();
                 details.click();
+                return;
+            }
+            const orig = card.__ifvOrig;
+            if (orig && card.closest(".ifv-attendance")) {
+                event.preventDefault();
+                orig.click();
             }
         });
     };
