@@ -2495,20 +2495,6 @@ const prepGrades = async () => {
         height: 40px !important;
     }
 
-    .modal-button--close > span:first-of-type {
-        display: none !important;
-    }
-
-    .modal-button--close > span:last-of-type {
-        content: url("https://raw.githubusercontent.com/banocean/ifv/main/assets/icons/keyboard_backspace_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg");
-        filter: invert(0.8);
-        height: 40px;
-    }
-
-    .modal-button--close > span > svg {
-        display: none !important;
-    }
-}
 `,
         "hideSubjectsWithNoGrades/normalGrades.css": `
 article.grades__box:has(.tile__content:first-of-type:empty) {
@@ -5037,23 +5023,27 @@ html[data-ifv-reskin] .modal-button--close.MuiIconButton-root {
     border-radius: 999px !important;
     background: transparent !important;
     color: var(--ifv-text-2) !important;
-    font-size: 20px !important;
-    line-height: 1 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    display: block !important;
+    overflow: hidden !important;
+}
+
+html[data-ifv-reskin] .modal-button--close > * {
+    display: none !important;
 }
 
 html[data-ifv-reskin] .modal-button--close::before {
-    content: "—" !important;
-}
-
-html[data-ifv-reskin] .modal-button--close svg {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    width: 0 !important;
-    height: 0 !important;
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    margin: auto !important;
+    width: 18px !important;
+    height: 18px !important;
+    background-color: currentColor !important;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z'/%3E%3C/svg%3E") center / contain no-repeat !important;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z'/%3E%3C/svg%3E") center / contain no-repeat !important;
 }
 
 html[data-ifv-reskin] .modal-button--close:hover {
