@@ -5504,7 +5504,10 @@ html[data-ifv-reskin] .frequency-position__one-item .zwolnienie {
 }
 
 /* Attendance rebuilt as plan-style cards (no hour grid) */
-html[data-ifv-reskin] .frekwencja .timetable__grid {
+html[data-ifv-reskin] .frekwencja .timetable__grid,
+html[data-ifv-reskin] .frekwencja .background,
+html[data-ifv-reskin] .frekwencja .timetable,
+html[data-ifv-reskin] .frekwencja > section {
     display: none !important;
 }
 
@@ -5696,6 +5699,111 @@ html[data-ifv-reskin] .ifv-oceny-pager__count {
     letter-spacing: 0.04em;
     color: var(--ifv-text-3);
     text-transform: uppercase;
+}
+
+/* ------------------------------------------------- Attendance day navbar --- */
+html[data-ifv-reskin] .MuiAccordion-root[data-ifv-att] {
+    margin: 0 12px 10px !important;
+    box-shadow: none !important;
+    border-radius: var(--ifv-radius) !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-att]
+    > .MuiAccordionSummary-root {
+    display: none !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-att]
+    .MuiAccordionDetails-root {
+    padding: 0 !important;
+}
+
+/* No expand/collapse animation — instant swap between days. */
+html[data-ifv-reskin] .MuiAccordion-root[data-ifv-att] .MuiCollapse-root,
+html[data-ifv-reskin] .MuiAccordion-root[data-ifv-att] .MuiCollapse-wrapper,
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-att]
+    .MuiCollapse-wrapperInner,
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-att]
+    .MuiAccordionDetails-root {
+    transition: none !important;
+    animation: none !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-att]:not(.Mui-expanded)
+    .MuiCollapse-root {
+    display: none !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-att].Mui-expanded
+    .MuiCollapse-root {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    visibility: visible !important;
+}
+
+html[data-ifv-reskin] .ifv-att-nav {
+    margin: 4px 12px 10px;
+}
+
+html[data-ifv-reskin] .ifv-att-nav__days {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+html[data-ifv-reskin] .ifv-att-nav__days::-webkit-scrollbar {
+    display: none;
+}
+
+html[data-ifv-reskin] .ifv-att-nav__day {
+    flex: 1 1 0;
+    min-width: 44px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 6px 4px;
+    border: 0;
+    border-radius: var(--ifv-radius-xs);
+    background: transparent;
+    color: var(--ifv-text-2);
+    cursor: pointer;
+    transition: background-color 0.16s var(--ifv-ease),
+        color 0.16s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .ifv-att-nav__day:hover {
+    background: var(--ifv-surface-3);
+}
+
+html[data-ifv-reskin] .ifv-att-nav__day.is-active {
+    background: var(--ifv-accent-soft);
+    color: var(--ifv-accent-text);
+}
+
+html[data-ifv-reskin] .ifv-att-nav__weekday {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+html[data-ifv-reskin] .ifv-att-nav__date {
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
 }
 
 /* ---------------------------------------------------- Global touch targets --- */
@@ -6424,8 +6532,157 @@ html[data-ifv-reskin][data-ifv-theme] .first-header__date-selector {
         host.insertBefore(list, host.firstChild);
     };
 
+    const RESKIN_ATT_DAYS = {
+        Poniedziałek: "Pon",
+        Wtorek: "Wt",
+        Środa: "Śr",
+        Czwartek: "Czw",
+        Piątek: "Pt",
+        Sobota: "Sob",
+        Niedziela: "Nd",
+    };
+
+    const RESKIN_ATT_DAY_RE =
+        /Poniedziałek|Wtorek|Środa|Czwartek|Piątek|Sobota|Niedziela/;
+
+    let reskinAttNavObs = null;
+
+    const reskinAttNavHeader = (accordion) =>
+        (
+            accordion.querySelector(".accordion__full-width__header h2")
+                ?.textContent || ""
+        )
+            .replace(/\s+/g, " ")
+            .trim();
+
+    const reskinAttNavDays = () => [
+        ...document.querySelectorAll(".MuiAccordion-root[data-ifv-att]"),
+    ];
+
+    const reskinAttNavActive = () => {
+        const idx = reskinAttNavDays().findIndex((a) =>
+            a.className.toString().includes("Mui-expanded"),
+        );
+        return idx < 0 ? 0 : idx;
+    };
+
+    const reskinAttNavState = () => {
+        const days = reskinAttNavDays();
+        const bar = days[0]?.parentElement?.querySelector(
+            ":scope > .ifv-att-nav",
+        );
+        if (!bar || !days.length) return;
+        const active = reskinAttNavActive();
+        bar.querySelectorAll(".ifv-att-nav__day").forEach((b) =>
+            b.classList.toggle("is-active", +b.dataset.i === active),
+        );
+    };
+
+    const reskinAttNavGo = (target) => {
+        const days = reskinAttNavDays();
+        if (!days.length) return;
+        const total = days.length;
+        const idx = ((target % total) + total) % total;
+        days.forEach((a, i) => {
+            const expanded = a.className.toString().includes("Mui-expanded");
+            if ((i === idx) === expanded) return;
+            a.querySelector(".MuiAccordionSummary-root")?.click();
+        });
+        requestAnimationFrame(reskinAttNavState);
+        setTimeout(reskinAttNavState, 160);
+    };
+
+    const reskinAttNavObserve = (parent) => {
+        if (reskinAttNavObs && reskinAttNavObs._ifvParent === parent) return;
+        if (reskinAttNavObs) reskinAttNavObs.disconnect();
+        reskinAttNavObs = new MutationObserver(reskinAttNavState);
+        reskinAttNavObs._ifvParent = parent;
+        reskinAttNavObs.observe(parent, {
+            subtree: true,
+            childList: true,
+            attributes: true,
+            attributeFilter: ["class"],
+        });
+    };
+
+    const refreshReskinAttendanceNav = () => {
+        if (!/(^|\/)frekwencja(\/|$|\?|#)/.test(W.location.pathname)) return;
+        const days = [...document.querySelectorAll(".MuiAccordion-root")].filter(
+            (a) =>
+                a.querySelector(".frekwencja") &&
+                RESKIN_ATT_DAY_RE.test(reskinAttNavHeader(a)),
+        );
+        if (days.length < 2) return;
+        const parent = days[0].parentElement;
+        if (!parent) return;
+        const sig = days.map(reskinAttNavHeader).join("|");
+        const existing = parent.querySelector(":scope > .ifv-att-nav");
+        if (existing) {
+            if (existing.dataset.ifvSig === sig) {
+                reskinAttNavObserve(parent);
+                reskinAttNavState();
+                return;
+            }
+            existing.remove();
+        }
+        days.forEach((a, i) => a.setAttribute("data-ifv-att", String(i)));
+
+        const bar = document.createElement("div");
+        bar.className = "ifv-oceny-pager ifv-att-nav";
+        bar.dataset.ifvSig = sig;
+        bar.innerHTML =
+            `<button type="button" class="ifv-oceny-pager__arrow" data-ifv-dir="-1" aria-label="Poprzedni dzień">` +
+            `<svg viewBox="0 0 24 24"><path d="${RESKIN_CHEVRON.prev}"/></svg></button>` +
+            `<div class="ifv-att-nav__days"></div>` +
+            `<button type="button" class="ifv-oceny-pager__arrow" data-ifv-dir="1" aria-label="Następny dzień">` +
+            `<svg viewBox="0 0 24 24"><path d="${RESKIN_CHEVRON.next}"/></svg></button>`;
+        const daysEl = bar.querySelector(".ifv-att-nav__days");
+        days.forEach((a, i) => {
+            const header = reskinAttNavHeader(a);
+            const [name, rest] = header.split(",");
+            const dayNo = (rest || "").trim().match(/^\d+/)?.[0] || "";
+            const short =
+                RESKIN_ATT_DAYS[name.trim()] || name.trim().slice(0, 3);
+            const b = document.createElement("button");
+            b.type = "button";
+            b.className = "ifv-att-nav__day";
+            b.dataset.i = String(i);
+            b.setAttribute("aria-label", header);
+            const wr = document.createElement("span");
+            wr.className = "ifv-att-nav__weekday";
+            wr.textContent = short;
+            const d = document.createElement("span");
+            d.className = "ifv-att-nav__date";
+            d.textContent = dayNo;
+            b.appendChild(wr);
+            b.appendChild(d);
+            daysEl.appendChild(b);
+        });
+        bar.addEventListener("click", (event) => {
+            const arrow = event.target.closest(".ifv-oceny-pager__arrow");
+            const dayBtn = event.target.closest(".ifv-att-nav__day");
+            if (!arrow && !dayBtn) return;
+            event.preventDefault();
+            if (dayBtn) reskinAttNavGo(+dayBtn.dataset.i);
+            else
+                reskinAttNavGo(
+                    reskinAttNavActive() +
+                        (parseInt(
+                            arrow.getAttribute("data-ifv-dir"),
+                            10,
+                        ) || 0),
+                );
+        });
+        parent.insertBefore(bar, days[0]);
+        reskinAttNavObserve(parent);
+        reskinAttNavState();
+    };
+
     const refreshReskinAttendance = () => {
-        document.querySelectorAll(".frekwencja").forEach(buildReskinAttendanceList);
+        document
+            .querySelectorAll(".frekwencja")
+            .forEach(buildReskinAttendanceList);
+        refreshReskinAttendanceNav();
     };
 
     const refreshReskinPlan = () => {
