@@ -1239,26 +1239,38 @@ html[data-ifv-reskin] .modal-button--close.MuiIconButton-root {
     border-radius: 999px !important;
     background: transparent !important;
     color: var(--ifv-text-2) !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
 }
 
 html[data-ifv-reskin] .modal-button--close::before {
-    content: none !important;
+    content: "—" !important;
 }
 
 html[data-ifv-reskin] .modal-button--close svg {
-    display: block !important;
-    width: 16px !important;
-    height: 16px !important;
-    stroke: currentColor !important;
-    stroke-width: 2 !important;
-    fill: none !important;
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
 }
 
 html[data-ifv-reskin] .modal-button--close:hover {
     background: var(--ifv-surface-3) !important;
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .modal__content {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+    padding: 16px 20px 20px !important;
+    background: var(--ifv-surface) !important;
     color: var(--ifv-text) !important;
 }
 
