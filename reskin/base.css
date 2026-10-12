@@ -636,73 +636,313 @@ html[data-ifv-reskin] .details-btn svg {
 }
 
 /* ---------------------------------------------------- Tablica (Dashboard) --- */
-/* Make today's schedule tile prominent */
-html[data-ifv-reskin] .tile:has(.plan-zajec),
-html[data-ifv-reskin] .tile:has(.tile__frequency__day) {
-    /* These contain the most important daily info */
+/* Rebuilt tiles: badge header + flat content lists matching the lesson cards. */
+
+html[data-ifv-reskin] .ifv-dash {
+    font-family: var(--ifv-font);
 }
 
-html[data-ifv-reskin] .tile__important-text {
-    color: var(--ifv-text) !important;
-    font-weight: 700 !important;
-    font-size: 14px !important;
-}
-
-/* Schedule inside tile */
-html[data-ifv-reskin] .plan-zajec {
-    margin: -6px 0 0 !important;
-    padding: 6px 10px 10px !important;
+html[data-ifv-reskin] .ifv-dash .tile {
     border-radius: var(--ifv-radius) !important;
-    overflow: hidden;
+    background: var(--ifv-surface) !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+    border: 1px solid var(--ifv-line) !important;
 }
 
-html[data-ifv-reskin] .plan-zajec .timetable__grid {
-    background: transparent !important;
+html[data-ifv-reskin] .ifv-dash__tile--empty {
+    opacity: 1 !important;
 }
 
-/* Grade tiles on dashboard */
-html[data-ifv-reskin] .tile__grades {
-    background: transparent !important;
-    border-radius: 0 0 var(--ifv-radius) var(--ifv-radius) !important;
-}
-
-html[data-ifv-reskin] .tile__empty-bg {
-    background: transparent !important;
-    border-radius: 0 0 var(--ifv-radius) var(--ifv-radius) !important;
-}
-
-html[data-ifv-reskin] .tile__empty__content {
-    color: var(--ifv-text-2) !important;
-    font-size: 14px !important;
-    padding: 24px 16px !important;
-}
-
-/* Tests/homework lists in tiles */
-html[data-ifv-reskin] .tile__list__rectangle-boxes li,
-html[data-ifv-reskin] .tile__list__borders li {
-    padding: 10px 12px !important;
-    border-bottom: 1px solid var(--ifv-line) !important;
+/* --- tile header --- */
+html[data-ifv-reskin] .ifv-dash__head {
     display: flex !important;
     align-items: center !important;
-    gap: 10px;
+    gap: 12px !important;
+    padding: 14px 16px 10px !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
 }
 
-html[data-ifv-reskin] .tile__list__rectangle-boxes li:last-child,
-html[data-ifv-reskin] .tile__list__borders li:last-child {
+html[data-ifv-reskin] .ifv-dash__head .flex__item-auto {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-width: 0;
+}
+
+html[data-ifv-reskin] .ifv-dash__ico {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: var(--ifv-radius-xs);
+    background: var(--ifv-accent-soft);
+}
+
+html[data-ifv-reskin] .ifv-dash__ico img {
+    width: 18px !important;
+    height: 18px !important;
+    filter: none !important;
+}
+
+html[data-ifv-reskin] .ifv-dash__head h2 {
+    margin: 0 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.01em;
+    color: var(--ifv-text) !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+html[data-ifv-reskin] .ifv-dash__head .toolbar {
+    margin-left: auto !important;
+}
+
+html[data-ifv-reskin] .ifv-dash__head .tile__link {
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 26px !important;
+    padding: 0 10px !important;
+    border-radius: 999px !important;
+    background: var(--ifv-surface-3) !important;
+    color: var(--ifv-text-2) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+}
+
+/* --- content lists --- */
+html[data-ifv-reskin] .ifv-dash__list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 14px 14px !important;
+}
+
+html[data-ifv-reskin] .ifv-dash__group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+html[data-ifv-reskin] .ifv-dash__group + .ifv-dash__group {
+    margin-top: 6px;
+}
+
+html[data-ifv-reskin] .ifv-dash__day {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ifv-text-3) !important;
+    padding: 2px 2px 4px !important;
+}
+
+/* --- schedule rows --- */
+html[data-ifv-reskin] .ifv-dash__lesson {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 8px 0 !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+}
+
+html[data-ifv-reskin] .ifv-dash__lesson:last-child {
     border-bottom: 0 !important;
 }
 
-html[data-ifv-reskin] .tile__list__rectangle__ribbon {
-    background: var(--ifv-accent-soft) !important;
-    color: var(--ifv-accent-text) !important;
-    border-radius: var(--ifv-radius-xs) !important;
-    padding: 2px 8px !important;
-    font-size: 11px !important;
+html[data-ifv-reskin] .ifv-dash__time {
+    flex: 0 0 auto;
+    width: 92px;
+    font-size: 11.5px !important;
     font-weight: 700 !important;
-    white-space: nowrap;
+    color: var(--ifv-text-2) !important;
+    font-variant-numeric: tabular-nums;
 }
 
-/* Teachers list */
+html[data-ifv-reskin] .ifv-dash__lesson-body {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+html[data-ifv-reskin] .ifv-dash__subject {
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    color: var(--ifv-text) !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+html[data-ifv-reskin] .ifv-dash__meta {
+    font-size: 11px !important;
+    color: var(--ifv-text-3) !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+html[data-ifv-reskin] .ifv-dash__chip {
+    flex: 0 0 auto;
+    align-self: center;
+    font-size: 9.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 3px 8px !important;
+    border-radius: 999px !important;
+    background: var(--ifv-surface-3) !important;
+    color: var(--ifv-text-2) !important;
+}
+
+html[data-ifv-reskin] .ifv-dash__chip--canceled {
+    background: rgba(220, 38, 38, 0.12) !important;
+    color: #dc2626 !important;
+}
+
+html[data-ifv-reskin] .ifv-dash__chip--substitute {
+    background: rgba(234, 179, 8, 0.16) !important;
+    color: #a16207 !important;
+}
+
+html[data-ifv-reskin] .ifv-dash__chip--conflicted,
+html[data-ifv-reskin] .ifv-dash__chip--info {
+    background: var(--ifv-accent-soft) !important;
+    color: var(--ifv-accent-text) !important;
+}
+
+html[data-ifv-reskin] .ifv-dash__lesson--canceled .ifv-dash__subject {
+    color: var(--ifv-text-3) !important;
+    text-decoration: line-through;
+}
+
+/* --- frequency list (reuses .ifv-lesson attendance cards) --- */
+html[data-ifv-reskin] .ifv-dash__freq > .ifv-dash__group > .ifv-lesson {
+    border-bottom: 1px solid var(--ifv-line);
+}
+
+html[data-ifv-reskin] .ifv-dash__freq > .ifv-dash__group > .ifv-lesson:last-child {
+    border-bottom: 0;
+}
+
+/* --- native rows (tests, duty, important) --- */
+html[data-ifv-reskin] .ifv-dash .tile__content__title,
+html[data-ifv-reskin] .ifv-dash .tile__important-text {
+    color: var(--ifv-text-3) !important;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+html[data-ifv-reskin] .ifv-dash__rows {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+html[data-ifv-reskin] .ifv-dash__row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 10px 14px !important;
+    border-bottom: 1px solid var(--ifv-line) !important;
+    color: var(--ifv-text) !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+}
+
+html[data-ifv-reskin] .ifv-dash__row:last-child {
+    border-bottom: 0 !important;
+}
+
+/* --- exam cards (sprawdziany) --- */
+html[data-ifv-reskin] .ifv-dash__exams > .ifv-dash__group {
+    gap: 8px;
+}
+
+html[data-ifv-reskin] .ifv-dash__exam {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    background: var(--ifv-surface-2) !important;
+    border: 1px solid var(--ifv-line) !important;
+}
+
+html[data-ifv-reskin] .ifv-dash__exam-body {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+html[data-ifv-reskin] .ifv-dash__exam-body .ifv-dash__subject {
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    color: var(--ifv-text) !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+html[data-ifv-reskin] .ifv-dash__exam-body .ifv-dash__chip {
+    align-self: center;
+}
+
+html[data-ifv-reskin] .ifv-dash__exam-go {
+    flex: 0 0 auto;
+    margin-left: auto !important;
+    color: var(--ifv-text-3) !important;
+}
+
+html[data-ifv-reskin] .ifv-dash .tile__list__rectangle__bold {
+    color: var(--ifv-text) !important;
+    font-weight: 600 !important;
+    font-size: 13.5px !important;
+}
+
+html[data-ifv-reskin] .ifv-dash .tile__list__rectangle__ribbon {
+    background: var(--ifv-accent-soft) !important;
+    color: var(--ifv-accent-text) !important;
+    border-radius: 999px !important;
+    padding: 3px 8px !important;
+    font-size: 9.5px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    margin-left: 8px !important;
+}
+
+html[data-ifv-reskin] .ifv-dash .details-btn--appearance {
+    margin-left: auto !important;
+    color: var(--ifv-text-3) !important;
+}
+
+/* --- empty states --- */
+html[data-ifv-reskin] .ifv-dash .tile__grades,
+html[data-ifv-reskin] .ifv-dash .tile__empty-bg {
+    background: transparent !important;
+    border-radius: 0 0 var(--ifv-radius) var(--ifv-radius) !important;
+}
+
+html[data-ifv-reskin] .ifv-dash .tile__empty__content,
+html[data-ifv-reskin] .ifv-dash .ifv-empty {
+    display: block;
+    color: var(--ifv-text-3) !important;
+    font-size: 12.5px !important;
+    font-weight: 500 !important;
+    padding: 18px 14px !important;
+    text-align: center;
+}
+
+/* --- teachers list --- */
 html[data-ifv-reskin] .tile__teachers__item {
     padding: 12px 0 !important;
     border-bottom: 1px solid var(--ifv-line) !important;
@@ -729,25 +969,98 @@ html[data-ifv-reskin] .tile__teacher__name {
     font-size: 14px !important;
 }
 
-/* Frequency tile */
-html[data-ifv-reskin] .tile__frequency__day {
-    padding: 8px 0 !important;
+/* --- hide the app's native/legacy markup behind rebuilt lists --- */
+html[data-ifv-reskin] .ifv-dash__hide-native .lessons-container,
+html[data-ifv-reskin] .ifv-dash__hide-native .plan-zajec,
+html[data-ifv-reskin] .ifv-dash__hide-native .tile__frequency__day,
+html[data-ifv-reskin] .ifv-dash__hide-native .tile__exam__day {
+    display: none !important;
 }
 
-html[data-ifv-reskin] .tile__frequency__day .tile__important-text {
-    display: block !important;
-    margin-bottom: 8px !important;
-    font-size: 13px !important;
+/* --- info toolbar chips --- */
+html[data-ifv-reskin] .ifv-dash .dashboard-info-toolbar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    height: auto !important;
+    max-height: none !important;
+    margin: 0 0 2px !important;
 }
 
-/* Hide less important empty tiles on mobile - keep only essential ones */
-html[data-ifv-reskin] .tile:has(.tile__empty__content:only-child):not(:has(.plan-zajec)):not(:has(.tile__frequency__day)) {
-    /* These will be de-emphasized via opacity */
-    opacity: 0.5;
+html[data-ifv-reskin] .ifv-dash .dashboard-info-toolbar > div {
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    align-items: center !important;
+    gap: 6px !important;
+    height: 30px !important;
+    padding: 0 12px !important;
+    border-radius: 999px !important;
+    background: var(--ifv-surface) !important;
+    border: 1px solid var(--ifv-line) !important;
+    color: var(--ifv-text-2) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    box-shadow: var(--ifv-shadow-sm);
 }
 
-html[data-ifv-reskin] .tile:has(.tile__empty__content:only-child):not(:has(.plan-zajec)):not(:has(.tile__frequency__day)):active {
-    opacity: 1;
+html[data-ifv-reskin] .ifv-dash .dashboard-info-toolbar > div img {
+    width: 16px !important;
+    height: 16px !important;
+    opacity: 0.85;
+    filter: invert(0.5) !important;
+}
+
+html[data-ifv-reskin][data-ifv-theme="dark"]
+    .ifv-dash
+    .dashboard-info-toolbar
+    > div
+    img {
+    filter: none !important;
+}
+
+/* header messages button icon (black SVG) must follow the theme ink */
+html[data-ifv-reskin] .header_logo_tools-container > div.messages {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .header_logo_tools-container > div.messages svg,
+html[data-ifv-reskin] .header_logo_tools-container > div.messages svg path,
+html[data-ifv-reskin] .header_logo_tools-container > div.messages svg * {
+    fill: var(--ifv-text) !important;
+    color: var(--ifv-text) !important;
+}
+
+/* --- widget grid --- */
+html[data-ifv-reskin] .ifv-dash .tile-subcontainer {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    align-items: start !important;
+}
+
+html[data-ifv-reskin] .ifv-dash .tile-subcontainer > .dashboard-info-toolbar,
+html[data-ifv-reskin] .ifv-dash .ifv-dash__tile--schedule,
+html[data-ifv-reskin] .ifv-dash .ifv-dash__tile--freq,
+html[data-ifv-reskin] .ifv-dash .ifv-dash__tile--exams {
+    grid-column: 1 / -1 !important;
+}
+
+html[data-ifv-reskin] .ifv-dash .ifv-dash__tile {
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* half-width widget header is tighter and wraps */
+html[data-ifv-reskin] .ifv-dash__tile:not(.ifv-dash__tile--schedule):not(.ifv-dash__tile--freq):not(.ifv-dash__tile--exams) .ifv-dash__head {
+    padding: 12px 12px 8px !important;
+    gap: 9px !important;
+}
+
+html[data-ifv-reskin] .ifv-dash__tile:not(.ifv-dash__tile--schedule):not(.ifv-dash__tile--freq):not(.ifv-dash__tile--exams) .ifv-dash__head h2 {
+    white-space: normal !important;
+    font-size: 12.5px !important;
+    line-height: 1.2;
 }
 
 /* ------------------------------------------------------------- buttons --- */
