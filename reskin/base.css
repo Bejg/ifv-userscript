@@ -1706,7 +1706,10 @@ html[data-ifv-reskin] .frequency-position__one-item .zwolnienie {
 }
 
 /* Attendance rebuilt as plan-style cards (no hour grid) */
-html[data-ifv-reskin] .frekwencja .timetable__grid {
+html[data-ifv-reskin] .frekwencja .timetable__grid,
+html[data-ifv-reskin] .frekwencja .background,
+html[data-ifv-reskin] .frekwencja .timetable,
+html[data-ifv-reskin] .frekwencja > section {
     display: none !important;
 }
 
@@ -1898,6 +1901,111 @@ html[data-ifv-reskin] .ifv-oceny-pager__count {
     letter-spacing: 0.04em;
     color: var(--ifv-text-3);
     text-transform: uppercase;
+}
+
+/* ------------------------------------------------- Attendance day navbar --- */
+html[data-ifv-reskin] .MuiAccordion-root[data-ifv-att] {
+    margin: 0 12px 10px !important;
+    box-shadow: none !important;
+    border-radius: var(--ifv-radius) !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-att]
+    > .MuiAccordionSummary-root {
+    display: none !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-att]
+    .MuiAccordionDetails-root {
+    padding: 0 !important;
+}
+
+/* No expand/collapse animation — instant swap between days. */
+html[data-ifv-reskin] .MuiAccordion-root[data-ifv-att] .MuiCollapse-root,
+html[data-ifv-reskin] .MuiAccordion-root[data-ifv-att] .MuiCollapse-wrapper,
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-att]
+    .MuiCollapse-wrapperInner,
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-att]
+    .MuiAccordionDetails-root {
+    transition: none !important;
+    animation: none !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-att]:not(.Mui-expanded)
+    .MuiCollapse-root {
+    display: none !important;
+}
+
+html[data-ifv-reskin]
+    .MuiAccordion-root[data-ifv-att].Mui-expanded
+    .MuiCollapse-root {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    visibility: visible !important;
+}
+
+html[data-ifv-reskin] .ifv-att-nav {
+    margin: 4px 12px 10px;
+}
+
+html[data-ifv-reskin] .ifv-att-nav__days {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+html[data-ifv-reskin] .ifv-att-nav__days::-webkit-scrollbar {
+    display: none;
+}
+
+html[data-ifv-reskin] .ifv-att-nav__day {
+    flex: 1 1 0;
+    min-width: 44px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 6px 4px;
+    border: 0;
+    border-radius: var(--ifv-radius-xs);
+    background: transparent;
+    color: var(--ifv-text-2);
+    cursor: pointer;
+    transition: background-color 0.16s var(--ifv-ease),
+        color 0.16s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .ifv-att-nav__day:hover {
+    background: var(--ifv-surface-3);
+}
+
+html[data-ifv-reskin] .ifv-att-nav__day.is-active {
+    background: var(--ifv-accent-soft);
+    color: var(--ifv-accent-text);
+}
+
+html[data-ifv-reskin] .ifv-att-nav__weekday {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+html[data-ifv-reskin] .ifv-att-nav__date {
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
 }
 
 /* ---------------------------------------------------- Global touch targets --- */
