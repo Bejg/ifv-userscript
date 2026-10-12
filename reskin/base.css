@@ -1705,6 +1705,61 @@ html[data-ifv-reskin] .frequency-position__one-item .zwolnienie {
     color: #94a3b8 !important;
 }
 
+/* Attendance rebuilt as plan-style cards (no hour grid) */
+html[data-ifv-reskin] .frekwencja .timetable__grid {
+    display: none !important;
+}
+
+html[data-ifv-reskin] .ifv-attendance {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+}
+
+html[data-ifv-reskin] .ifv-attendance > .ifv-lesson {
+    margin: 0;
+    padding: 11px 13px;
+    background: var(--ifv-surface);
+    border-radius: var(--ifv-radius-sm);
+    box-shadow: var(--ifv-shadow-sm);
+    transition: transform 0.12s var(--ifv-ease),
+        background-color 0.15s var(--ifv-ease);
+}
+
+html[data-ifv-reskin] .ifv-attendance > .ifv-lesson:active {
+    transform: scale(0.99);
+    background: var(--ifv-surface-2);
+}
+
+html[data-ifv-reskin] .ifv-empty {
+    text-align: center;
+    color: var(--ifv-text-3);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 28px 12px;
+}
+
+html[data-ifv-reskin] .ifv-lesson__chip--ok {
+    color: #10b981 !important;
+    background: rgba(16, 185, 129, 0.15) !important;
+}
+
+html[data-ifv-reskin] .ifv-lesson__chip--bad {
+    color: #ef4444 !important;
+    background: rgba(239, 68, 68, 0.15) !important;
+}
+
+html[data-ifv-reskin] .ifv-lesson__chip--warn {
+    color: #f59e0b !important;
+    background: rgba(245, 158, 11, 0.15) !important;
+}
+
+html[data-ifv-reskin] .ifv-lesson__chip--info {
+    color: #94a3b8 !important;
+    background: rgba(148, 163, 184, 0.15) !important;
+}
+
 /* Statistics cards */
 html[data-ifv-reskin] .statistics .content__header {
     padding: 12px 16px !important;
