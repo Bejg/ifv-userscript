@@ -130,15 +130,31 @@ html[data-ifv-reskin] div#root {
     overflow-x: hidden !important;
 }
 
-/* the messages button injected by another patch is 72px tall (20px padding)
-   which clips inside the 56px bar — shrink it and cluster it on the right */
-html[data-ifv-reskin] .header_logo_tools-container > div.messages {
-    padding: 12px !important;
-    float: none !important;
-    margin-left: 0 !important;
-    display: flex;
+/* the app's "wiadomości" shortcut in the header is 72px tall (20px inline
+   padding) which clips inside the 56px bar — shrink it to a 32px tap target */
+html[data-ifv-reskin] .header_logo_tools-container > div[style*="float: right"] {
+    padding: 4px 6px !important;
+    display: flex !important;
     align-items: center;
     justify-content: center;
+}
+
+html[data-ifv-reskin]
+    .header_logo_tools-container
+    a[title="Przejdź do modułu wiadomości"] {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 32px !important;
+    height: 32px !important;
+}
+
+html[data-ifv-reskin]
+    .header_logo_tools-container
+    a[title="Przejdź do modułu wiadomości"]
+    svg {
+    width: 22px !important;
+    height: 22px !important;
 }
 
 html[data-ifv-reskin] .header_logo_tools-container > .ifv-theme-toggle {
@@ -288,7 +304,8 @@ html[data-ifv-reskin] .bottom-navigation-bar > div > div > img.highlight {
 }
 
 /* hide original grades boxes used as click proxies */
-html[data-ifv-reskin] .ifv-grades-proxy {
+html[data-ifv-reskin] .ifv-grades-proxy,
+html[data-ifv-reskin] .ifv-grades-empty {
     display: none !important;
 }
 
@@ -518,7 +535,8 @@ html[data-ifv-reskin] .subject-row:active {
     background: var(--ifv-surface-2) !important;
 }
 
-html[data-ifv-reskin] .subject-row:last-child {
+html[data-ifv-reskin] .subject-row:last-child,
+html[data-ifv-reskin] .subject-row--last {
     border-bottom: 0 !important;
 }
 
@@ -1071,16 +1089,30 @@ html[data-ifv-reskin][data-ifv-theme="dark"]
     filter: none !important;
 }
 
-/* header messages button icon (black SVG) must follow the theme ink */
-html[data-ifv-reskin] .header_logo_tools-container > div.messages {
+/* header messages shortcut icon (black SVG) must follow the theme ink */
+html[data-ifv-reskin]
+    .header_logo_tools-container
+    a[title="Przejdź do modułu wiadomości"] {
     color: var(--ifv-text) !important;
 }
 
-html[data-ifv-reskin] .header_logo_tools-container > div.messages svg,
-html[data-ifv-reskin] .header_logo_tools-container > div.messages svg path,
-html[data-ifv-reskin] .header_logo_tools-container > div.messages svg * {
+html[data-ifv-reskin]
+    .header_logo_tools-container
+    a[title="Przejdź do modułu wiadomości"]
+    svg,
+html[data-ifv-reskin]
+    .header_logo_tools-container
+    a[title="Przejdź do modułu wiadomości"]
+    svg
+    path,
+html[data-ifv-reskin]
+    .header_logo_tools-container
+    a[title="Przejdź do modułu wiadomości"]
+    svg
+    * {
     fill: var(--ifv-text) !important;
     color: var(--ifv-text) !important;
+    stroke: none !important;
 }
 
 /* --- widget grid --- */
@@ -1294,6 +1326,14 @@ html[data-ifv-reskin] .modal__content-limit {
     padding: 14px 16px 16px !important;
     background: transparent !important;
     color: var(--ifv-text) !important;
+}
+
+/* Flatten helper wrappers without removing React-owned nodes (removing them
+   desyncs React's reconciliation and breaks the modal on the next render). */
+html[data-ifv-reskin] .modal .modal__header__title-wrapper,
+html[data-ifv-reskin] .modal .modal__box__content-limit,
+html[data-ifv-reskin] .modal .details__content__box__content {
+    display: contents !important;
 }
 
 /* Footer: minimal, only if buttons exist */
@@ -2858,4 +2898,183 @@ html[data-ifv-reskin][data-ifv-theme] .ifv-att-nav {
     box-shadow: none !important;
     margin: 0 0 10px !important;
     padding: 0 !important;
+}
+
+/* ------------------------------------------------- Frekwencja: actions & month ---
+   "Usprawiedliw" CTA buttons ship in the app's blue — switch them to the
+   reskin accent so they follow the active theme and accent colour. */
+html[data-ifv-reskin] .app__content__header .toolbar .MuiButton-contained,
+html[data-ifv-reskin] .tabsview.attendance-init .toolbar .MuiButton-contained {
+    background-color: var(--ifv-accent) !important;
+    color: var(--ifv-accent-contrast) !important;
+    box-shadow: none !important;
+}
+
+html[data-ifv-reskin] button.justify-abstence {
+    background-color: var(--ifv-accent) !important;
+    border-color: var(--ifv-accent) !important;
+    color: var(--ifv-accent-contrast) !important;
+    border-radius: var(--ifv-radius) !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+}
+
+/* Frekwencja "Miesiąc" scheduler ("frequency-scheduler"): rebuild the bare
+   app table into a quiet app-style card — surface, rounded cells, muted day
+   numbers, accent only on today. Both themes pick the tokens automatically. */
+html[data-ifv-reskin] .month-selector__month-current {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .frequency-scheduler {
+    width: 388px !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+    margin: 0 auto !important;
+    border-collapse: separate !important;
+    border-spacing: 3px !important;
+    border: 0 !important;
+    background: var(--ifv-surface) !important;
+    border-radius: var(--ifv-radius) !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+    padding: 12px !important;
+    overflow: hidden !important;
+}
+
+html[data-ifv-reskin] .frequency-scheduler__header-cell {
+    width: 0 !important;
+    padding: 12px 2px 10px !important;
+    text-align: center !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    color: var(--ifv-text-3) !important;
+    background: transparent !important;
+    border: 0 !important;
+}
+
+html[data-ifv-reskin]
+    .frequency-scheduler__header-row
+    .frequency-scheduler__header-cell:nth-of-type(-n + 5) {
+    width: 74px !important;
+}
+
+html[data-ifv-reskin] .frequency-scheduler__body-cell {
+    position: relative !important;
+    height: 74px !important;
+    min-height: 74px !important;
+    max-height: 74px !important;
+    width: 74px !important;
+    vertical-align: middle !important;
+    text-align: center !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    overflow: hidden !important;
+    transition: background-color 0.12s var(--ifv-ease);
+}
+
+html[data-ifv-reskin]
+    .frequency-scheduler__body-cell:not(.frequency-scheduler-cell--unavailable) {
+    background: var(--ifv-surface-2) !important;
+}
+
+html[data-ifv-reskin]
+    .frequency-scheduler-cell__container,
+html[data-ifv-reskin]
+    .frequency-scheduler-cell__container > .mobile__frame {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 0 !important;
+    padding: 0 !important;
+}
+
+html[data-ifv-reskin] .frequency-scheduler-cell__visible-frequencies {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0 !important;
+}
+
+html[data-ifv-reskin] .frequency-scheduler .frequency-scheduler-cell__footer,
+html[data-ifv-reskin] .frequency-scheduler-cell__footer.flex__items {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    position: static !important;
+    inset: auto !important;
+    bottom: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 20px !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+}
+
+html[data-ifv-reskin] .frequency-scheduler-cell__footer span {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: var(--ifv-text-2) !important;
+    line-height: 1 !important;
+}
+
+html[data-ifv-reskin]
+    .frequency-scheduler__body-cell.frequency-scheduler-cell--current {
+    background: var(--ifv-surface-2) !important;
+    border: 2px solid var(--ifv-accent) !important;
+}
+
+html[data-ifv-reskin] .frequency-scheduler__body-cell:active {
+    background: var(--ifv-surface-3) !important;
+}
+
+/* Days that hold a "Szczegóły" shortcut become whole-clickable tiles: the
+   native chevron button is hidden and a small dot marks the top of the cell.
+   The "ifv-scheduler-clickable" class is added by the userscript; any click on
+   the tile triggers the app's own details button. */
+html[data-ifv-reskin]
+    .frequency-scheduler__body-cell
+    button.details-btn--appearance {
+    display: none !important;
+}
+
+html[data-ifv-reskin]
+    .frequency-scheduler__body-cell.ifv-scheduler-clickable::after {
+    content: "";
+    position: absolute;
+    top: 4px !important;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 4px !important;
+    height: 4px !important;
+    border-radius: 50%;
+    background: var(--ifv-accent) !important;
+    pointer-events: none;
+}
+
+/* Status chips on days with attendance: the app ships darkblue / green —
+   them to the palette (accent for "all", reskin green for "present"). */
+html[data-ifv-reskin]
+    .frequency-scheduler__body-cell
+    .frequency-scheduler-cell__all-frequencies-btn {
+    background-color: var(--ifv-accent) !important;
+    border-color: var(--ifv-accent) !important;
+    color: var(--ifv-accent-contrast) !important;
+    border-radius: var(--ifv-radius-xs) !important;
+}
+
+html[data-ifv-reskin]
+    .frequency-scheduler__body-cell
+    .frequency-scheduler-cell__show-frequency-btn {
+    background-color: #10b981 !important;
+    border-color: #10b981 !important;
+    color: #ffffff !important;
+    border-radius: var(--ifv-radius-xs) !important;
 }

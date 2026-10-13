@@ -644,89 +644,174 @@ const prepGrades = async () => {
                     ".MuiAccordionDetails-root.accordion__full-width__content > .mobile__frame .grades__box",
                 ),
             );
-            document
-                .querySelectorAll(
-                    ".MuiAccordionDetails-root.accordion__full-width__content > .mobile__frame",
+
+            // Build a compact journal-style row for a subject box WITHOUT touching
+            // the React-owned node. The original box is only hidden via CSS and its
+            // buttons keep their handlers; our row forwards clicks to them, so the
+            // app's state stays in sync and React never sees moved/removed nodes.
+            const boxKey = (box) =>
+                [
+                    box.querySelector(".grades__subject .right-gap")
+                        ?.textContent?.trim(),
+                    box.querySelector(".info-text > span")
+                        ?.textContent?.trim(),
+                    Array.from(
+                        box.querySelectorAll(".grades__button__one-grade"),
+                    )
+                        .map((b) => b.textContent.trim())
+                        .join(","),
+                ].join("|");
+
+            const buildGradeRow = (box) => {
+                const existing = box.previousElementSibling;
+                if (
+                    existing?.classList?.contains("subject-row") &&
+                    existing.__ifvBox === box &&
+                    existing.__ifvKey === boxKey(box)
                 )
-                .forEach(async (semester) => {
-                    await waitForRender(() =>
-                        semester.querySelector(
-                            ".MuiAccordionDetails-root .grades__box .info-row .info-text > span",
-                        ),
-                    );
-                    semester.querySelectorAll(".info-row").forEach((e) => {
-                        if (
-                            e
-                                .querySelector(".info-text > span")
-                                .textContent.trim() === "" ||
-                            e
-                                .querySelector(".info-text > span")
-                                .textContent.trim() === "0"
-                        ) {
-                            e.remove();
-                        }
-                    });
-                    // Transform grade boxes into compact journal-style rows
-                    semester
-                        .querySelectorAll(".grades__box")
-                        .forEach((box) => {
-                            const header = box.querySelector(".grades__subject");
-                            if (!header) return;
-                            const nameEl = header.querySelector(".right-gap");
-                            const detailsBtn = header.querySelector(
-                                "button[aria-label*='Szczegóły']",
-                            );
-                            const gradeBtns = box.querySelectorAll(
+                    return;
+                if (existing?.classList?.contains("subject-row"))
+                    existing.remove();
+                box.classList.remove("ifv-grades-proxy");
+                const header = box.querySelector(".grades__subject");
+                if (!header) return;
+                const nameEl = header.querySelector(".right-gap");
+                const detailsBtn = header.querySelector(
+                    "button[aria-label*='Szczegóły']",
+                );
+                const gradeBtns = box.querySelectorAll(
+                    ".grades__button__one-grade",
+                );
+                const avgEl = box.querySelector(".info-text > span");
+                const subjectName = nameEl?.textContent?.trim() || "";
+                const average = avgEl?.textContent?.trim() || "";
+                if (!subjectName) return;
+
+                const row = document.createElement("div");
+                row.className = "subject-row";
+                row.__ifvBox = box;
+                row.__ifvKey = boxKey(box);
+                const ownerBoxes =
+                    box.parentElement?.querySelectorAll(".grades__box");
+                if (ownerBoxes && ownerBoxes[ownerBoxes.length - 1] === box)
+                    row.classList.add("subject-row--last");
+
+                const info = document.createElement("div");
+                info.className = "subject-info";
+                const name = document.createElement("h3");
+                name.className = "subject-name";
+                name.textContent = subjectName;
+                info.appendChild(name);
+
+                const gradesList = document.createElement("div");
+                gradesList.className = "grades-list";
+                Array.from(gradeBtns).forEach((btn, i) => {
+                    const badge = document.createElement("button");
+                    badge.type = "button";
+                    badge.className = "grade-badge";
+                    badge.textContent = btn.textContent.trim();
+                    badge.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const orig =
+                            row.__ifvBox?.querySelectorAll(
                                 ".grades__button__one-grade",
-                            );
-                            const avgEl = box.querySelector(".info-text > span");
-
-                            const subjectName =
-                                nameEl?.textContent?.trim() || "";
-                            const grades = Array.from(gradeBtns).map((b) =>
-                                b.textContent.trim(),
-                            );
-                            const gradeBtnElements = Array.from(gradeBtns);
-                            const average = avgEl?.textContent?.trim() || "";
-
-                            if (!subjectName) return;
-
-                            const row = document.createElement("div");
-                            row.className = "subject-row";
-                            row.innerHTML = `
-                                <div class="subject-info">
-                                    <h3 class="subject-name">${subjectName}</h3>
-                                    <div class="grades-list"></div>
-                                </div>
-                                <div class="subject-stats">
-                                    <div class="average-box">
-                                        <span class="average-label">Średnia</span>
-                                        <span class="average-value">${average}</span>
-                                    </div>
-                                </div>
-                            `;
-                            const gradesList = row.querySelector(".grades-list");
-                            // Move original grade buttons (preserve click handlers) and restyle as badges
-                            gradeBtnElements.forEach((btn) => {
-                                btn.classList.add("grade-badge");
-                                btn.removeAttribute("style");
-                                btn.removeAttribute("tabindex");
-                                btn.setAttribute("type", "button");
-                                gradesList.appendChild(btn);
-                            });
-                            if (detailsBtn) {
-                                const stats = row.querySelector(".subject-stats");
-                                // Move original button (not clone) to preserve event listeners
-                                detailsBtn.classList.add("details-btn");
-                                detailsBtn.style.marginLeft = "8px";
-                                stats.appendChild(detailsBtn);
-                            }
-                            // Keep original box in DOM as click proxy (hidden via CSS)
-                            box.style.display = "none";
-                            box.classList.add("ifv-grades-proxy");
-                            box.parentNode.insertBefore(row, box);
-                        });
+                            )[i] || btn;
+                        orig.click();
+                    });
+                    gradesList.appendChild(badge);
                 });
+                info.appendChild(gradesList);
+
+                const stats = document.createElement("div");
+                stats.className = "subject-stats";
+                if (average) {
+                    const avgBox = document.createElement("div");
+                    avgBox.className = "average-box";
+                    const avgLabel = document.createElement("span");
+                    avgLabel.className = "average-label";
+                    avgLabel.textContent = "Średnia";
+                    const avgValue = document.createElement("span");
+                    avgValue.className = "average-value";
+                    avgValue.textContent = average;
+                    avgBox.appendChild(avgLabel);
+                    avgBox.appendChild(avgValue);
+                    stats.appendChild(avgBox);
+                }
+                if (detailsBtn) {
+                    const dBtn = document.createElement("button");
+                    dBtn.type = "button";
+                    dBtn.className = "details-btn";
+                    dBtn.setAttribute("aria-label", "Szczegóły");
+                    dBtn.innerHTML =
+                        '<svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>';
+                    dBtn.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        row.__ifvBox
+                            ?.querySelector(
+                                "button[aria-label*='Szczegóły']",
+                            )
+                            ?.click();
+                    });
+                    stats.appendChild(dBtn);
+                }
+
+                row.appendChild(info);
+                row.appendChild(stats);
+
+                // Hide the original box via CSS, insert our row as an overlay.
+                box.classList.add("ifv-grades-proxy");
+                box.parentNode.insertBefore(row, box);
+            };
+
+            const reconcileRows = () => {
+                document
+                    .querySelectorAll(
+                        ".MuiAccordionDetails-root.accordion__full-width__content > .mobile__frame",
+                    )
+                    .forEach((semester) => {
+                        // Hide empty average rows instead of deleting them.
+                        semester.querySelectorAll(".info-row").forEach((e) => {
+                            const t = e
+                                .querySelector(".info-text > span")
+                                ?.textContent.trim();
+                            e.classList.toggle(
+                                "ifv-grades-empty",
+                                t === "" || t === "0",
+                            );
+                        });
+                        // Remove rows that are no longer the immediate neighbour
+                        // of their box (React reordered/replaced the accordion).
+                        semester.querySelectorAll(".subject-row").forEach((r) => {
+                            const box = r.__ifvBox;
+                            if (!box || !box.isConnected) {
+                                r.remove();
+                                return;
+                            }
+                            if (box.previousElementSibling !== r) r.remove();
+                        });
+                        semester
+                            .querySelectorAll(".grades__box")
+                            .forEach(buildGradeRow);
+                    });
+            };
+
+            reconcileRows();
+
+            // Keep the overlay rows in sync when React re-renders the accordions
+            // (e.g. switching semesters / grades).
+            let reconcileFrame = 0;
+            new MutationObserver(() => {
+                if (reconcileFrame) return;
+                reconcileFrame = requestAnimationFrame(() => {
+                    reconcileFrame = 0;
+                    reconcileRows();
+                });
+            }).observe(document.body, {
+                childList: true,
+                subtree: true,
+            });
         }
     };
 
@@ -3916,15 +4001,31 @@ html[data-ifv-reskin] div#root {
     overflow-x: hidden !important;
 }
 
-/* the messages button injected by another patch is 72px tall (20px padding)
-   which clips inside the 56px bar — shrink it and cluster it on the right */
-html[data-ifv-reskin] .header_logo_tools-container > div.messages {
-    padding: 12px !important;
-    float: none !important;
-    margin-left: 0 !important;
-    display: flex;
+/* the app's "wiadomości" shortcut in the header is 72px tall (20px inline
+   padding) which clips inside the 56px bar — shrink it to a 32px tap target */
+html[data-ifv-reskin] .header_logo_tools-container > div[style*="float: right"] {
+    padding: 4px 6px !important;
+    display: flex !important;
     align-items: center;
     justify-content: center;
+}
+
+html[data-ifv-reskin]
+    .header_logo_tools-container
+    a[title="Przejdź do modułu wiadomości"] {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 32px !important;
+    height: 32px !important;
+}
+
+html[data-ifv-reskin]
+    .header_logo_tools-container
+    a[title="Przejdź do modułu wiadomości"]
+    svg {
+    width: 22px !important;
+    height: 22px !important;
 }
 
 html[data-ifv-reskin] .header_logo_tools-container > .ifv-theme-toggle {
@@ -4074,7 +4175,8 @@ html[data-ifv-reskin] .bottom-navigation-bar > div > div > img.highlight {
 }
 
 /* hide original grades boxes used as click proxies */
-html[data-ifv-reskin] .ifv-grades-proxy {
+html[data-ifv-reskin] .ifv-grades-proxy,
+html[data-ifv-reskin] .ifv-grades-empty {
     display: none !important;
 }
 
@@ -4304,7 +4406,8 @@ html[data-ifv-reskin] .subject-row:active {
     background: var(--ifv-surface-2) !important;
 }
 
-html[data-ifv-reskin] .subject-row:last-child {
+html[data-ifv-reskin] .subject-row:last-child,
+html[data-ifv-reskin] .subject-row--last {
     border-bottom: 0 !important;
 }
 
@@ -4857,16 +4960,30 @@ html[data-ifv-reskin][data-ifv-theme="dark"]
     filter: none !important;
 }
 
-/* header messages button icon (black SVG) must follow the theme ink */
-html[data-ifv-reskin] .header_logo_tools-container > div.messages {
+/* header messages shortcut icon (black SVG) must follow the theme ink */
+html[data-ifv-reskin]
+    .header_logo_tools-container
+    a[title="Przejdź do modułu wiadomości"] {
     color: var(--ifv-text) !important;
 }
 
-html[data-ifv-reskin] .header_logo_tools-container > div.messages svg,
-html[data-ifv-reskin] .header_logo_tools-container > div.messages svg path,
-html[data-ifv-reskin] .header_logo_tools-container > div.messages svg * {
+html[data-ifv-reskin]
+    .header_logo_tools-container
+    a[title="Przejdź do modułu wiadomości"]
+    svg,
+html[data-ifv-reskin]
+    .header_logo_tools-container
+    a[title="Przejdź do modułu wiadomości"]
+    svg
+    path,
+html[data-ifv-reskin]
+    .header_logo_tools-container
+    a[title="Przejdź do modułu wiadomości"]
+    svg
+    * {
     fill: var(--ifv-text) !important;
     color: var(--ifv-text) !important;
+    stroke: none !important;
 }
 
 /* --- widget grid --- */
@@ -5080,6 +5197,14 @@ html[data-ifv-reskin] .modal__content-limit {
     padding: 14px 16px 16px !important;
     background: transparent !important;
     color: var(--ifv-text) !important;
+}
+
+/* Flatten helper wrappers without removing React-owned nodes (removing them
+   desyncs React's reconciliation and breaks the modal on the next render). */
+html[data-ifv-reskin] .modal .modal__header__title-wrapper,
+html[data-ifv-reskin] .modal .modal__box__content-limit,
+html[data-ifv-reskin] .modal .details__content__box__content {
+    display: contents !important;
 }
 
 /* Footer: minimal, only if buttons exist */
@@ -6645,6 +6770,185 @@ html[data-ifv-reskin][data-ifv-theme] .ifv-att-nav {
     margin: 0 0 10px !important;
     padding: 0 !important;
 }
+
+/* ------------------------------------------------- Frekwencja: actions & month ---
+   "Usprawiedliw" CTA buttons ship in the app's blue — switch them to the
+   reskin accent so they follow the active theme and accent colour. */
+html[data-ifv-reskin] .app__content__header .toolbar .MuiButton-contained,
+html[data-ifv-reskin] .tabsview.attendance-init .toolbar .MuiButton-contained {
+    background-color: var(--ifv-accent) !important;
+    color: var(--ifv-accent-contrast) !important;
+    box-shadow: none !important;
+}
+
+html[data-ifv-reskin] button.justify-abstence {
+    background-color: var(--ifv-accent) !important;
+    border-color: var(--ifv-accent) !important;
+    color: var(--ifv-accent-contrast) !important;
+    border-radius: var(--ifv-radius) !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+}
+
+/* Frekwencja "Miesiąc" scheduler ("frequency-scheduler"): rebuild the bare
+   app table into a quiet app-style card — surface, rounded cells, muted day
+   numbers, accent only on today. Both themes pick the tokens automatically. */
+html[data-ifv-reskin] .month-selector__month-current {
+    color: var(--ifv-text) !important;
+}
+
+html[data-ifv-reskin] .frequency-scheduler {
+    width: 388px !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+    margin: 0 auto !important;
+    border-collapse: separate !important;
+    border-spacing: 3px !important;
+    border: 0 !important;
+    background: var(--ifv-surface) !important;
+    border-radius: var(--ifv-radius) !important;
+    box-shadow: var(--ifv-shadow-sm) !important;
+    padding: 12px !important;
+    overflow: hidden !important;
+}
+
+html[data-ifv-reskin] .frequency-scheduler__header-cell {
+    width: 0 !important;
+    padding: 12px 2px 10px !important;
+    text-align: center !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    color: var(--ifv-text-3) !important;
+    background: transparent !important;
+    border: 0 !important;
+}
+
+html[data-ifv-reskin]
+    .frequency-scheduler__header-row
+    .frequency-scheduler__header-cell:nth-of-type(-n + 5) {
+    width: 74px !important;
+}
+
+html[data-ifv-reskin] .frequency-scheduler__body-cell {
+    position: relative !important;
+    height: 74px !important;
+    min-height: 74px !important;
+    max-height: 74px !important;
+    width: 74px !important;
+    vertical-align: middle !important;
+    text-align: center !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    border-radius: var(--ifv-radius-sm) !important;
+    overflow: hidden !important;
+    transition: background-color 0.12s var(--ifv-ease);
+}
+
+html[data-ifv-reskin]
+    .frequency-scheduler__body-cell:not(.frequency-scheduler-cell--unavailable) {
+    background: var(--ifv-surface-2) !important;
+}
+
+html[data-ifv-reskin]
+    .frequency-scheduler-cell__container,
+html[data-ifv-reskin]
+    .frequency-scheduler-cell__container > .mobile__frame {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 0 !important;
+    padding: 0 !important;
+}
+
+html[data-ifv-reskin] .frequency-scheduler-cell__visible-frequencies {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0 !important;
+}
+
+html[data-ifv-reskin] .frequency-scheduler .frequency-scheduler-cell__footer,
+html[data-ifv-reskin] .frequency-scheduler-cell__footer.flex__items {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    position: static !important;
+    inset: auto !important;
+    bottom: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 20px !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+}
+
+html[data-ifv-reskin] .frequency-scheduler-cell__footer span {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: var(--ifv-text-2) !important;
+    line-height: 1 !important;
+}
+
+html[data-ifv-reskin]
+    .frequency-scheduler__body-cell.frequency-scheduler-cell--current {
+    background: var(--ifv-surface-2) !important;
+    border: 2px solid var(--ifv-accent) !important;
+}
+
+html[data-ifv-reskin] .frequency-scheduler__body-cell:active {
+    background: var(--ifv-surface-3) !important;
+}
+
+/* Days that hold a "Szczegóły" shortcut become whole-clickable tiles: the
+   native chevron button is hidden and a small dot marks the top of the cell.
+   The "ifv-scheduler-clickable" class is added by the userscript; any click on
+   the tile triggers the app's own details button. */
+html[data-ifv-reskin]
+    .frequency-scheduler__body-cell
+    button.details-btn--appearance {
+    display: none !important;
+}
+
+html[data-ifv-reskin]
+    .frequency-scheduler__body-cell.ifv-scheduler-clickable::after {
+    content: "";
+    position: absolute;
+    top: 4px !important;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 4px !important;
+    height: 4px !important;
+    border-radius: 50%;
+    background: var(--ifv-accent) !important;
+    pointer-events: none;
+}
+
+/* Status chips on days with attendance: the app ships darkblue / green —
+   them to the palette (accent for "all", reskin green for "present"). */
+html[data-ifv-reskin]
+    .frequency-scheduler__body-cell
+    .frequency-scheduler-cell__all-frequencies-btn {
+    background-color: var(--ifv-accent) !important;
+    border-color: var(--ifv-accent) !important;
+    color: var(--ifv-accent-contrast) !important;
+    border-radius: var(--ifv-radius-xs) !important;
+}
+
+html[data-ifv-reskin]
+    .frequency-scheduler__body-cell
+    .frequency-scheduler-cell__show-frequency-btn {
+    background-color: #10b981 !important;
+    border-color: #10b981 !important;
+    color: #ffffff !important;
+    border-radius: var(--ifv-radius-xs) !important;
+}
 `,
 
         /* IFV-RESKIN-CSS:END */
@@ -7777,7 +8081,23 @@ const RESKIN_ATT_DAY_RE =
     let reskinPlanObserver = null;
     let reskinPlanFrame = 0;
 
+    // Frekwencja "Miesiąc": days carrying a "Szczegóły" shortcut become
+    // whole-clickable tiles (the native chevron button is hidden via CSS and a
+    // small dot marks the cell). Clicking the tile fires the app's own details
+    // button, so the modal opens through React-managed paths only.
+    const reskinSchedulerCells = () => {
+        document
+            .querySelectorAll(".frequency-scheduler__body-cell")
+            .forEach((td) => {
+                if (!td.querySelector("button.details-btn--appearance")) return;
+                if (td.dataset.ifvClick) return;
+                td.dataset.ifvClick = "1";
+                td.classList.add("ifv-scheduler-clickable");
+            });
+    };
+
     const mountReskinPlan = () => {
+        reskinSchedulerCells();
         refreshReskinPlan();
         if (reskinPlanObserver) return;
 
@@ -7787,10 +8107,16 @@ const RESKIN_ATT_DAY_RE =
                 reskinPlanFrame = 0;
                 if (
                     document.querySelector(
-                        ".plan-position, .timetable .lesson, .frekwencja .timetable__grid",
+                        ".plan-position, .timetable .lesson, .frekwencja .timetable__grid, .frequency-scheduler",
                     )
-                )
-                    refreshReskinPlan();
+                ) {
+                    reskinSchedulerCells();
+                    try {
+                        refreshReskinPlan();
+                    } catch (err) {
+                        /* never let one view's refresh break the scheduler cells */
+                    }
+                }
             });
         });
         reskinPlanObserver.observe(document.body, {
@@ -7799,6 +8125,19 @@ const RESKIN_ATT_DAY_RE =
         });
 
         document.addEventListener("click", (event) => {
+            const cell = event.target.closest?.(
+                ".frequency-scheduler__body-cell.ifv-scheduler-clickable",
+            );
+            if (cell && !event.target.closest("button")) {
+                const details = cell.querySelector(
+                    "button.details-btn--appearance",
+                );
+                if (details) {
+                    event.preventDefault();
+                    details.click();
+                    return;
+                }
+            }
             const card = event.target.closest?.(".ifv-lesson");
             if (!card || event.target.closest("button")) return;
             const pos = card.closest(".plan-position");
@@ -7826,72 +8165,59 @@ const RESKIN_ATT_DAY_RE =
         let modalObserver = null;
         let currentModal = null;
 
-        const restructureModal = (paper) => {
+        // Style-only modal handling. The flat look is achieved via CSS, and we
+        // must NOT remove or reorder React-owned nodes here (moving the title,
+        // unwrapping .modal__box__content-limit / .details__content__box__content,
+        // or removing the drawer manually desyncs React's reconciliation and makes
+        // the app drop whole sections when the modal re-renders or closes).
+        const ensureCloseButton = (paper) => {
             if (paper.dataset.ifvModalRestructured === "1") return;
             paper.dataset.ifvModalRestructured = "1";
 
             const modal = paper.querySelector(".modal");
-            if (!modal) return;
+            const header = modal?.querySelector(".modal__header");
+            if (!modal || !header) return;
 
-            // Flatten modal structure: remove extra wrappers
-            const header = modal.querySelector(".modal__header");
-            const content = modal.querySelector(".modal__content, .modal__content-limit");
-            const footer = modal.querySelector(".modal__footer");
+            // If the app already renders any close button, keep it.
+            if (modal.querySelector(".modal-button--close:not(.ifv-modal-close)"))
+                return;
 
-            if (header) {
-                // Simplify header: keep only title and close button
-                const titleWrapper = header.querySelector(".modal__header__title-wrapper");
-                if (titleWrapper) {
-                    const title = titleWrapper.querySelector(".modal__title");
-                    if (title) {
-                        // Move title directly into header
-                        header.insertBefore(title, header.firstChild);
-                    }
-                    titleWrapper.remove();
+            const closeBtn = document.createElement("button");
+            closeBtn.className = "modal-button--close ifv-modal-close";
+            closeBtn.type = "button";
+            closeBtn.setAttribute("aria-label", "Zamknij");
+            closeBtn.setAttribute("tabindex", "0");
+            closeBtn.innerHTML =
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+            header.appendChild(closeBtn);
+            // Close through the app's own React-managed paths only.
+            closeBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const drawer = closeBtn.closest?.(".MuiDrawer-root");
+                const backdrop = drawer?.querySelector?.(".MuiBackdrop-root");
+                if (backdrop) {
+                    backdrop.click();
+                    return;
                 }
-                // Add close button if missing
-                if (!header.querySelector(".modal-button--close")) {
-                    const closeBtn = document.createElement("button");
-                    closeBtn.className = "modal-button--close ifv-modal-close";
-                    closeBtn.type = "button";
-                    closeBtn.setAttribute("aria-label", "Zamknij");
-                    closeBtn.setAttribute("tabindex", "0");
-                    closeBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>';
-                    header.appendChild(closeBtn);
-                    // Click handler to close modal - remove entire drawer root
-                    closeBtn.onclick = (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const drawerRoot = closeBtn.closest(".MuiDrawer-root");
-                        const backdrop = document.querySelector(".MuiBackdrop-root");
-                        if (drawerRoot) drawerRoot.remove();
-                        if (backdrop) backdrop.remove();
-                        if (W.history.state?.details) W.history.back();
-                    };
+                if (W.history.state?.details) {
+                    W.history.back();
+                    return;
                 }
-            }
-
-            if (content) {
-                // Remove extra limit wrappers inside content
-                const limitWrappers = content.querySelectorAll(".modal__box__content-limit, .details__content__box__content");
-                limitWrappers.forEach(w => {
-                    // Unwrap: move children up
-                    while (w.firstChild) w.parentNode.insertBefore(w.firstChild, w);
-                    w.remove();
-                });
-            }
-
-            // Ensure close button is properly styled
-            const closeBtn = modal.querySelector(".modal-button--close");
-            if (closeBtn) {
-                closeBtn.setAttribute("aria-label", "Zamknij");
-            }
+                drawer?.dispatchEvent(
+                    new KeyboardEvent("keydown", {
+                        key: "Escape",
+                        bubbles: true,
+                        cancelable: true,
+                    }),
+                );
+            });
         };
 
         const handleModalOpen = (paper) => {
             if (paper === currentModal) return;
             currentModal = paper;
-            restructureModal(paper);
+            ensureCloseButton(paper);
         };
 
         const mutationHandler = (mutations) => {
