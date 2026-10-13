@@ -716,13 +716,15 @@ const prepGrades = async () => {
                             });
                             if (detailsBtn) {
                                 const stats = row.querySelector(".subject-stats");
-                                const newBtn = detailsBtn.cloneNode(true);
-                                newBtn.classList.add("details-btn");
-                                newBtn.style.marginLeft = "8px";
-                                stats.appendChild(newBtn);
-                                detailsBtn.remove();
+                                // Move original button (not clone) to preserve event listeners
+                                detailsBtn.classList.add("details-btn");
+                                detailsBtn.style.marginLeft = "8px";
+                                stats.appendChild(detailsBtn);
                             }
-                            box.replaceWith(row);
+                            // Keep original box in DOM as click proxy (hidden via CSS)
+                            box.style.display = "none";
+                            box.classList.add("ifv-grades-proxy");
+                            box.parentNode.insertBefore(row, box);
                         });
                 });
         }
@@ -4071,6 +4073,11 @@ html[data-ifv-reskin] .bottom-navigation-bar > div > div > img.highlight {
     opacity: 1;
 }
 
+/* hide original grades boxes used as click proxies */
+html[data-ifv-reskin] .ifv-grades-proxy {
+    display: none !important;
+}
+
 /* ------------------------------------------------------- cards/tiles --- */
 /* Native app card system */
 html[data-ifv-reskin] .tile {
@@ -4953,8 +4960,8 @@ html[data-ifv-reskin] .MuiDrawer-paper:has(.modal) {
     left: 50% !important;
     right: auto !important;
     bottom: auto !important;
-    width: min(92vw, 440px) !important;
-    max-width: 440px !important;
+    width: min(92vw, 400px) !important;
+    max-width: 400px !important;
     height: auto !important;
     max-height: 82vh !important;
     margin: 0 !important;
@@ -4970,7 +4977,7 @@ html[data-ifv-reskin] .MuiDrawer-paper:has(.modal) {
 @keyframes ifv-modal-in {
     from {
         opacity: 0;
-        transform: translate(-50%, calc(-50% + 14px)) scale(0.96);
+        transform: translate(-50%, calc(-50% + 10px)) scale(0.97);
     }
     to {
         opacity: 1;
@@ -4978,9 +4985,10 @@ html[data-ifv-reskin] .MuiDrawer-paper:has(.modal) {
     }
 }
 
+/* Flatten the app's verbose modal structure into a minimal card */
 html[data-ifv-reskin] .MuiDrawer-paper:has(.modal) .modal {
-    display: flex;
-    flex-direction: column;
+    display: flex !important;
+    flex-direction: column !important;
     width: 100% !important;
     height: auto !important;
     max-height: inherit !important;
@@ -4989,12 +4997,11 @@ html[data-ifv-reskin] .MuiDrawer-paper:has(.modal) .modal {
     color: var(--ifv-text) !important;
 }
 
+/* Header: title + close button only */
 html[data-ifv-reskin] .modal__header {
-    position: relative;
-    flex: 0 0 auto;
-    height: auto !important;
-    min-height: 0 !important;
-    padding: 16px 56px 14px 18px !important;
+    position: relative !important;
+    flex: 0 0 auto !important;
+    padding: 14px 48px 12px 16px !important;
     background: transparent !important;
     border-bottom: 1px solid var(--ifv-line) !important;
     color: var(--ifv-text) !important;
@@ -5004,71 +5011,85 @@ html[data-ifv-reskin] .modal__header .modal__title h1,
 html[data-ifv-reskin] .modal__title h1,
 html[data-ifv-reskin] .modal__header .modal__title * {
     margin: 0 !important;
-    font-size: 16px !important;
+    font-size: 15px !important;
     font-weight: 700 !important;
     color: var(--ifv-text) !important;
+    line-height: 1.3 !important;
 }
 
-/* close button -> minimal icon only, no text */
+/* Close button: minimal, top-right */
 html[data-ifv-reskin] .modal-button--close,
-html[data-ifv-reskin] .modal-button--close.MuiIconButton-root {
+html[data-ifv-reskin] .modal-button--close.MuiIconButton-root,
+html[data-ifv-reskin] .ifv-modal-close {
     position: absolute !important;
-    top: 12px !important;
-    right: 12px !important;
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px !important;
-    min-height: 36px !important;
+    top: 10px !important;
+    right: 10px !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
     padding: 0 !important;
     border-radius: 999px !important;
     background: transparent !important;
     color: var(--ifv-text-2) !important;
-    display: block !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     overflow: hidden !important;
+    border: none !important;
+    cursor: pointer !important;
 }
 
-html[data-ifv-reskin] .modal-button--close > * {
-    display: none !important;
+html[data-ifv-reskin] .modal-button--close > *,
+html[data-ifv-reskin] .ifv-modal-close > * {
+    display: block !important;
 }
 
-html[data-ifv-reskin] .modal-button--close::before {
-    content: "" !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    margin: auto !important;
+html[data-ifv-reskin] .modal-button--close svg,
+html[data-ifv-reskin] .ifv-modal-close svg {
     width: 18px !important;
     height: 18px !important;
-    background-color: currentColor !important;
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z'/%3E%3C/svg%3E") center / contain no-repeat !important;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z'/%3E%3C/svg%3E") center / contain no-repeat !important;
+    stroke: currentColor !important;
+    fill: none !important;
 }
 
-html[data-ifv-reskin] .modal-button--close:hover {
+html[data-ifv-reskin] .modal-button--close::before,
+html[data-ifv-reskin] .ifv-modal-close::before {
+    content: none !important;
+}
+
+html[data-ifv-reskin] .modal-button--close:hover,
+html[data-ifv-reskin] .ifv-modal-close:hover {
     background: var(--ifv-surface-3) !important;
     color: var(--ifv-text) !important;
 }
 
-html[data-ifv-reskin] .modal__content {
-    flex: 1 1 auto;
-    overflow-y: auto;
+html[data-ifv-reskin] .modal-button--close:active,
+html[data-ifv-reskin] .ifv-modal-close:active {
+    transform: scale(0.9) !important;
+}
+
+/* Content: flat, no extra wrappers */
+html[data-ifv-reskin] .modal__content,
+html[data-ifv-reskin] .modal__content-limit {
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
     width: 100% !important;
     max-width: 100% !important;
-    box-sizing: border-box;
-    padding: 16px 20px 20px !important;
-    background: var(--ifv-surface) !important;
+    box-sizing: border-box !important;
+    padding: 14px 16px 16px !important;
+    background: transparent !important;
     color: var(--ifv-text) !important;
 }
 
+/* Footer: minimal, only if buttons exist */
 html[data-ifv-reskin] .modal__footer {
-    flex: 0 0 auto;
+    flex: 0 0 auto !important;
     display: flex !important;
-    flex-wrap: wrap;
-    gap: 10px !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
     justify-content: flex-end !important;
-    padding-top: 14px !important;
+    padding-top: 12px !important;
     background: transparent !important;
     border-top: 1px solid var(--ifv-line) !important;
     color: var(--ifv-text) !important;
@@ -5076,13 +5097,13 @@ html[data-ifv-reskin] .modal__footer {
 
 html[data-ifv-reskin] .modal__footer .MuiButton-root {
     font-family: var(--ifv-font) !important;
-    font-size: 13.5px !important;
+    font-size: 13px !important;
     font-weight: 600 !important;
     text-transform: none !important;
     border-radius: var(--ifv-radius-sm) !important;
-    padding: 10px 20px !important;
-    min-width: 88px !important;
-    height: 40px !important;
+    padding: 8px 16px !important;
+    min-width: 80px !important;
+    height: 36px !important;
     box-shadow: none !important;
 }
 
@@ -5116,29 +5137,26 @@ html[data-ifv-reskin] .modal__footer button:not(.MuiButton-contained):hover {
     color: var(--ifv-accent) !important;
 }
 
-/* modal data box: subtle surface for both themes */
+/* Content boxes: flat cards */
 html[data-ifv-reskin] .modal .details__content__box,
-html[data-ifv-reskin] .modal .modal__box {
+html[data-ifv-reskin] .modal .modal__box,
+html[data-ifv-reskin] .modal .modal__plan-details {
     background: var(--ifv-surface-2) !important;
     border: 1px solid var(--ifv-line) !important;
     border-radius: var(--ifv-radius-sm) !important;
     color: var(--ifv-text) !important;
-    overflow: visible;
-}
-
-html[data-ifv-reskin] .modal .details__content__box__header {
-    background: transparent !important;
-    border-bottom: 0 !important;
-    padding: 0 2px 16px !important;
-    font-size: 15px !important;
-    font-weight: 600 !important;
-    color: var(--ifv-text) !important;
-}
-
-html[data-ifv-reskin] .modal .details__content__box__header h2,
-html[data-ifv-reskin] .modal .details__content__box__header h2 * {
+    overflow: visible !important;
+    padding: 12px 14px !important;
     margin: 0 !important;
-    font-size: 15px !important;
+}
+
+html[data-ifv-reskin] .modal .details__content__box__header,
+html[data-ifv-reskin] .modal .modal__box__header {
+    background: transparent !important;
+    border: 0 !important;
+    padding: 0 0 12px !important;
+    margin: 0 !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
     color: var(--ifv-text) !important;
 }
@@ -5148,13 +5166,13 @@ html[data-ifv-reskin] .modal .details__content__box__content {
     color: var(--ifv-text) !important;
 }
 
-/* grade detail: label above value, no divider bars under each record */
+/* Grade detail: label above value, no divider bars */
 html[data-ifv-reskin] .modal .info-row {
     display: flex !important;
     flex-direction: column !important;
     align-items: stretch !important;
-    gap: 3px !important;
-    padding: 0 2px 16px !important;
+    gap: 2px !important;
+    padding: 0 0 12px !important;
     border: 0 !important;
     background: transparent !important;
 }
@@ -5164,36 +5182,37 @@ html[data-ifv-reskin] .modal .info-row:last-child {
 }
 
 html[data-ifv-reskin] .modal .details__content__box__content .info-label span {
-    display: block;
+    display: block !important;
     color: var(--ifv-text-3) !important;
-    font-size: 11px !important;
+    font-size: 10px !important;
     font-weight: 600 !important;
     text-transform: uppercase !important;
-    letter-spacing: 0.07em !important;
+    letter-spacing: 0.06em !important;
 }
 
 html[data-ifv-reskin] .modal .info-text {
     color: var(--ifv-text) !important;
-    font-size: 14.5px !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
 }
 
 html[data-ifv-reskin] .modal .details__content__box__content .info-text span {
-    font-size: 14.5px !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
 }
 
 html[data-ifv-reskin] .modal .details__content__box__content .info-text .tile__important-text {
-    font-size: 16px !important;
+    font-size: 15px !important;
     font-weight: 700 !important;
 }
 
+/* Plan details rows */
 html[data-ifv-reskin] .modal .modal__plan-details__row {
     display: flex !important;
     align-items: flex-start !important;
-    gap: 12px !important;
-    padding: 8px 2px !important;
-    font-size: 13.5px !important;
+    gap: 10px !important;
+    padding: 6px 0 !important;
+    font-size: 13px !important;
     color: var(--ifv-text) !important;
     border: 0 !important;
 }
@@ -5203,15 +5222,15 @@ html[data-ifv-reskin] .modal .modal__plan-details__row:last-child {
 }
 
 html[data-ifv-reskin] .modal .modal__plan-details__row svg {
-    flex: 0 0 auto;
-    width: 17px !important;
-    height: 17px !important;
-    margin-top: 1px;
+    flex: 0 0 auto !important;
+    width: 16px !important;
+    height: 16px !important;
+    margin-top: 1px !important;
     fill: var(--ifv-text-3) !important;
     color: var(--ifv-text-3) !important;
 }
 
-/* keep semantic colours (grade values), force the rest to theme text */
+/* Keep semantic colours for grade values */
 html[data-ifv-reskin] .modal .details__content__box__content h3,
 html[data-ifv-reskin] .modal .details__content__box__content p,
 html[data-ifv-reskin] .modal .details__content__box__content strong,
@@ -5219,7 +5238,7 @@ html[data-ifv-reskin] .modal .details__content__box__content b {
     color: var(--ifv-text) !important;
 }
 
-/* the "Więcej" / list modals */
+/* List modals ("Więcej") */
 html[data-ifv-reskin] .list-modal,
 html[data-ifv-reskin] .more-popup {
     background: var(--ifv-bg) !important;
@@ -7803,12 +7822,116 @@ const RESKIN_ATT_DAY_RE =
         });
     };
 
+    const mountReskinModal = () => {
+        let modalObserver = null;
+        let currentModal = null;
+
+        const restructureModal = (paper) => {
+            if (paper.dataset.ifvModalRestructured === "1") return;
+            paper.dataset.ifvModalRestructured = "1";
+
+            const modal = paper.querySelector(".modal");
+            if (!modal) return;
+
+            // Flatten modal structure: remove extra wrappers
+            const header = modal.querySelector(".modal__header");
+            const content = modal.querySelector(".modal__content, .modal__content-limit");
+            const footer = modal.querySelector(".modal__footer");
+
+            if (header) {
+                // Simplify header: keep only title and close button
+                const titleWrapper = header.querySelector(".modal__header__title-wrapper");
+                if (titleWrapper) {
+                    const title = titleWrapper.querySelector(".modal__title");
+                    if (title) {
+                        // Move title directly into header
+                        header.insertBefore(title, header.firstChild);
+                    }
+                    titleWrapper.remove();
+                }
+                // Add close button if missing
+                if (!header.querySelector(".modal-button--close")) {
+                    const closeBtn = document.createElement("button");
+                    closeBtn.className = "modal-button--close ifv-modal-close";
+                    closeBtn.type = "button";
+                    closeBtn.setAttribute("aria-label", "Zamknij");
+                    closeBtn.setAttribute("tabindex", "0");
+                    closeBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+                    header.appendChild(closeBtn);
+                    // Click handler to close modal - remove entire drawer root
+                    closeBtn.onclick = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const drawerRoot = closeBtn.closest(".MuiDrawer-root");
+                        const backdrop = document.querySelector(".MuiBackdrop-root");
+                        if (drawerRoot) drawerRoot.remove();
+                        if (backdrop) backdrop.remove();
+                        if (W.history.state?.details) W.history.back();
+                    };
+                }
+            }
+
+            if (content) {
+                // Remove extra limit wrappers inside content
+                const limitWrappers = content.querySelectorAll(".modal__box__content-limit, .details__content__box__content");
+                limitWrappers.forEach(w => {
+                    // Unwrap: move children up
+                    while (w.firstChild) w.parentNode.insertBefore(w.firstChild, w);
+                    w.remove();
+                });
+            }
+
+            // Ensure close button is properly styled
+            const closeBtn = modal.querySelector(".modal-button--close");
+            if (closeBtn) {
+                closeBtn.setAttribute("aria-label", "Zamknij");
+            }
+        };
+
+        const handleModalOpen = (paper) => {
+            if (paper === currentModal) return;
+            currentModal = paper;
+            restructureModal(paper);
+        };
+
+        const mutationHandler = (mutations) => {
+            for (const mutation of mutations) {
+                for (const node of mutation.addedNodes) {
+                    if (node.nodeType === 1 && node.classList?.contains?.("MuiDrawer-paper")) {
+                        // Check if this is a modal drawer
+                        if (node.querySelector(".modal") || node.closest(".MuiDrawer-modal")) {
+                            handleModalOpen(node);
+                        }
+                    }
+                    // Also check inside added nodes
+                    const papers = node.querySelectorAll?.(".MuiDrawer-paper");
+                    if (papers?.length) {
+                        papers.forEach(p => {
+                            if (p.querySelector(".modal") || p.closest(".MuiDrawer-modal")) {
+                                handleModalOpen(p);
+                            }
+                        });
+                    }
+                }
+            }
+        };
+
+        modalObserver = new MutationObserver(mutationHandler);
+        modalObserver.observe(document.body, { childList: true, subtree: true });
+
+        // Check for existing modals
+        document.querySelectorAll(".MuiDrawer-paper:has(.modal), .MuiDrawer-paper.MuiDrawer-paperAnchorRight").forEach(p => {
+            if (p.querySelector(".modal")) handleModalOpen(p);
+        });
+    };
+
     const mountReskin = () => {
         applyReskinTheme();
         addReskinThemeToggle();
         syncReskinMetrics();
         mountOcenyPager();
         mountReskinPlan();
+        mountReskinModal();
         waitForRender(() =>
             document.querySelector(".bottom-navigation-bar"),
         ).then(() => {
